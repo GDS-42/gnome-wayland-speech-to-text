@@ -11,8 +11,7 @@ from typing import Any
 import gi
 
 gi.require_version("Gio", "2.0")
-gi.require_version("Gst", "1.0")
-from gi.repository import Gio, GLib, Gst
+from gi.repository import Gio, GLib
 
 from greffier.const import APP_ID, APP_NAME, DAEMON_ID, VERSION
 from greffier.daemon.controller import Controller, Deps
@@ -46,10 +45,8 @@ def build_deps(bus: Gio.DBusConnection) -> Deps:
     models = ModelManager(catalog, paths.models_dir(), paths.downloads_dir())
 
     def environment_report() -> dict[str, Any]:
-        return {
-            "gnome_shell": environment.gnome_shell_version(bus) or "",
-            "session_type": environment.session_type(),
-        }
+        # The GNOME Shell version comes from the injector's cached async probes.
+        return {"session_type": environment.session_type()}
 
     return Deps(
         models=models,
@@ -95,7 +92,12 @@ class DaemonApplication(Gio.Application):
     def do_startup(self) -> None:
         Gio.Application.do_startup(self)
         self.hold()  # a service: stay alive without windows
-        Gst.init(None)
+        # Not Gst.init(): ensure_gst() first pins the C++ unwinder so that an
+        # exception thrown by sherpa-onnx cannot abort the whole process when
+        # GStreamer has pulled libunwind into the global symbol scope.
+        from greffier.audio.capture import ensure_gst
+
+        ensure_gst()
         open_gui = Gio.SimpleAction.new("open-gui", None)
         open_gui.connect("activate", lambda *_a: launch_gui())
         self.add_action(open_gui)

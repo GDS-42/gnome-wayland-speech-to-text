@@ -147,7 +147,7 @@
       "speed": 2,
       "accuracy": 4,
       "max_segment_s": 30,
-      "options": {"max_new_tokens": 256}
+      "options": {"max_new_tokens": 256, "max_total_len": 1024}
     },
     {
       "id": "whisper-turbo-int8",
