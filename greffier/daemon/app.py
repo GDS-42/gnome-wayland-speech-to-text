@@ -68,11 +68,10 @@ def build_deps(bus: Gio.DBusConnection) -> Deps:
 
 
 class DaemonApplication(Gio.Application):
-    def __init__(self, replace: bool = False) -> None:
-        flags = Gio.ApplicationFlags.ALLOW_REPLACEMENT
-        if replace:
-            flags |= Gio.ApplicationFlags.REPLACE
-        super().__init__(application_id=DAEMON_ID, flags=flags)
+    def __init__(self) -> None:
+        # No ALLOW_REPLACEMENT: otherwise any client could take over the bus
+        # name (and with it the trust the Shell extension grants the daemon).
+        super().__init__(application_id=DAEMON_ID, flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.service: DBusService | None = None
         self.controller: Controller | None = None
 
@@ -120,11 +119,6 @@ class DaemonApplication(Gio.Application):
             self.controller.shutdown()
         Gio.Application.do_shutdown(self)
 
-    def do_name_lost(self) -> bool:
-        log.info("replaced by another instance")
-        self.quit()
-        return True
-
     def send_message(self, ident: str, title: str, body: str, *, open_gui: bool = True) -> None:
         notification = Gio.Notification.new(title)
         notification.set_body(body)
@@ -155,8 +149,6 @@ def main(argv: list[str] | None = None) -> int:
         description=_("Greffier background service (voice dictation)."),
     )
     parser.add_argument("-v", "--verbose", action="store_true", help=_("debug logging"))
-    parser.add_argument("--replace", action="store_true",
-                        help=_("replace a running instance"))
     parser.add_argument("--version", action="version", version=f"{APP_NAME} {VERSION}")
     args = parser.parse_args(argv)
 
@@ -165,7 +157,7 @@ def main(argv: list[str] | None = None) -> int:
         format="%(levelname)s %(name)s: %(message)s",
         stream=sys.stderr,
     )
-    app = DaemonApplication(replace=args.replace)
+    app = DaemonApplication()
     for signum in (signal.SIGINT, signal.SIGTERM):
         GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signum, lambda: app.quit() or False)
     return app.run([sys.argv[0]])

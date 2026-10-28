@@ -135,6 +135,19 @@ def _default_of(f) -> Any:
     return f.default_factory()  # type: ignore[misc]
 
 
+def _check_text(where: str, value: str) -> None:
+    """Reject text TOML or UTF-8 cannot carry (lone surrogates, control characters).
+
+    Newlines and tabs are allowed: replacements may insert them on purpose.
+    """
+    for char in value:
+        code = ord(char)
+        if 0xD800 <= code <= 0xDFFF:
+            raise ConfigError(f"{where}: invalid Unicode text")
+        if (code < 0x20 and char not in "\n\t") or 0x7F <= code < 0xA0:
+            raise ConfigError(f"{where}: control characters are not allowed")
+
+
 def _coerce(section: str, f, value: Any) -> Any:
     """Validate one value against its field; raise ConfigError if invalid."""
     where = f"{section}.{f.name}"
@@ -155,6 +168,7 @@ def _coerce(section: str, f, value: Any) -> Any:
     elif kind == "str":
         if not isinstance(value, str):
             raise ConfigError(f"{where}: expected a string, got {value!r}")
+        _check_text(where, value)
     elif kind == "list[Replacement]":
         if not isinstance(value, list):
             raise ConfigError(f"{where}: expected a list")
@@ -163,6 +177,8 @@ def _coerce(section: str, f, value: Any) -> Any:
             if not isinstance(item, dict) or not isinstance(item.get("spoken"), str) \
                     or not isinstance(item.get("written", ""), str):
                 raise ConfigError(f"{where}: items need 'spoken' and 'written' strings")
+            _check_text(where, item["spoken"])
+            _check_text(where, item.get("written", ""))
             if item["spoken"].strip():
                 items.append(Replacement(item["spoken"], item.get("written", "")))
         value = items
@@ -264,8 +280,9 @@ def _toml_value(value: Any) -> str:
     if isinstance(value, (int, float)):
         return repr(value)
     if isinstance(value, str):
-        # JSON string escapes are a subset of TOML basic-string escapes.
-        return json.dumps(value, ensure_ascii=False)
+        # JSON string escapes are a subset of TOML basic-string escapes; DEL is
+        # the one control character JSON leaves raw but TOML forbids.
+        return json.dumps(value, ensure_ascii=False).replace("\x7f", "\\u007f")
     raise TypeError(f"cannot serialise {value!r}")
 
 

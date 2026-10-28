@@ -16,7 +16,7 @@ STRICT        ?= 0
 INSTALL_FLAGS   ?=
 UNINSTALL_FLAGS ?=
 PYTEST_ARGS     ?=
-DAEMON_ARGS     ?= --verbose --replace
+DAEMON_ARGS     ?= --verbose
 
 APP_ID   := io.github.greffier.Greffier
 UNIT     := app-$(APP_ID).Daemon.service
@@ -107,7 +107,8 @@ validate: ## desktop-file-validate + appstreamcli validate --no-net
 	if [ -z "$$files" ]; then echo "  (aucun fichier metainfo dans data/)"; exit 0; fi; \
 	$(call need,appstreamcli); appstreamcli validate --no-net --explain $$files
 
-run-daemon: ## Lancer le service au premier plan, journaux détaillés (remplace l'instance systemd)
+run-daemon: ## Lancer le service au premier plan, journaux détaillés (arrête d'abord l'instance systemd)
+	-systemctl --user stop app-io.github.greffier.Greffier.Daemon.service 2>/dev/null
 	$(PYTHON) -m greffier.daemon.app $(DAEMON_ARGS)
 
 run-gui: ## Lancer l'interface depuis le dépôt

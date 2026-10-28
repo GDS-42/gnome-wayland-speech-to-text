@@ -188,8 +188,20 @@ def install_and_wait(client: Client, model_id: str) -> int:
     # finish before we listen and we would wait forever.
     sub = client.bus.signal_subscribe(None, DBUS_IFACE, "ModelProgress", DBUS_PATH, None,
                                       Gio.DBusSignalFlags.NONE, on_signal)
+
+    def on_vanished(_bus, _name) -> None:
+        if tty:
+            print()
+        print(_("The Greffier service stopped during the installation."), file=sys.stderr)
+        loop.quit()
+
+    watch = 0
     try:
         client.call("InstallModel", "(s)", model_id)
+        # Only watch once the call (and any D-Bus activation) succeeded.
+        watch = Gio.bus_watch_name_on_connection(client.bus, DBUS_NAME,
+                                                 Gio.BusNameWatcherFlags.NONE, None,
+                                                 on_vanished)
         loop.run()
     except KeyboardInterrupt:
         client.call("CancelInstall", "(s)", model_id)
@@ -197,6 +209,8 @@ def install_and_wait(client: Client, model_id: str) -> int:
         return 130
     finally:
         client.bus.signal_unsubscribe(sub)
+        if watch:
+            Gio.bus_unwatch_name(watch)
     return outcome["code"]
 
 
@@ -266,11 +280,6 @@ def cmd_doctor(client: Client, args: argparse.Namespace) -> int:
     return worst
 
 
-def cmd_inject(client: Client, args: argparse.Namespace) -> int:
-    client.call("InjectText", "(s)", " ".join(args.text))
-    return 0
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="greffierctl",
                                      description=_("Control the Greffier dictation service."))
@@ -320,9 +329,6 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--json", action="store_true")
     p.set_defaults(func=cmd_doctor)
 
-    p = sub.add_parser("inject", help=_("insert text as if it had been dictated"))
-    p.add_argument("text", nargs="+")
-    p.set_defaults(func=cmd_inject)
     return parser
 
 

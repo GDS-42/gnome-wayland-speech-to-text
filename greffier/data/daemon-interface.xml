@@ -84,10 +84,6 @@
     <method name="GetDiagnostics">
       <arg name="report" type="s" direction="out"/>
     </method>
-    <!-- Inject arbitrary text with the configured method (diagnostics / tests). -->
-    <method name="InjectText">
-      <arg name="text" type="s" direction="in"/>
-    </method>
     <method name="Quit"/>
 
     <!-- ===== Signals ===== -->

@@ -215,13 +215,17 @@ journalctl --user -u $UNIT -f            # en direct
 journalctl -b /usr/bin/gnome-shell | grep -i greffier    # extension
 ```
 
-Pour des journaux détaillés, lancez le service au premier plan (il remplace
-l'instance en cours ; Ctrl+C pour arrêter, puis
-`systemctl --user start $UNIT`) :
+Pour des journaux détaillés, arrêtez le service puis lancez-le au premier plan
+(Ctrl+C pour arrêter, puis `systemctl --user start $UNIT`) :
 
 ```bash
-greffier-daemon --verbose --replace
+systemctl --user stop $UNIT
+greffier-daemon --verbose
 ```
+
+Lancé ainsi depuis un terminal, le service n'est pas reconnu par l'extension
+GNOME Shell (elle n'accepte que le service démarré par systemd) : le texte est
+alors inséré par le portail de bureau à distance ou seulement copié.
 
 L'interface affiche ses messages si vous la lancez depuis un terminal :
 `greffier`.

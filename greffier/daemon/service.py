@@ -60,7 +60,6 @@ class DBusService:
             "ClearHistory": lambda a: self._ctl.clear_history(),
             "ListAudioDevices": lambda a: _json(self._ctl.list_audio_devices()),
             "GetDiagnostics": lambda a: _json(self._ctl.diagnostics()),
-            "InjectText": lambda a: self._ctl.inject_text(a[0]),
             "Quit": lambda a: GLib.idle_add(self._quit),
         }
 
@@ -97,19 +96,20 @@ class DBusService:
         log.debug("%s from %s", method_name, sender)
         try:
             result = handler(parameters.unpack())
+            out_args = self._iface.lookup_method(method_name).out_args
+            if out_args:
+                signature = "(" + "".join(arg.signature for arg in out_args) + ")"
+                reply = GLib.Variant(signature, (result,))
+            else:
+                reply = None
         except DaemonError as exc:
             invocation.return_dbus_error(ERROR_PREFIX + exc.code, str(exc))
             return
-        except Exception as exc:
+        except Exception as exc:  # including a reply that cannot be encoded
             log.exception("%s failed", method_name)
             invocation.return_dbus_error(ERROR_PREFIX + "Failed", str(exc))
             return
-        out_args = self._iface.lookup_method(method_name).out_args
-        if out_args:
-            signature = "(" + "".join(arg.signature for arg in out_args) + ")"
-            invocation.return_value(GLib.Variant(signature, (result,)))
-        else:
-            invocation.return_value(None)
+        invocation.return_value(reply)
 
     def _on_get_property(self, connection, sender, object_path, interface_name, name):
         ctl = self.controller

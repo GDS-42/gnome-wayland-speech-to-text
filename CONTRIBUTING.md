@@ -28,9 +28,10 @@ PyGObject, GTK 4 et GStreamer viennent de la distribution, pas de PyPI.
 Deux façons de lancer votre code :
 
 - **Au premier plan**, sans rien installer :
-  `make run-daemon` (journaux détaillés ; remplace le service installé le
-  temps de la session grâce à `--replace`) et, dans un autre terminal,
-  `make run-gui`.
+  `make run-daemon` (journaux détaillés ; arrête d'abord le service installé)
+  et, dans un autre terminal, `make run-gui`. L'extension GNOME Shell ne fait
+  confiance qu'au service lancé par systemd : au premier plan, l'insertion
+  passe par le portail ou le presse-papiers.
 - **Comme un utilisateur** : `./packaging/install.sh --dev` installe le
   service, les fichiers `.desktop` et l'extension, avec une installation
   « éditable » qui pointe sur votre dépôt. Après une modification :

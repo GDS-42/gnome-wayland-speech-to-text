@@ -483,8 +483,6 @@ class DaemonClient(GObject.Object):
     def get_diagnostics(self, on_done: OnDone, on_error: OnError | None = None) -> None:
         self.call_json("GetDiagnostics", on_done=on_done, on_error=on_error)
 
-    def inject_text(self, text: str) -> None:
-        self.call("InjectText", (text,), "s")
 
     def quit_service(self, on_done: OnDone | None = None) -> None:
         self.call("Quit", on_done=on_done)

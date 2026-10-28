@@ -287,3 +287,85 @@ def test_history_persistence_toggle(make):
     assert paths.history_file().exists()
     ctl.set_config({"general": {"persist_history": False}})
     assert not paths.history_file().exists()
+
+
+# -- regressions found in review ----------------------------------------------- #
+
+
+def test_live_mode_without_vad_transcribes_the_whole_take(make):
+    ctl, deps, bus = make(installed=(PARAKEET,), recording={"live": True})
+    deps.models.install_delay = 1  # keep the automatic VAD install from finishing
+    run_until(lambda: loaded(ctl))
+    ctl.start_recording()
+    ctl.stop()
+    assert run_until(lambda: bus.named("Transcribed"))
+    assert json.loads(bus.named("Transcribed")[0][1])["partial"] is False
+    assert ctl.history_items()
+
+
+def test_live_segment_queued_just_before_stop_is_kept(make):
+    ctl, deps, bus = make(recording={"live": True})
+    run_until(lambda: loaded(ctl))
+    ctl.start_recording()
+    FakeRecorder.instances[-1].feed(0.5)  # queued; main loop not iterated yet
+    ctl.stop()
+    assert run_until(lambda: ctl.history_items())
+    run_until(lambda: False, timeout=0.3)  # let the late idle callback run
+    assert len(deps.injector.texts) == 1
+
+
+def test_error_does_not_hide_an_ongoing_recording(make):
+    ctl, deps, bus = make()
+    run_until(lambda: loaded(ctl))
+    ctl.start_recording()
+    ctl._fail("something unrelated failed")
+    assert ctl.state == State.RECORDING
+    assert any(level == "error" for level, _m in bus.named("Notice"))
+
+
+def test_model_load_failure_during_recording_cancels_it(make):
+    ctl, deps, bus = make(model={"preload": False})
+
+    def broken(model, threads=0, provider="cpu"):
+        raise RuntimeError("corrupted model")
+
+    deps.engine_loader = broken
+    ctl.start_recording()
+    assert run_until(lambda: ctl.state == State.ERROR)
+    assert ctl._recorder is None and FakeRecorder.instances[-1].cancelled
+
+
+def test_invalid_text_settings_are_rejected(make):
+    ctl, deps, bus = make()
+    for bad in ("a\x7fb", "\ud800", "tab\x07"):
+        with pytest.raises(DaemonError) as err:
+            ctl.set_config({"shortcut": {"accelerator": bad}})
+        assert err.value.code == "InvalidArgument"
+    ok = ctl.set_config({"text": {"replacements": [{"spoken": "nl", "written": "\n"}]}})
+    assert ok["text"]["replacements"][0]["written"] == "\n"
+    assert cfgmod.load(ctl._config_path).text.replacements[0].written == "\n"
+
+
+def test_failed_save_keeps_previous_settings(make, monkeypatch):
+    ctl, deps, bus = make()
+
+    def failing_save(cfg, path=None):
+        raise OSError("disk full")
+
+    monkeypatch.setattr(cfgmod, "save", failing_save)
+    with pytest.raises(DaemonError):
+        ctl.set_config({"model": {"threads": 3}})
+    assert ctl.cfg.model.threads == 0
+
+
+def test_history_file_is_private(make):
+    import stat
+
+    from greffier import paths
+
+    ctl, deps, bus = make(general={"persist_history": True})
+    run_until(lambda: loaded(ctl))
+    ctl.toggle()
+    ctl.toggle()
+    assert run_until(lambda: paths.history_file().exists())
+    assert stat.S_IMODE(paths.history_file().stat().st_mode) == 0o600

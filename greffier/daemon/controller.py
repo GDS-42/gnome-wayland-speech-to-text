@@ -122,6 +122,7 @@ class Controller:
         self._vad_lock = threading.Lock()
         self._auto_stop_posted = False
         self._live: dict[int, dict[str, Any]] = {}
+        self._live_queue: list[np.ndarray] = []  # guarded by _vad_lock
         self._cancelled_sessions: set[int] = set()
 
         # Model installs.
@@ -215,12 +216,18 @@ class Controller:
         self._emit("PropertiesChanged", "(sa{sv}as)", (DBUS_IFACE, changed, []))
 
     def _fail(self, message: str, *, notify: bool = True, sound: bool = True) -> None:
-        """Show an error for a few seconds, then return to the normal state."""
+        """Show an error for a few seconds, then return to the normal state.
+
+        While the microphone is open the RECORDING state is kept (the user must
+        still see that they are being recorded); the error is only announced.
+        """
         log.warning("%s", message)
-        if self._error_source:
-            GLib.source_remove(self._error_source)
-        self._error_source = GLib.timeout_add_seconds(ERROR_DISPLAY_SECONDS, self._end_error)
-        self._publish_state(State.ERROR, message)
+        if self._recorder is None:
+            if self._error_source:
+                GLib.source_remove(self._error_source)
+            self._error_source = GLib.timeout_add_seconds(ERROR_DISPLAY_SECONDS,
+                                                          self._end_error)
+            self._publish_state(State.ERROR, message)
         self._emit("Notice", "(ss)", ("error", message))
         if sound:
             self._sound("error")
@@ -322,6 +329,8 @@ class Controller:
             self._loading_model = ""
             self._loaded_model = ""
             self._last_load_error = str(exc)
+            if self._recorder is not None:
+                self.cancel(quiet=True)  # nothing could transcribe this take
             self._fail(_("Could not load the model: {error}").format(error=exc))
 
         self._worker.submit(job, done, failed)
@@ -433,7 +442,8 @@ class Controller:
         self._vad = vad
         self._auto_stop_posted = False
         self._rec_started = time.monotonic()
-        if rec_cfg.live:
+        self._live_queue = []
+        if rec_cfg.live and vad is not None:  # without a VAD: transcribe the whole take
             self._live[session] = {"parts": [], "pending": 0, "stopped": False,
                                    "duration": 0.0, "model": model.id}
         self._rec_timeout = GLib.timeout_add_seconds(rec_cfg.max_duration, self._on_max_duration)
@@ -462,7 +472,11 @@ class Controller:
         self._sound("stop")
         with self._vad_lock:
             vad, self._vad = self._vad, None
-            tail = vad.flush() if vad is not None and session in self._live else []
+            # Segments the streaming thread queued but the main loop has not
+            # drained yet come first, then what the VAD still holds.
+            tail, self._live_queue = self._live_queue, []
+            if vad is not None and session in self._live:
+                tail.extend(vad.flush())
 
         live = self._live.get(session)
         if live is not None:
@@ -475,7 +489,7 @@ class Controller:
             self._submit_transcription(audio, session, partial=False, duration=duration)
         self._refresh_state()
 
-    def cancel(self) -> None:
+    def cancel(self, quiet: bool = False) -> None:
         recorder = self._recorder
         if recorder is None:
             return
@@ -487,12 +501,14 @@ class Controller:
             self._rec_timeout = 0
         with self._vad_lock:
             self._vad = None
+            self._live_queue = []
         try:
             recorder.cancel()
         except Exception:
             log.exception("error while cancelling the recorder")
-        self._sound("cancel")
-        self._notice("info", _("Dictation cancelled."))
+        if not quiet:
+            self._sound("cancel")
+            self._notice("info", _("Dictation cancelled."))
         self._refresh_state()
         self._schedule_unload()
 
@@ -516,8 +532,11 @@ class Controller:
                 return
             segments = vad.accept(samples)
             started, silence = vad.speech_started, vad.trailing_silence
-        if segments and rec_cfg.live:
-            call_in_main(self._on_live_segments, session, segments)
+            live = bool(segments) and rec_cfg.live
+            if live:
+                self._live_queue.extend(segments)
+        if live:
+            call_in_main(self._on_live_segments, session)
         if (rec_cfg.auto_stop and started and silence >= rec_cfg.silence_timeout
                 and not self._auto_stop_posted):
             self._auto_stop_posted = True
@@ -535,9 +554,11 @@ class Controller:
             log.info("silence detected, stopping")
             self.stop()
 
-    def _on_live_segments(self, session: int, segments: list[np.ndarray]) -> None:
-        if session not in self._live or session in self._cancelled_sessions:
+    def _on_live_segments(self, session: int) -> None:
+        if session != self._session or session not in self._live:
             return
+        with self._vad_lock:
+            segments, self._live_queue = self._live_queue, []
         for segment in segments:
             self._submit_transcription(segment, session, partial=True, duration=0.0)
 
@@ -873,15 +894,17 @@ class Controller:
 
     def _set_config(self, patch: dict[str, Any], react: bool) -> None:
         new = cfgmod.apply_patch(self.cfg, patch)
-        old, self.cfg = self.cfg, new
-        changed = cfgmod.diff_sections(old, new)
+        changed = cfgmod.diff_sections(self.cfg, new)
         if not changed:
             return
         try:
             cfgmod.save(new, self._config_path)
-        except OSError as exc:
+        except (OSError, UnicodeError) as exc:
+            # Keep the previous settings: memory and disk must not disagree.
             log.error("cannot save the configuration: %s", exc)
-            self._notice("error", _("Cannot save the settings: {error}").format(error=exc))
+            raise DaemonError("Failed", _("Cannot save the settings: {error}").format(
+                error=exc)) from exc
+        old, self.cfg = self.cfg, new
         self._emit("ConfigChanged", "(s)", (json.dumps(cfgmod.to_dict(new), ensure_ascii=False),))
         if react:
             self._react_to_config(old, new, changed)
@@ -1034,11 +1057,6 @@ class Controller:
     def clear_history(self) -> None:
         self.history.clear()
 
-    def inject_text(self, text: str) -> None:
-        self.deps.injector.inject(text, lambda res: self._emit(
-            "Notice", "(ss)",
-            ("info" if res.ok else "error",
-             res.message or (_("Text inserted.") if res.ok else _("Insertion failed.")))))
 
 
 def ngettext_devices(count: int) -> str:

@@ -40,7 +40,8 @@ class History:
         if self._persist:
             try:
                 self._path.parent.mkdir(parents=True, exist_ok=True)
-                with self._path.open("a", encoding="utf-8") as fh:
+                fd = os.open(self._path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+                with os.fdopen(fd, "a", encoding="utf-8") as fh:
                     fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
                 if self._file_lines() > 2 * self._size:
                     self._rewrite()
@@ -87,7 +88,8 @@ class History:
         try:
             self._path.parent.mkdir(parents=True, exist_ok=True)
             tmp = self._path.with_suffix(".tmp")
-            with tmp.open("w", encoding="utf-8") as fh:
+            fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+            with os.fdopen(fd, "w", encoding="utf-8") as fh:
                 for item in self._items:
                     fh.write(json.dumps(item, ensure_ascii=False) + "\n")
             os.replace(tmp, self._path)

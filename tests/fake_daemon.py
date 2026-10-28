@@ -583,9 +583,6 @@ class FakeDaemon:
     def m_GetDiagnostics(self) -> dict[str, Any]:  # noqa: N802
         return self._diagnostics()
 
-    def m_InjectText(self, text: str) -> None:  # noqa: N802
-        self._notice("info", "Text inserted.")
-
     def m_Quit(self) -> None:  # noqa: N802
         GLib.timeout_add(50, lambda: self.loop.quit() or GLib.SOURCE_REMOVE)
 
