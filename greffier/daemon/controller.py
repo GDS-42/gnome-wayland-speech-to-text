@@ -1045,11 +1045,18 @@ class Controller:
                            if hk.active else _("The keyboard shortcut is not active.")),
             "error" if self.cfg.shortcut.backend != "none" else "warning")
         ext = report.get("extension", {})
-        add("extension", bool(ext.get("active")),
-            _("The GNOME Shell extension is active") if ext.get("active") else
-            (_("The GNOME Shell extension is installed but not active (log out and back in, "
-               "then enable it in Extensions).") if ext.get("installed") else
-             _("Install the Greffier GNOME Shell extension for the best experience.")))
+        usable = bool(ext.get("usable", ext.get("active")))
+        if usable:
+            ext_message = _("The GNOME Shell extension is active")
+        elif ext.get("active") and ext.get("message"):
+            ext_message = ext["message"]  # running but refused / not trusted / too old
+        elif ext.get("installed"):
+            ext_message = _("The GNOME Shell extension is installed but not active (log out "
+                            "and back in, then enable it in Extensions).")
+        else:
+            ext_message = _("Install the Greffier GNOME Shell extension for the best "
+                            "experience.")
+        add("extension", usable, ext_message)
         injection = self.status()["injection"]
         add("keyboard", injection.get("keyboard", "none") != "none",
             _("Text is inserted with: {backend}").format(backend=injection.get("keyboard"))
