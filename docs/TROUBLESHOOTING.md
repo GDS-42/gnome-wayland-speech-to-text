@@ -100,8 +100,8 @@ avec `greffierctl status`, puis :
   avec `greffierctl config set injection.restore_clipboard false`.
 - `wl-copy` manque (`rpm -q wl-clipboard`) : `sudo dnf install wl-clipboard`.
 
-Pour tester l'insertion sans parler : placez le curseur dans un éditeur et
-lancez `sleep 3; greffierctl inject "Bonjour à tous"`.
+Pour tester l'insertion : Greffier › Préférences › Système ›
+« Relancer l’assistant de configuration », puis utilisez la zone d'essai de l'assistant.
 
 ## Pas de son, micro introuvable
 

@@ -367,7 +367,12 @@ fi
 # PyGObject is compiled for one interpreter. If python3 points to another one
 # (alternatives, a newer Python installed next to the system one…), use the
 # versioned interpreter that can actually import it.
-gi_importable() { "$1" -c 'import gi' >/dev/null 2>&1; }
+# Probes import GObject libraries; GStreamer would create its registry in
+# ~/.cache, so they run with a throw-away cache (keeps --dry-run side-effect free).
+# (TMP_DIR is created here, outside any $(…) subshell, so the EXIT trap removes it.)
+if [ -z "${TMP_DIR}" ]; then TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/greffier-install.XXXXXX")"; fi
+probe_env() { XDG_CACHE_HOME="${TMP_DIR}/probe-cache" "$@"; }
+gi_importable() { probe_env "$1" -c 'import gi' >/dev/null 2>&1; }
 if [ -z "${GREFFIER_PYTHON:-}" ] && ! gi_importable "${PY}"; then
   for minor in 15 14 13 12 11; do
     candidate="/usr/bin/python3.${minor}"
@@ -386,7 +391,7 @@ ok "Python ${PY_VER} (${PY})"
 
 # --- System packages ---
 check_gi() {  # prints the missing GObject namespaces (empty = all good)
-  "${PY}" - 2>/dev/null <<'PYEOF'
+  probe_env "${PY}" - 2>/dev/null <<'PYEOF'
 import sys
 
 try:
