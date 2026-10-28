@@ -364,6 +364,20 @@ fi
 if [ -z "${PY}" ] || ! have "${PY}"; then
   die "Python 3 est introuvable${PY:+ (${PY})}. Sur Fedora : sudo dnf install python3"
 fi
+# PyGObject is compiled for one interpreter. If python3 points to another one
+# (alternatives, a newer Python installed next to the system one…), use the
+# versioned interpreter that can actually import it.
+gi_importable() { "$1" -c 'import gi' >/dev/null 2>&1; }
+if [ -z "${GREFFIER_PYTHON:-}" ] && ! gi_importable "${PY}"; then
+  for minor in 15 14 13 12 11; do
+    candidate="/usr/bin/python3.${minor}"
+    if [ -x "${candidate}" ] && [ "${candidate}" != "${PY}" ] && gi_importable "${candidate}"; then
+      info "${PY} ne trouve pas PyGObject ; utilisation de ${candidate}, pour lequel il est installé."
+      PY="${candidate}"
+      break
+    fi
+  done
+fi
 PY_VER="$("${PY}" -c 'import sys; print("%d.%d" % sys.version_info[:2])')"
 if ! "${PY}" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)'; then
   fatal "Python ${PY_VER} (${PY}) est trop ancien : Greffier demande Python 3.11 ou plus récent."

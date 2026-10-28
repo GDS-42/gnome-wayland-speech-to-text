@@ -40,7 +40,10 @@ class Client:
             reply = self.bus.call_sync(DBUS_NAME, DBUS_PATH, DBUS_IFACE, method, params, None,
                                        Gio.DBusCallFlags.NONE, TIMEOUT_MS, None)
         except GLib.Error as exc:
-            message = Gio.DBusError.strip_remote_error(exc) or exc.message
+            message = exc.message
+            # PyGObject does not strip remote errors in place: drop "GDBus.Error:<name>: ".
+            if message.startswith("GDBus.Error:"):
+                message = message.partition(": ")[2] or message
             raise CliError(message) from exc
         values = reply.unpack() if reply is not None else ()
         return values[0] if values else None

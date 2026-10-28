@@ -121,6 +121,7 @@ def test_cli(daemon):
     assert res.returncode == 0, res.stderr
     assert "installed" in res.stdout
     res = run_cli(daemon, "models", "remove", "nope")
-    assert res.returncode == 1 and "Error" in res.stderr
+    assert res.returncode == 1
+    assert res.stderr.strip() == "Error: nope is not installed."
     res = run_cli(daemon, "doctor")
     assert "Model: Parakeet" in res.stdout
