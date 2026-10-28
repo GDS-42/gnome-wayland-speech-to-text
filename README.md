@@ -1,6 +1,7 @@
 # Greffier — speech-to-text natif Wayland pour GNOME
 
 **Dictée vocale locale et privée pour GNOME sous Wayland.**
+L'alternative native Wayland à [Handy](https://github.com/cjpais/Handy) pour GNOME.
 Appuyez sur un raccourci, parlez, le texte s'écrit dans l'application où se
 trouve le curseur. La reconnaissance vocale tourne entièrement sur votre
 machine : aucun son ni aucun texte ne quitte votre ordinateur.
@@ -18,11 +19,13 @@ machine : aucun son ni aucun texte ne quitte votre ordinateur.
 
 ## Pourquoi Greffier ?
 
-- **Natif Wayland** : né du constat que les outils de dictée existants gèrent
-  mal Wayland (raccourci global, saisie dans les autres fenêtres), Greffier
-  utilise ce que GNOME prévoit pour cela : raccourcis personnalisés, portails
-  xdg-desktop-portal et une extension GNOME Shell. Pas de X11, pas d'accès
-  aux périphériques d'entrée.
+- **Natif Wayland** : Greffier est né parce que [Handy](https://github.com/cjpais/Handy), excellente
+  application de dictée locale, ne prenait pas en charge Wayland nativement
+  au lancement du projet (raccourci global, saisie dans les autres fenêtres).
+  Même idée — dictée locale, un raccourci, le modèle Parakeet — mais
+  construite sur ce que GNOME prévoit pour cela : raccourcis personnalisés,
+  portails xdg-desktop-portal et une extension GNOME Shell. Pas de X11, pas
+  d'accès aux périphériques d'entrée. Aucun code n'est partagé avec Handy.
 - **Local et privé** : la voix est transcrite par
   [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) sur votre processeur.
   Pas de compte, pas de nuage, pas de télémétrie.
@@ -216,6 +219,8 @@ Greffier est un logiciel libre sous licence
 
 Il s'appuie sur le travail de :
 
+- [Handy](https://github.com/cjpais/Handy) de CJ Pais (MIT), dont Greffier reprend l'idée et l'ergonomie
+  (aucun code commun) ;
 - [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) (k2-fsa, Apache-2.0),
   le moteur de reconnaissance, et ses exports ONNX des modèles ;
 - **NVIDIA** pour Parakeet TDT 0.6B v3 et Canary 180M Flash (CC-BY-4.0) ;
@@ -239,10 +244,13 @@ lui-même.
 ## English
 
 **Greffier is a local, private, Wayland-native voice-dictation tool for GNOME**
-(Fedora first). It was built because existing dictation tools handle Wayland
-poorly: Greffier relies on what GNOME provides instead (custom shortcuts,
-xdg-desktop-portal, a GNOME Shell extension), with no X11 and no access to
-input devices. Press a shortcut, speak, and the text appears in the focused
+(Fedora first) — the Wayland-native alternative to [Handy](https://github.com/cjpais/Handy). It was built
+because Handy, an excellent local dictation app, did not support Wayland
+natively when this project started (global shortcut, typing into other
+windows). Same idea — local dictation, one shortcut, the Parakeet model — but
+built on what GNOME provides (custom shortcuts, xdg-desktop-portal, a GNOME
+Shell extension), with no X11 and no access to input devices. No code is
+shared with Handy. Press a shortcut, speak, and the text appears in the focused
 application. Speech recognition runs entirely on your machine with
 [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx); the default model,
 NVIDIA Parakeet TDT 0.6B v3, transcribes about ten times faster than real
@@ -288,4 +296,6 @@ architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); contributing:
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **License**: GPL-3.0-or-later. Models keep their own licenses (see above);
-thanks to k2-fsa/sherpa-onnx, NVIDIA, Cohere, Qwen, OpenAI and Silero.
+thanks to [Handy](https://github.com/cjpais/Handy) by CJ Pais (MIT) for the idea and the user experience
+Greffier follows, and to k2-fsa/sherpa-onnx, NVIDIA, Cohere, Qwen, OpenAI and
+Silero.
