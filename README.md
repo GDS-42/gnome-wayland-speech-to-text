@@ -7,7 +7,7 @@ machine : aucun son ni aucun texte ne quitte votre ordinateur.
 
 *English version below: [Greffier in English](#english).*
 
-![Greffier : la fenêtre principale](docs/screenshots/main.png)
+![Greffier : la fenêtre principale](docs/screenshots/main-idle.png)
 
 > **État du projet : version 0.1.0, première publication.** Greffier est
 > utilisable au quotidien sur Fedora Workstation (GNOME 48 à 50), mais c'est

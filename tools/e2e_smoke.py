@@ -20,6 +20,7 @@ as in the catalog URLs.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import functools
 import http.server
 import json
@@ -185,10 +186,8 @@ def main() -> int:
         ok = args.expect.lower() in text.lower()
         print("\nRESULT:", "PASS" if ok else f"FAIL (expected {args.expect!r})")
     finally:
-        try:
+        with contextlib.suppress(Exception):
             Bus(address).call("Quit")
-        except Exception:
-            pass
         try:
             daemon.wait(10)
         except subprocess.TimeoutExpired:
