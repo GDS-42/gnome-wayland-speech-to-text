@@ -32,6 +32,6 @@ push-to-talk needs release events, which justifies the portal. evdev was
 rejected: reading every keystroke is unacceptable for a privacy-focused tool.
 
 ## Consequences
-- The daemon runs as `app-io.github.greffier.Greffier.Daemon.service` and calls
+- The daemon runs as `app-io.github.gds_42.Greffier.Daemon.service` and calls
   `Registry.Register` first thing on its bus connection.
 - Conflicts with existing shortcuts are detected and reported, not overridden.

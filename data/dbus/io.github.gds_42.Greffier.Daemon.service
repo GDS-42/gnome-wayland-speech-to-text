@@ -2,15 +2,15 @@
 #
 # D-Bus activation of the Greffier daemon on the session bus.
 # Template: packaging/install.sh copies it to
-#   ~/.local/share/dbus-1/services/io.github.greffier.Greffier.Daemon.service
+#   ~/.local/share/dbus-1/services/io.github.gds_42.Greffier.Daemon.service
 # replacing @BINDIR@ with an absolute path (D-Bus does not search $PATH).
 #
 # SystemdService= makes the bus ask systemd to start the user unit instead of
 # spawning Exec= itself, so an activated daemon (GNOME shortcut, GUI,
-# greffierctl) still runs as app-io.github.greffier.Greffier.Daemon.service,
+# greffierctl) still runs as app-io.github.gds_42.Greffier.Daemon.service,
 # the unit name the portals use to identify Greffier. Exec= is the fallback for
 # buses without systemd.
 [D-BUS Service]
-Name=io.github.greffier.Greffier.Daemon
+Name=io.github.gds_42.Greffier.Daemon
 Exec=@BINDIR@/greffier-daemon
-SystemdService=app-io.github.greffier.Greffier.Daemon.service
+SystemdService=app-io.github.gds_42.Greffier.Daemon.service

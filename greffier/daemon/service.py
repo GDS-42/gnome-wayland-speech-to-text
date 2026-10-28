@@ -1,4 +1,4 @@
-"""D-Bus export of the controller (interface io.github.greffier.Greffier.Daemon1)."""
+"""D-Bus export of the controller (interface io.github.gds_42.Greffier.Daemon1)."""
 
 from __future__ import annotations
 

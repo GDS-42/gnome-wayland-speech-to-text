@@ -21,9 +21,9 @@ from greffier.desktop.gnome_keybinding import (
 )
 
 SCHEMAS = Path(__file__).parent / "fixtures" / "desktop" / "schemas"
-TOGGLE = ["gdbus", "call", "--session", "--dest", "io.github.greffier.Greffier.Daemon",
-          "--object-path", "/io/github/greffier/Greffier/Daemon",
-          "--method", "io.github.greffier.Greffier.Daemon1.Toggle"]
+TOGGLE = ["gdbus", "call", "--session", "--dest", "io.github.gds_42.Greffier.Daemon",
+          "--object-path", "/io/github/gds_42/Greffier/Daemon",
+          "--method", "io.github.gds_42.Greffier.Daemon1.Toggle"]
 
 
 @pytest.fixture(scope="module")

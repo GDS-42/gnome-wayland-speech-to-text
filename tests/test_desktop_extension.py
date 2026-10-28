@@ -156,23 +156,23 @@ def test_stylesheet_classes_are_used() -> None:
 CGROUP_CASES = {
     # systemd user unit (D-Bus/systemd activation): accepted
     "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
-    "app-io.github.greffier.Greffier.Daemon.service\n": True,
+    "app-io.github.gds_42.Greffier.Daemon.service\n": True,
     # XDG autostart launched by gnome-session / gnome-shell: accepted
     "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
-    "app-gnome-io.github.greffier.Greffier.Daemon-4242.scope\n": True,
+    "app-gnome-io.github.gds_42.Greffier.Daemon-4242.scope\n": True,
     # systemd-xdg-autostart-generator unit: accepted
     "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
-    "app-io.github.greffier.Greffier.Daemon@autostart.service\n": True,
+    "app-io.github.gds_42.Greffier.Daemon@autostart.service\n": True,
     # hybrid hierarchy: name=systemd line
-    "12:memory:/x\n1:name=systemd:/user.slice/app-io.github.greffier.Greffier.Daemon.service\n"
+    "12:memory:/x\n1:name=systemd:/user.slice/app-io.github.gds_42.Greffier.Daemon.service\n"
     "0::/\n": True,
     # a terminal, another app, look-alikes, other controllers: refused
     "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
     "app-org.gnome.Terminal.slice/vte-spawn-1234.scope\n": False,
-    "0::/user.slice/app-io.github.greffier.Greffier.Daemon.service/evil.scope\n": False,
-    "0::/user.slice/app-gnome-io.github.greffier.Greffier.Daemon-x1.scope\n": False,
-    "0::/app-io.github.greffier.Greffier.DaemonX.service\n": False,
-    "4:memory:/app-io.github.greffier.Greffier.Daemon.service\n0::/\n": False,
+    "0::/user.slice/app-io.github.gds_42.Greffier.Daemon.service/evil.scope\n": False,
+    "0::/user.slice/app-gnome-io.github.gds_42.Greffier.Daemon-x1.scope\n": False,
+    "0::/app-io.github.gds_42.Greffier.DaemonX.service\n": False,
+    "4:memory:/app-io.github.gds_42.Greffier.Daemon.service\n0::/\n": False,
     "": False,
 }
 

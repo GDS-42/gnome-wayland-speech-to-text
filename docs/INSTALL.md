@@ -8,8 +8,8 @@ n'est nécessaire, sauf pour installer d'éventuels paquets système manquants
 ## Installation rapide (Fedora Workstation 42 à 44)
 
 ```bash
-git clone https://github.com/greffier/greffier.git
-cd greffier
+git clone https://github.com/GDS-42/gnome-wayland-speech-to-text.git
+cd gnome-wayland-speech-to-text
 ./packaging/install.sh
 ```
 
@@ -67,12 +67,12 @@ Variables d'environnement reconnues :
 |---|---|
 | `~/.local/share/greffier/venv/` | environnement Python (Greffier, numpy, sherpa-onnx) |
 | `~/.local/bin/greffier`, `greffierctl`, `greffier-daemon` | petits lanceurs vers l'environnement Python |
-| `~/.config/systemd/user/app-io.github.greffier.Greffier.Daemon.service` | service utilisateur systemd |
-| `~/.local/share/dbus-1/services/io.github.greffier.Greffier.Daemon.service` | activation D-Bus du service |
-| `~/.local/share/applications/io.github.greffier.Greffier.desktop` | lanceur de l'application |
-| `~/.local/share/applications/io.github.greffier.Greffier.Daemon.desktop` | entrée cachée qui nomme le service (notifications, portails) |
+| `~/.config/systemd/user/app-io.github.gds_42.Greffier.Daemon.service` | service utilisateur systemd |
+| `~/.local/share/dbus-1/services/io.github.gds_42.Greffier.Daemon.service` | activation D-Bus du service |
+| `~/.local/share/applications/io.github.gds_42.Greffier.desktop` | lanceur de l'application |
+| `~/.local/share/applications/io.github.gds_42.Greffier.Daemon.desktop` | entrée cachée qui nomme le service (notifications, portails) |
 | `~/.local/share/metainfo/`, `~/.local/share/icons/hicolor/` | métadonnées AppStream et icônes |
-| `~/.local/share/gnome-shell/extensions/greffier@greffier.github.io/` | extension GNOME Shell |
+| `~/.local/share/gnome-shell/extensions/greffier@gds-42.github.io/` | extension GNOME Shell |
 | `~/.local/share/greffier/uninstall.sh`, `installed-files.txt` | désinstallateur et liste des fichiers installés |
 
 Créés ensuite par Greffier lui-même : réglages (`~/.config/greffier/`),
@@ -87,7 +87,7 @@ détaillée dans le fichier du service, `data/systemd/`.
 ## Mettre à jour
 
 ```bash
-cd greffier
+cd gnome-wayland-speech-to-text
 git pull
 ./packaging/install.sh
 ```

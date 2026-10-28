@@ -9,10 +9,10 @@ greffierctl doctor
 Il vérifie le service, le modèle, le micro, l'extension, les portails et les
 outils (`wl-copy`, `ydotool`), et dit quoi faire pour chaque point en
 erreur. Dans les commandes ci-dessous, `UNIT` désigne le service
-`app-io.github.greffier.Greffier.Daemon.service` :
+`app-io.github.gds_42.Greffier.Daemon.service` :
 
 ```bash
-UNIT=app-io.github.greffier.Greffier.Daemon.service
+UNIT=app-io.github.gds_42.Greffier.Daemon.service
 ```
 
 ## Sommaire
@@ -64,7 +64,7 @@ avec `greffierctl status`, puis :
 - **L'extension vient d'être installée** : sous Wayland, GNOME Shell ne
   charge une nouvelle extension qu'à l'ouverture de session.
   **Déconnectez-vous puis reconnectez-vous.** Vérifiez ensuite :
-  `gnome-extensions info greffier@greffier.github.io` doit afficher
+  `gnome-extensions info greffier@gds-42.github.io` doit afficher
   `State: ACTIVE` (ou `ENABLED`). Sinon, activez-la dans l'application
   *Extensions* ; vérifiez aussi que l'interrupteur général « Extensions »
   n'est pas désactivé.
@@ -232,7 +232,7 @@ L'interface affiche ses messages si vous la lancez depuis un terminal :
 
 ## Signaler un problème
 
-Ouvrez un ticket sur <https://github.com/greffier/greffier/issues> avec :
+Ouvrez un ticket sur <https://github.com/GDS-42/gnome-wayland-speech-to-text/issues> avec :
 
 - la sortie de `greffierctl doctor` (ou `greffierctl doctor --json`) ;
 - votre version de Fedora et de GNOME ;

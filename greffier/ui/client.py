@@ -1,6 +1,6 @@
 """D-Bus client of the Greffier background service.
 
-``DaemonClient`` wraps a ``Gio.DBusProxy`` for ``io.github.greffier.Greffier.Daemon1``
+``DaemonClient`` wraps a ``Gio.DBusProxy`` for ``io.github.gds_42.Greffier.Daemon1``
 and turns the JSON payloads of the contract (greffier/data/daemon-interface.xml)
 into Python objects and GObject signals the views can bind to. Every call is
 asynchronous; failures are reported to the caller's ``on_error`` or, by
@@ -27,7 +27,7 @@ from greffier.i18n import _
 
 log = logging.getLogger(__name__)
 
-ERROR_PREFIX = "io.github.greffier.Greffier.Error."
+ERROR_PREFIX = "io.github.gds_42.Greffier.Error."
 _GDBUS_PREFIX = re.compile(r"^GDBus\.Error:[\w.]+:\s*")
 _NOT_RUNNING = (
     "org.freedesktop.DBus.Error.ServiceUnknown",

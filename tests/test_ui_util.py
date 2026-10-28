@@ -147,7 +147,7 @@ def test_dbus_errors_become_user_messages():
         return GLib.Error.new_literal(Gio.io_error_quark(), f"GDBus.Error:{name}: {message}",
                                       Gio.IOErrorEnum.DBUS_ERROR)
 
-    err = error_from_glib(remote("io.github.greffier.Greffier.Error.Busy",
+    err = error_from_glib(remote("io.github.gds_42.Greffier.Error.Busy",
                                  "Cancel the download first."))
     assert (err.code, err.message) == ("Busy", "Cancel the download first.")
     err = error_from_glib(remote("org.freedesktop.DBus.Error.ServiceUnknown", "x"))

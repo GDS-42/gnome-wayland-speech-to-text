@@ -1,20 +1,20 @@
-"""Client of the optional GNOME Shell extension (``io.github.greffier.Greffier.Shell1``).
+"""Client of the optional GNOME Shell extension (``io.github.gds_42.Greffier.Shell1``).
 
 The extension lives inside gnome-shell and can therefore set the clipboard and
 press keys without stealing focus. It is optional: :attr:`ShellClient.available`
 is true only when
 
-* someone owns ``io.github.greffier.Greffier.Shell`` and speaks interface
+* someone owns ``io.github.gds_42.Greffier.Shell`` and speaks interface
   version ≥ :data:`SHELL_API_VERSION`;
 * that owner is *also* the owner of ``org.gnome.Shell`` — the real extension
   shares gnome-shell's bus connection, so any other process claiming the name
   is an impostor and is ignored;
 * the extension did not refuse us (it checks that we run in the
-  ``app-io.github.greffier.Greffier.Daemon.service`` unit and answers
+  ``app-io.github.gds_42.Greffier.Daemon.service`` unit and answers
   AccessDenied otherwise, e.g. for a daemon started from a terminal).
 
 The ``bus`` given here must be the connection that owns
-``io.github.greffier.Greffier.Daemon``.
+``io.github.gds_42.Greffier.Daemon``.
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ log = logging.getLogger(__name__)
 SHELL_API_VERSION = 2  # minimum Shell1.Version this client understands
 GNOME_SHELL_NAME = "org.gnome.Shell"
 ERROR_ACCESS_DENIED = "org.freedesktop.DBus.Error.AccessDenied"
-ERROR_MODIFIERS_HELD = "io.github.greffier.Greffier.Shell.Error.ModifiersHeld"
+ERROR_MODIFIERS_HELD = "io.github.gds_42.Greffier.Shell.Error.ModifiersHeld"
 CALL_TIMEOUT_MS = 3000
 # PasteText may wait up to ~1 s for modifiers plus the clipboard read.
 PASTE_TIMEOUT_MS = 5000

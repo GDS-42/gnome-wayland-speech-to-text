@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2026 The Greffier Contributors -->
 <component type="desktop-application">
-  <id>io.github.greffier.Greffier</id>
+  <id>io.github.gds_42.Greffier</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
@@ -9,7 +9,7 @@
   <summary>Private voice dictation</summary>
   <summary xml:lang="fr">Dictée vocale privée</summary>
 
-  <developer id="io.github.greffier">
+  <developer id="io.github.gds_42">
     <name>The Greffier Contributors</name>
     <name xml:lang="fr">Les contributeurs de Greffier</name>
   </developer>
@@ -46,50 +46,50 @@
     </ul>
   </description>
 
-  <launchable type="desktop-id">io.github.greffier.Greffier.desktop</launchable>
+  <launchable type="desktop-id">io.github.gds_42.Greffier.desktop</launchable>
   <provides>
     <binary>greffier</binary>
   </provides>
 
-  <url type="homepage">https://github.com/greffier/greffier</url>
-  <url type="bugtracker">https://github.com/greffier/greffier/issues</url>
-  <url type="vcs-browser">https://github.com/greffier/greffier</url>
+  <url type="homepage">https://github.com/GDS-42/gnome-wayland-speech-to-text</url>
+  <url type="bugtracker">https://github.com/GDS-42/gnome-wayland-speech-to-text/issues</url>
+  <url type="vcs-browser">https://github.com/GDS-42/gnome-wayland-speech-to-text</url>
 
   <screenshots>
     <screenshot type="default">
       <caption>Ready to dictate, with your recent dictations</caption>
       <caption xml:lang="fr">Prêt à dicter, avec vos dictées récentes</caption>
-      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/main-idle.png</image>
+      <image>https://raw.githubusercontent.com/GDS-42/gnome-wayland-speech-to-text/main/docs/screenshots/main-idle.png</image>
     </screenshot>
     <screenshot>
       <caption>Listening while you speak</caption>
       <caption xml:lang="fr">À l’écoute pendant que vous parlez</caption>
-      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/main-recording.png</image>
+      <image>https://raw.githubusercontent.com/GDS-42/gnome-wayland-speech-to-text/main/docs/screenshots/main-recording.png</image>
     </screenshot>
     <screenshot>
       <caption>Choose a speech model the first time</caption>
       <caption xml:lang="fr">Choix du modèle vocal au premier lancement</caption>
-      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/onboarding-model.png</image>
+      <image>https://raw.githubusercontent.com/GDS-42/gnome-wayland-speech-to-text/main/docs/screenshots/onboarding-model.png</image>
     </screenshot>
     <screenshot>
       <caption>Manage speech recognition models</caption>
       <caption xml:lang="fr">Gestion des modèles de reconnaissance vocale</caption>
-      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/preferences-models.png</image>
+      <image>https://raw.githubusercontent.com/GDS-42/gnome-wayland-speech-to-text/main/docs/screenshots/preferences-models.png</image>
     </screenshot>
     <screenshot>
       <caption>Set the dictation shortcut and mode</caption>
       <caption xml:lang="fr">Réglage du raccourci et du mode de dictée</caption>
-      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/preferences-shortcut.png</image>
+      <image>https://raw.githubusercontent.com/GDS-42/gnome-wayland-speech-to-text/main/docs/screenshots/preferences-shortcut.png</image>
     </screenshot>
     <screenshot>
       <caption>Check that everything works</caption>
       <caption xml:lang="fr">Vérification du bon fonctionnement</caption>
-      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/diagnostics.png</image>
+      <image>https://raw.githubusercontent.com/GDS-42/gnome-wayland-speech-to-text/main/docs/screenshots/diagnostics.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Dark style</caption>
       <caption xml:lang="fr">Style sombre</caption>
-      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/main-idle-dark.png</image>
+      <image>https://raw.githubusercontent.com/GDS-42/gnome-wayland-speech-to-text/main/docs/screenshots/main-idle-dark.png</image>
     </screenshot>
   </screenshots>
 

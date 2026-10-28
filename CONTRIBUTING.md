@@ -6,7 +6,7 @@ les contributions en anglais sont tout aussi bienvenues
 
 - **Un bogue ?** Ouvrez un ticket avec la sortie de `greffierctl doctor`,
   votre version de Fedora/GNOME et un extrait du journal
-  (`journalctl --user -u app-io.github.greffier.Greffier.Daemon.service -b`).
+  (`journalctl --user -u app-io.github.gds_42.Greffier.Daemon.service -b`).
 - **Une idée ?** Ouvrez d'abord un ticket pour en discuter, surtout si elle
   touche à l'architecture ([docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
 - **Une traduction, un modèle, un correctif ?** Lisez la suite.
@@ -18,7 +18,7 @@ Prérequis : les paquets système du [README](README.md#prérequis), plus
 
 ```bash
 sudo dnf install git make ShellCheck nodejs desktop-file-utils appstream gettext
-git clone https://github.com/greffier/greffier.git && cd greffier
+git clone https://github.com/GDS-42/gnome-wayland-speech-to-text.git && cd gnome-wayland-speech-to-text
 make dev            # .venv avec --system-site-packages + pip install -e '.[dev]'
 ```
 
@@ -35,7 +35,7 @@ Deux façons de lancer votre code :
 - **Comme un utilisateur** : `./packaging/install.sh --dev` installe le
   service, les fichiers `.desktop` et l'extension, avec une installation
   « éditable » qui pointe sur votre dépôt. Après une modification :
-  `systemctl --user restart app-io.github.greffier.Greffier.Daemon.service`.
+  `systemctl --user restart app-io.github.gds_42.Greffier.Daemon.service`.
   L'extension, elle, n'est rechargée qu'à la reconnexion (Wayland) ; pour
   itérer plus vite, lancez une session imbriquée :
   `dbus-run-session gnome-shell --devkit --wayland` (GNOME 49+) ou
@@ -107,7 +107,7 @@ GREFFIER_LANG=es make run-gui               # vérifier le résultat
 français est la langue de référence : il doit rester complet. Les entrées
 « fuzzy » sont ignorées à l'exécution. Laissez les marqueurs comme `{n}` ou
 `{path}` intacts. Les chaînes de l'extension GNOME Shell se trouvent dans
-`gnome-extension/greffier@greffier.github.io/` (voir `i18n.js`).
+`gnome-extension/greffier@gds-42.github.io/` (voir `i18n.js`).
 
 ## Ajouter un modèle au catalogue
 

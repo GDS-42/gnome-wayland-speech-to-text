@@ -11,7 +11,7 @@ resident. Users also want a polished GUI, and power users a CLI.
 `greffier-daemon` is a `Gio.Application` (GLib main loop, no GTK) started by a
 systemd user unit and D-Bus-activatable. It is the single owner and writer of
 configuration, models, microphone, engine and history, and exposes
-`io.github.greffier.Greffier.Daemon1` (`greffier/data/daemon-interface.xml`).
+`io.github.gds_42.Greffier.Daemon1` (`greffier/data/daemon-interface.xml`).
 The GTK4/libadwaita GUI and `greffierctl` are thin clients. Structured payloads
 are JSON strings so the API evolves without changing D-Bus signatures.
 

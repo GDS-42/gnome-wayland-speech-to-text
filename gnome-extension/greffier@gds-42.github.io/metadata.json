@@ -1,5 +1,5 @@
 {
-  "uuid": "greffier@greffier.github.io",
+  "uuid": "greffier@gds-42.github.io",
   "name": "Greffier",
   "description": "Companion of the Greffier local voice dictation app: a top-bar indicator, a recording overlay that never takes focus, and reliable text insertion on Wayland (clipboard and virtual keyboard). Requires the Greffier application.",
   "shell-version": [
@@ -10,6 +10,6 @@
     "49",
     "50"
   ],
-  "url": "https://github.com/greffier/greffier",
+  "url": "https://github.com/GDS-42/gnome-wayland-speech-to-text",
   "version-name": "0.1.0"
 }

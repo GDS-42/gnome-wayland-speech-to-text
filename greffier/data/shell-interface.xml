@@ -2,9 +2,9 @@
  "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <!--
   Interface exported by the optional GNOME Shell extension
-  (gnome-extension/greffier@greffier.github.io).
-  Bus name:    io.github.greffier.Greffier.Shell
-  Object path: /io/github/greffier/Greffier/Shell
+  (gnome-extension/greffier@gds-42.github.io).
+  Bus name:    io.github.gds_42.Greffier.Shell
+  Object path: /io/github/gds_42/Greffier/Shell
 
   Living inside gnome-shell gives the extension what Wayland clients cannot
   have: setting the clipboard without keyboard focus, synthesising key presses
@@ -12,20 +12,20 @@
   (to pick Ctrl+Shift+V in terminals).
 
   Security (extension side): a caller is accepted only if it is the current
-  owner of io.github.greffier.Greffier.Daemon AND its process runs in the
-  systemd unit app-io.github.greffier.Greffier.Daemon.service (or the
+  owner of io.github.gds_42.Greffier.Daemon AND its process runs in the
+  systemd unit app-io.github.gds_42.Greffier.Daemon.service (or the
   XDG-autostart scope/service of that desktop id), checked through
   /proc/<pid>/cgroup. Others get org.freedesktop.DBus.Error.AccessDenied.
   The clipboard can be written but never read through this interface.
 
   Security (client side): the daemon only uses this interface when the unique
-  owner of io.github.greffier.Greffier.Shell is also the owner of
+  owner of io.github.gds_42.Greffier.Shell is also the owner of
   org.gnome.Shell (the extension shares gnome-shell's bus connection).
 
   Version 2: GetClipboard and Paste were replaced by PasteText.
 -->
 <node>
-  <interface name="io.github.greffier.Greffier.Shell1">
+  <interface name="io.github.gds_42.Greffier.Shell1">
     <!-- Set CLIPBOARD and PRIMARY to text/plain;charset=utf-8 `text`
          (copy-only mode). Cancels a pending clipboard restoration. -->
     <method name="SetClipboard">
@@ -38,7 +38,7 @@
          changed meanwhile. Calls are serialised.
          shortcut: auto | ctrl-v | ctrl-shift-v | shift-insert
          used: the shortcut actually sent (auto resolved).
-         Errors: io.github.greffier.Greffier.Shell.Error.ModifiersHeld when
+         Errors: io.github.gds_42.Greffier.Shell.Error.ModifiersHeld when
          keys were still held (the text is left in the clipboard),
          org.freedesktop.DBus.Error.InvalidArgs for an unknown shortcut. -->
     <method name="PasteText">

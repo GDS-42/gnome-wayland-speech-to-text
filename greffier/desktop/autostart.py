@@ -1,6 +1,6 @@
 """Start the Greffier service with the session.
 
-Preferred: the systemd user unit ``app-io.github.greffier.Greffier.Daemon.service``
+Preferred: the systemd user unit ``app-io.github.gds_42.Greffier.Daemon.service``
 (``systemctl --user enable``). When the unit is not installed (e.g. a pip
 install without the data files) or cannot be enabled (no ``[Install]``
 section), an XDG autostart entry ``~/.config/autostart/<DAEMON_ID>.desktop``

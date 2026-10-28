@@ -37,7 +37,7 @@ Decisions are recorded in [`docs/adr/`](adr/). This page is the map.
 
 * **greffier-daemon** owns everything stateful: configuration (single writer),
   models, the microphone, the engine and the history. It runs a GLib main loop
-  (no GTK) and is a `Gio.Application` with id `io.github.greffier.Greffier.Daemon`
+  (no GTK) and is a `Gio.Application` with id `io.github.gds_42.Greffier.Daemon`
   so that notifications and portals attribute it to Greffier.
 * **greffier** (GUI) and **greffierctl** (CLI) are thin D-Bus clients. Closing the
   window never stops dictation; the GUI can be started/stopped at will.
@@ -101,7 +101,7 @@ modifiers; the extension never hands the clipboard content to anyone.
 
 Trust between the two sides (see [SECURITY.md](../SECURITY.md)): the extension
 only serves the current owner of the daemon's bus name *and* only if that
-process runs in the `app-io.github.greffier.Greffier.Daemon.service` cgroup;
+process runs in the `app-io.github.gds_42.Greffier.Daemon.service` cgroup;
 the daemon only uses `…Shell` when it is owned by the same connection as
 `org.gnome.Shell`. The daemon's name cannot be replaced while it runs.
 
@@ -244,9 +244,9 @@ def portal.register_host_app(bus, app_id) -> bool   # once, before any other por
 | `~/.cache/greffier/downloads/` | partial downloads (`.part`, resumable) |
 | `~/.cache/greffier/catalog.json` | last remote catalog |
 | `~/.local/state/greffier/history.jsonl` | history, only if `general.persist_history` |
-| `~/.config/systemd/user/app-io.github.greffier.Greffier.Daemon.service` | autostart unit |
-| `~/.local/share/dbus-1/services/io.github.greffier.Greffier.Daemon.service` | D-Bus activation of the service |
-| `~/.local/share/dbus-1/services/io.github.greffier.Greffier.service` | D-Bus activation of the window (`DBusActivatable=true`) |
+| `~/.config/systemd/user/app-io.github.gds_42.Greffier.Daemon.service` | autostart unit |
+| `~/.local/share/dbus-1/services/io.github.gds_42.Greffier.Daemon.service` | D-Bus activation of the service |
+| `~/.local/share/dbus-1/services/io.github.gds_42.Greffier.service` | D-Bus activation of the window (`DBusActivatable=true`) |
 
 `GREFFIER_HOME` relocates config/data/cache/state (tests, portable use).
 

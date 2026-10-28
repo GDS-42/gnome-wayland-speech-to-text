@@ -13,13 +13,13 @@
 set -Eeuo pipefail
 
 # Identifiers: keep in sync with greffier/const.py and packaging/install.sh.
-APP_ID="io.github.greffier.Greffier"
+APP_ID="io.github.gds_42.Greffier"
 DAEMON_ID="${APP_ID}.Daemon"
 DBUS_NAME="${DAEMON_ID}"
-DBUS_PATH="/io/github/greffier/Greffier/Daemon"
+DBUS_PATH="/io/github/gds_42/Greffier/Daemon"
 DBUS_IFACE="${APP_ID}.Daemon1"
 SYSTEMD_UNIT="app-${DAEMON_ID}.service"
-EXTENSION_UUID="greffier@greffier.github.io"
+EXTENSION_UUID="greffier@gds-42.github.io"
 # GNOME custom shortcut created by the daemon (greffier.desktop.HotkeyManager).
 MEDIA_KEYS_SCHEMA="org.gnome.settings-daemon.plugins.media-keys"
 SHORTCUT_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/greffier/"

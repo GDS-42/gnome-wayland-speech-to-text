@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "greffier"
 version = "0.1.0"
-description = "Dictée vocale locale pour GNOME (Wayland) : Parakeet, Canary, Whisper… via sherpa-onnx"
+description = "Speech-to-text natif Wayland pour GNOME : dictée vocale locale (Parakeet, Canary, Whisper…) via sherpa-onnx"
 readme = "README.md"
 license = "GPL-3.0-or-later"
 requires-python = ">=3.11"
@@ -39,8 +39,8 @@ greffierctl = "greffier.cli:main"
 greffier = "greffier.ui.app:main"
 
 [project.urls]
-Homepage = "https://github.com/greffier/greffier"
-Issues = "https://github.com/greffier/greffier/issues"
+Homepage = "https://github.com/GDS-42/gnome-wayland-speech-to-text"
+Issues = "https://github.com/GDS-42/gnome-wayland-speech-to-text/issues"
 
 [tool.setuptools.packages.find]
 include = ["greffier*"]

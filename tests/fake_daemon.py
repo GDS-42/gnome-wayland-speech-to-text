@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Stand-alone fake of the Greffier background service (Daemon1 interface).
 
-It owns ``io.github.greffier.Greffier.Daemon`` on the session bus and
+It owns ``io.github.gds_42.Greffier.Daemon`` on the session bus and
 implements every method, signal and property of
 ``greffier/data/daemon-interface.xml`` with realistic canned data: the six
 catalog models (Parakeet installed and active, Canary installed with an update
@@ -39,7 +39,7 @@ from gi.repository import Gio, GLib  # noqa: E402
 from greffier import config as cfgmod  # noqa: E402
 from greffier.const import DBUS_IFACE, DBUS_NAME, DBUS_PATH, VERSION, State  # noqa: E402
 
-ERROR = "io.github.greffier.Greffier.Error."
+ERROR = "io.github.gds_42.Greffier.Error."
 INTERFACE_XML = ROOT / "greffier" / "data" / "daemon-interface.xml"
 CATALOG = ROOT / "greffier" / "data" / "catalog.json"
 

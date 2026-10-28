@@ -41,5 +41,5 @@ Première version publique.
 - Installation par utilisateur (`packaging/install.sh`) et désinstallation
   (`uninstall.sh`, `--purge`), intégration continue Ubuntu et Fedora.
 
-[Non publié]: https://github.com/greffier/greffier/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/greffier/greffier/releases/tag/v0.1.0
+[Non publié]: https://github.com/GDS-42/gnome-wayland-speech-to-text/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/GDS-42/gnome-wayland-speech-to-text/releases/tag/v0.1.0

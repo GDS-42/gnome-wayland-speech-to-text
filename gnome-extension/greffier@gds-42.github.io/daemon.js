@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Client of the Greffier service (io.github.greffier.Greffier.Daemon1):
+// Client of the Greffier service (io.github.gds_42.Greffier.Daemon1):
 // tracks its bus name owner, its State/ActiveModel properties and its
 // StateChanged/Level/Transcribed signals.
 

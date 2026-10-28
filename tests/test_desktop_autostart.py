@@ -83,7 +83,7 @@ def test_exec_line_uses_dbus_activation_without_binary(env: Path, monkeypatch) -
                         lambda name: None if name == "greffier-daemon" else "/usr/bin/" + name)
     exec_line = next(line for line in autostart.desktop_entry().splitlines()
                      if line.startswith("Exec="))
-    assert "gdbus call --session --dest io.github.greffier.Greffier.Daemon" in exec_line
+    assert "gdbus call --session --dest io.github.gds_42.Greffier.Daemon" in exec_line
     assert "org.freedesktop.DBus.Peer.Ping" in exec_line
 
 

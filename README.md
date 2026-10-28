@@ -1,4 +1,4 @@
-# Greffier
+# Greffier — speech-to-text natif Wayland pour GNOME
 
 **Dictée vocale locale et privée pour GNOME sous Wayland.**
 Appuyez sur un raccourci, parlez, le texte s'écrit dans l'application où se
@@ -14,10 +14,15 @@ machine : aucun son ni aucun texte ne quitte votre ordinateur.
 > **État du projet : version 0.1.0, première publication.** Greffier est
 > utilisable au quotidien sur Fedora Workstation (GNOME 48 à 50), mais c'est
 > une première version : attendez-vous à quelques angles vifs et
-> [signalez-les](https://github.com/greffier/greffier/issues) !
+> [signalez-les](https://github.com/GDS-42/gnome-wayland-speech-to-text/issues) !
 
 ## Pourquoi Greffier ?
 
+- **Natif Wayland** : né du constat que les outils de dictée existants gèrent
+  mal Wayland (raccourci global, saisie dans les autres fenêtres), Greffier
+  utilise ce que GNOME prévoit pour cela : raccourcis personnalisés, portails
+  xdg-desktop-portal et une extension GNOME Shell. Pas de X11, pas d'accès
+  aux périphériques d'entrée.
 - **Local et privé** : la voix est transcrite par
   [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) sur votre processeur.
   Pas de compte, pas de nuage, pas de télémétrie.
@@ -78,8 +83,8 @@ plus grand nombre de langues.
 ## Installation
 
 ```bash
-git clone https://github.com/greffier/greffier.git
-cd greffier
+git clone https://github.com/GDS-42/gnome-wayland-speech-to-text.git
+cd gnome-wayland-speech-to-text
 ./packaging/install.sh
 ```
 
@@ -233,8 +238,11 @@ lui-même.
 
 ## English
 
-**Greffier is a local, private voice-dictation tool for GNOME on Wayland**
-(Fedora first). Press a shortcut, speak, and the text appears in the focused
+**Greffier is a local, private, Wayland-native voice-dictation tool for GNOME**
+(Fedora first). It was built because existing dictation tools handle Wayland
+poorly: Greffier relies on what GNOME provides instead (custom shortcuts,
+xdg-desktop-portal, a GNOME Shell extension), with no X11 and no access to
+input devices. Press a shortcut, speak, and the text appears in the focused
 application. Speech recognition runs entirely on your machine with
 [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx); the default model,
 NVIDIA Parakeet TDT 0.6B v3, transcribes about ten times faster than real
@@ -251,7 +259,7 @@ available in French and English.
 missing system packages):
 
 ```bash
-git clone https://github.com/greffier/greffier.git && cd greffier
+git clone https://github.com/GDS-42/gnome-wayland-speech-to-text.git && cd gnome-wayland-speech-to-text
 ./packaging/install.sh        # --help for options; log out/in once for the extension
 ```
 

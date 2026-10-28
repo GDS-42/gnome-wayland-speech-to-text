@@ -6,5 +6,5 @@
 # bus: it then runs in its own systemd unit instead of inheriting the
 # daemon's cgroup and restrictions.
 [D-BUS Service]
-Name=io.github.greffier.Greffier
+Name=io.github.gds_42.Greffier
 Exec=@BINDIR@/greffier --gapplication-service

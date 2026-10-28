@@ -18,16 +18,16 @@ UNINSTALL_FLAGS ?=
 PYTEST_ARGS     ?=
 DAEMON_ARGS     ?= --verbose
 
-APP_ID   := io.github.greffier.Greffier
+APP_ID   := io.github.gds_42.Greffier
 UNIT     := app-$(APP_ID).Daemon.service
-UUID     := greffier@greffier.github.io
+UUID     := greffier@gds-42.github.io
 EXT_SRC  := gnome-extension/$(UUID)
 DIST     := dist
 EXT_BUILD := build/extension/$(UUID)
 EXT_ZIP  := $(DIST)/$(UUID).shell-extension.zip
 POT      := greffier/data/locale/greffier.pot
 VERSION  := $(shell sed -n 's/^__version__ = "\(.*\)"/\1/p' greffier/__init__.py)
-ISSUES   := https://github.com/greffier/greffier/issues
+ISSUES   := https://github.com/GDS-42/gnome-wayland-speech-to-text/issues
 
 PY_SOURCES  = $(shell find greffier -name '*.py' -not -path '*/__pycache__/*' | LC_ALL=C sort)
 UI_SOURCES  = $(wildcard greffier/ui/*.ui)
@@ -108,7 +108,7 @@ validate: ## desktop-file-validate + appstreamcli validate --no-net
 	$(call need,appstreamcli); appstreamcli validate --no-net --explain $$files
 
 run-daemon: ## Lancer le service au premier plan, journaux détaillés (arrête d'abord l'instance systemd)
-	-systemctl --user stop app-io.github.greffier.Greffier.Daemon.service 2>/dev/null
+	-systemctl --user stop app-io.github.gds_42.Greffier.Daemon.service 2>/dev/null
 	$(PYTHON) -m greffier.daemon.app $(DAEMON_ARGS)
 
 run-gui: ## Lancer l'interface depuis le dépôt

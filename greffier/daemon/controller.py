@@ -53,7 +53,7 @@ CATALOG_CHECK_INTERVAL_SECONDS = 24 * 3600
 
 
 class DaemonError(Exception):
-    """Error reported to D-Bus callers as io.github.greffier.Greffier.Error.<code>."""
+    """Error reported to D-Bus callers as io.github.gds_42.Greffier.Error.<code>."""
 
     def __init__(self, code: str, message: str) -> None:
         super().__init__(message)

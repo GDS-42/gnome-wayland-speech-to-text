@@ -183,8 +183,8 @@ def test_register_host_app(private_bus, client) -> None:
     # register_host_app() is synchronous: serve the fake from another thread.
     service = ThreadedService(private_bus, FakePortal, PORTAL_NAME)
     try:
-        assert portal.register_host_app(client, "io.github.greffier.Greffier.Daemon") is True
-        assert service.result.registered_apps == ["io.github.greffier.Greffier.Daemon"]
+        assert portal.register_host_app(client, "io.github.gds_42.Greffier.Daemon") is True
+        assert service.result.registered_apps == ["io.github.gds_42.Greffier.Daemon"]
     finally:
         service.stop()
 
@@ -200,8 +200,8 @@ def test_register_host_app_without_registry(private_bus, client) -> None:
     service = ThreadedService(private_bus, lambda c: FakePortal(c, interfaces=("RemoteDesktop",)),
                               PORTAL_NAME)
     try:
-        assert portal.register_host_app(client, "io.github.greffier.Greffier.Daemon") is False
+        assert portal.register_host_app(client, "io.github.gds_42.Greffier.Daemon") is False
     finally:
         service.stop()
     # and with no portal on the bus at all
-    assert portal.register_host_app(client, "io.github.greffier.Greffier.Daemon") is False
+    assert portal.register_host_app(client, "io.github.gds_42.Greffier.Daemon") is False

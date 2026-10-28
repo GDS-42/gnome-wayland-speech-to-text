@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Greffier 0.1.0\n"
-"Report-Msgid-Bugs-To: https://github.com/greffier/greffier/issues\n"
+"Report-Msgid-Bugs-To: https://github.com/GDS-42/gnome-wayland-speech-to-text/issues\n"
 "POT-Creation-Date: 2026-10-28 14:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"

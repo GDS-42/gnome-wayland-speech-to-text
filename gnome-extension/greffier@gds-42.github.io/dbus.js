@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// io.github.greffier.Greffier.Shell1 (greffier/data/shell-interface.xml),
+// io.github.gds_42.Greffier.Shell1 (greffier/data/shell-interface.xml),
 // exported on gnome-shell's own session bus connection (the service checks
 // that the owner of our name is also the owner of org.gnome.Shell).
 //

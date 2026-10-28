@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Greffier — GNOME Shell companion of the Greffier voice dictation app.
 //
-// * exports io.github.greffier.Greffier.Shell1 so that the service can set
+// * exports io.github.gds_42.Greffier.Shell1 so that the service can set
 //   the clipboard and press keys without stealing focus (Wayland);
 // * shows a top-bar indicator bound to the service state;
 // * shows a non-interactive overlay while recording/transcribing.

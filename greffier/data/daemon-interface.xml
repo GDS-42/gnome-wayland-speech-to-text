@@ -2,18 +2,18 @@
  "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <!--
   Public contract of the Greffier background service.
-  Bus name:    io.github.greffier.Greffier.Daemon   (session bus, D-Bus activatable)
-  Object path: /io/github/greffier/Greffier/Daemon
+  Bus name:    io.github.gds_42.Greffier.Daemon   (session bus, D-Bus activatable)
+  Object path: /io/github/gds_42/Greffier/Daemon
 
   Conventions
   * Structured payloads are JSON strings (UTF-8): they evolve without breaking
     the D-Bus signature. Every documented key is always present.
-  * Errors are returned as D-Bus errors named io.github.greffier.Greffier.Error.<Code>
+  * Errors are returned as D-Bus errors named io.github.gds_42.Greffier.Error.<Code>
     (NoModel, Busy, InvalidArgument, NotFound, Failed).
   * All methods return quickly; long work (downloads, loading) is reported via signals.
 -->
 <node>
-  <interface name="io.github.greffier.Greffier.Daemon1">
+  <interface name="io.github.gds_42.Greffier.Daemon1">
 
     <!-- ===== Dictation ===== -->
     <!-- Start if idle, stop (and transcribe) if recording. Used by the GNOME shortcut. -->

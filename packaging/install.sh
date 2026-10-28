@@ -30,12 +30,12 @@ set -Eeuo pipefail
 # Identifiers: keep in sync with greffier/const.py (docs/ARCHITECTURE.md §9).
 # tests/test_packaging_templates.py checks that they match.
 # --------------------------------------------------------------------------- #
-APP_ID="io.github.greffier.Greffier"
+APP_ID="io.github.gds_42.Greffier"
 DAEMON_ID="${APP_ID}.Daemon"
 DBUS_NAME="${DAEMON_ID}"
 SYSTEMD_UNIT="app-${DAEMON_ID}.service"
-EXTENSION_UUID="greffier@greffier.github.io"
-PROJECT_URL="https://github.com/greffier/greffier"
+EXTENSION_UUID="greffier@gds-42.github.io"
+PROJECT_URL="https://github.com/GDS-42/gnome-wayland-speech-to-text"
 DEFAULT_SHORTCUT="Super+Alt+D"
 
 # Fedora packages providing PyGObject, GTK 4, libadwaita, GStreamer (+ GstApp),

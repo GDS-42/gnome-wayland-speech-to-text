@@ -3,7 +3,7 @@
 # Greffier background dictation service (systemd *user* unit).
 #
 # Template: packaging/install.sh copies it to
-#   ~/.config/systemd/user/app-io.github.greffier.Greffier.Daemon.service
+#   ~/.config/systemd/user/app-io.github.gds_42.Greffier.Daemon.service
 # after replacing @BINDIR@ with the absolute bin/ directory of the Greffier
 # virtualenv (~/.local/share/greffier/venv/bin).
 #
@@ -15,7 +15,7 @@
 
 [Unit]
 Description=Greffier voice dictation service
-Documentation=https://github.com/greffier/greffier
+Documentation=https://github.com/GDS-42/gnome-wayland-speech-to-text
 # The daemon is only useful inside a graphical session. After= makes it start
 # once gnome-session has imported WAYLAND_DISPLAY, DISPLAY, XDG_CURRENT_DESKTOP…
 # into the user manager; PartOf= stops it at logout together with the session.
@@ -29,9 +29,9 @@ StartLimitBurst=5
 [Service]
 # Ready as soon as the process owns its well-known bus name (Gio.Application
 # registration). The same name is used for D-Bus activation, see
-# data/dbus/io.github.greffier.Greffier.Daemon.service.
+# data/dbus/io.github.gds_42.Greffier.Daemon.service.
 Type=dbus
-BusName=io.github.greffier.Greffier.Daemon
+BusName=io.github.gds_42.Greffier.Daemon
 ExecStart=@BINDIR@/greffier-daemon
 Restart=on-failure
 RestartSec=2
