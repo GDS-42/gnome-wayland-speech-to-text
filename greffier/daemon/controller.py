@@ -593,9 +593,6 @@ class Controller:
         if partial and session in self._live:
             self._live[session]["parts"].append(text)
 
-        payload = text
-        if self.cfg.injection.trailing_space and not text.endswith((" ", "\n", "\t")):
-            payload += " "
         meta = {
             "duration": round(duration, 2),
             "elapsed": round(elapsed, 3),
@@ -607,7 +604,8 @@ class Controller:
         }
         if not partial:
             self._add_history(text, duration, model_id, language)
-        self.deps.injector.inject(payload, lambda res: self._on_injected(res, text, meta))
+        # The injector appends the separating space itself (injection.trailing_space).
+        self.deps.injector.inject(text, lambda res: self._on_injected(res, text, meta))
 
     def _on_injected(self, result: Any, text: str, meta: dict[str, Any]) -> None:
         meta["injected"] = bool(result.ok) and result.method != "clipboard"

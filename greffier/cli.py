@@ -134,8 +134,10 @@ def cmd_models(client: Client, args: argparse.Namespace) -> int:
             print(f"{mark} {m['id']:<34} {m['name']:<26} {size:>9}  {', '.join(flags)}")
         return 0
     if action == "install":
-        client.call("InstallModel", "(s)", args.id)
-        return wait_install(client, args.id) if not args.no_wait else 0
+        if args.no_wait:
+            client.call("InstallModel", "(s)", args.id)
+            return 0
+        return install_and_wait(client, args.id)
     if action == "remove":
         client.call("RemoveModel", "(s)", args.id)
         print(_("{id} removed.").format(id=args.id))
@@ -154,7 +156,8 @@ def cmd_models(client: Client, args: argparse.Namespace) -> int:
     raise CliError(_("Unknown action {action}").format(action=action))
 
 
-def wait_install(client: Client, model_id: str) -> int:
+def install_and_wait(client: Client, model_id: str) -> int:
+    """Start an install and follow its ModelProgress signals until it ends."""
     loop = GLib.MainLoop()
     outcome = {"code": 1}
     tty = sys.stdout.isatty()
@@ -181,9 +184,12 @@ def wait_install(client: Client, model_id: str) -> int:
             print(_("Installation failed: {error}").format(error=message), file=sys.stderr)
         loop.quit()
 
-    sub = client.bus.signal_subscribe(DBUS_NAME, DBUS_IFACE, "ModelProgress", DBUS_PATH, None,
+    # Subscribe before asking for the install: a fast install could otherwise
+    # finish before we listen and we would wait forever.
+    sub = client.bus.signal_subscribe(None, DBUS_IFACE, "ModelProgress", DBUS_PATH, None,
                                       Gio.DBusSignalFlags.NONE, on_signal)
     try:
+        client.call("InstallModel", "(s)", model_id)
         loop.run()
     except KeyboardInterrupt:
         client.call("CancelInstall", "(s)", model_id)

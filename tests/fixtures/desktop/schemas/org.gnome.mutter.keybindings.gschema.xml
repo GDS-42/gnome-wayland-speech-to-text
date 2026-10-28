@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Trimmed copy of mutter's keybindings schemas. -->
+<schemalist>
+  <schema id="org.gnome.mutter.keybindings" path="/org/gnome/mutter/keybindings/" gettext-domain="mutter">
+    <key name="toggle-tiled-left" type="as">
+      <default><![CDATA[['<Super>Left']]]></default>
+      <summary>View split on left</summary>
+    </key>
+    <key name="toggle-tiled-right" type="as">
+      <default><![CDATA[['<Super>Right']]]></default>
+      <summary>View split on right</summary>
+    </key>
+  </schema>
+  <schema id="org.gnome.mutter.wayland.keybindings" path="/org/gnome/mutter/wayland/keybindings/" gettext-domain="mutter">
+    <key name="restore-shortcuts" type="as">
+      <default><![CDATA[['<Super>Escape']]]></default>
+      <summary>Restore the keyboard shortcuts</summary>
+    </key>
+  </schema>
+</schemalist>

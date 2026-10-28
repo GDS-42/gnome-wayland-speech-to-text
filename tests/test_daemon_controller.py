@@ -78,7 +78,7 @@ def test_dictation_round_trip(make):
     assert text == "bonjour tout le monde"
     meta = json.loads(meta)
     assert meta["injected"] is True and meta["partial"] is False
-    assert deps.injector.texts == ["bonjour tout le monde "]  # trailing space
+    assert deps.injector.texts == ["bonjour tout le monde"]  # the injector adds the space
     assert ctl.history_items()[0]["text"] == "bonjour tout le monde"
     assert run_until(lambda: ctl.state == State.IDLE)
     assert "stop" in deps.sounds.played

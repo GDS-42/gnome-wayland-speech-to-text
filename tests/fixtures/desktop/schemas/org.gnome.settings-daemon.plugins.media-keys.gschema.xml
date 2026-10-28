@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Trimmed copy of gnome-settings-daemon's media-keys schemas (GNOME 46),
+     enough for greffier.desktop.gnome_keybinding tests. -->
+<schemalist>
+  <schema gettext-domain="gnome-settings-daemon" id="org.gnome.settings-daemon.plugins.media-keys" path="/org/gnome/settings-daemon/plugins/media-keys/">
+    <key name="custom-keybindings" type="as">
+      <default>[]</default>
+      <summary>Custom keybindings</summary>
+      <description>List of custom keybindings</description>
+    </key>
+    <key name="calculator" type="as">
+      <default>['']</default>
+      <summary>Launch calculator</summary>
+    </key>
+    <key name="home" type="as">
+      <default>['']</default>
+      <summary>Home folder</summary>
+    </key>
+    <key name="screensaver" type="as">
+      <default>['&lt;Super&gt;l']</default>
+      <summary>Lock screen</summary>
+    </key>
+    <key name="terminal" type="as">
+      <default>['']</default>
+      <summary>Launch terminal</summary>
+    </key>
+    <key name="volume-up-static" type="as">
+      <default>['XF86AudioRaiseVolume']</default>
+      <summary>Volume up</summary>
+    </key>
+  </schema>
+
+  <schema gettext-domain="gnome-settings-daemon" id="org.gnome.settings-daemon.plugins.media-keys.custom-keybinding">
+    <key name="name" type="s">
+      <default>''</default>
+      <summary>Name</summary>
+    </key>
+    <key name="binding" type="s">
+      <default>''</default>
+      <summary>Binding</summary>
+    </key>
+    <key name="command" type="s">
+      <default>''</default>
+      <summary>Command</summary>
+    </key>
+  </schema>
+</schemalist>

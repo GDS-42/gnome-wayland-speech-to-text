@@ -1,0 +1,61 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+/* ---- top-bar indicator ---- */
+.greffier-indicator-icon.greffier-recording {
+  color: #e01b24; /* GNOME "red 3": recording */
+}
+
+.greffier-indicator-icon.greffier-warning {
+  color: #f6d32d;
+}
+
+.greffier-indicator-icon.greffier-error {
+  color: #ff7b63;
+}
+
+.greffier-menu-status {
+  font-weight: bold;
+}
+
+.greffier-menu-model {
+  font-size: 0.9em;
+}
+
+/* ---- recording overlay ---- */
+.greffier-osd {
+  background-color: rgba(30, 30, 30, 0.88);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 18px;
+  spacing: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.greffier-osd-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #e01b24;
+}
+
+.greffier-osd.greffier-osd-busy .greffier-osd-dot {
+  background-color: #3584e4; /* accent blue while transcribing */
+}
+
+.greffier-osd-bars {
+  spacing: 2px;
+  min-height: 24px;
+}
+
+.greffier-osd-bar {
+  width: 3px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.greffier-osd-label {
+  color: #ffffff;
+  font-size: 0.95em;
+  font-feature-settings: "tnum";
+  min-width: 2.6em;
+}

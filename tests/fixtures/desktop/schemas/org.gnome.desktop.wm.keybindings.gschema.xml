@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Trimmed copy of gsettings-desktop-schemas' window manager keybindings. -->
+<schemalist gettext-domain="gsettings-desktop-schemas">
+  <schema id="org.gnome.desktop.wm.keybindings" path="/org/gnome/desktop/wm/keybindings/">
+    <key name="switch-to-workspace-1" type="as">
+      <default><![CDATA[['<Super>Home']]]></default>
+      <summary>Switch to workspace 1</summary>
+    </key>
+    <key name="close" type="as">
+      <default><![CDATA[['<Alt>F4']]]></default>
+      <summary>Close window</summary>
+    </key>
+    <key name="toggle-maximized" type="as">
+      <default><![CDATA[['<Alt>F10']]]></default>
+      <summary>Toggle maximization state</summary>
+    </key>
+    <key name="show-desktop" type="as">
+      <default><![CDATA[[]]]></default>
+      <summary>Hide all normal windows</summary>
+    </key>
+    <key name="panel-run-dialog" type="as">
+      <default><![CDATA[['<Alt>F2']]]></default>
+      <summary>Show the run command prompt</summary>
+    </key>
+  </schema>
+</schemalist>

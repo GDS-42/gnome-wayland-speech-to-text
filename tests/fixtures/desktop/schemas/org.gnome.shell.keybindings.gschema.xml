@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Trimmed copy of gnome-shell's keybindings schema. -->
+<schemalist>
+  <schema id="org.gnome.shell.keybindings" path="/org/gnome/shell/keybindings/" gettext-domain="gnome-shell">
+    <key name="shift-overview-up" type="as">
+      <default>["&lt;Super&gt;&lt;Alt&gt;Up"]</default>
+      <summary>Keybinding to shift between overview states</summary>
+    </key>
+    <key name="toggle-message-tray" type="as">
+      <default>["&lt;Super&gt;v","&lt;Super&gt;m"]</default>
+      <summary>Show the notification list</summary>
+    </key>
+    <key name="screenshot" type="as">
+      <default>["&lt;Shift&gt;Print"]</default>
+      <summary>Take a screenshot</summary>
+    </key>
+  </schema>
+</schemalist>

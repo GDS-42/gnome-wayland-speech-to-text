@@ -1,0 +1,15 @@
+{
+  "uuid": "greffier@greffier.github.io",
+  "name": "Greffier",
+  "description": "Companion of the Greffier local voice dictation app: a top-bar indicator, a recording overlay that never takes focus, and reliable text insertion on Wayland (clipboard and virtual keyboard). Requires the Greffier application.",
+  "shell-version": [
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50"
+  ],
+  "url": "https://github.com/greffier/greffier",
+  "version-name": "0.1.0"
+}
