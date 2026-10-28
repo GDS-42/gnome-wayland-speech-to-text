@@ -8,7 +8,7 @@ catalogue en ligne et ne figurent pas forcément ici.
 
 ## [Non publié]
 
-## [0.1.0] - à venir
+## [0.1.0] - 2026-10-28
 
 Première version publique.
 
