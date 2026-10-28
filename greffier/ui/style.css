@@ -1,0 +1,93 @@
+/* Greffier — deliberately small and theme-friendly: only libadwaita named
+ * colours, so dark mode, high contrast and the GNOME accent colour apply. */
+
+/* ---- Microphone button (drawn in mic_button.py from the CSS `color`) ---- */
+button.mic-button,
+button.mic-button:hover,
+button.mic-button:active,
+button.mic-button:disabled {
+  background: none;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 9999px;
+  outline-color: transparent;
+  color: @accent_bg_color;
+  transition: color 250ms ease-out;
+}
+button.mic-button:hover { color: mix(@accent_bg_color, @window_fg_color, 0.08); }
+button.mic-button:active { color: mix(@accent_bg_color, @window_fg_color, 0.16); }
+button.mic-button > image { color: @accent_fg_color; }
+
+button.mic-button.recording { color: @destructive_bg_color; }
+button.mic-button.recording:hover { color: mix(@destructive_bg_color, @window_fg_color, 0.08); }
+button.mic-button.recording > image { color: @destructive_fg_color; }
+
+button.mic-button:disabled { color: alpha(@window_fg_color, 0.1); }
+button.mic-button:disabled > image { color: alpha(@window_fg_color, 0.45); }
+button.mic-button.busy > image { color: alpha(@accent_fg_color, 0.8); }
+
+/* ---- Main view ---------------------------------------------------------- */
+.hero-title { margin-top: 2px; }
+.hero-timer { font-size: 1.15em; opacity: 0.75; }
+.hero-hint > label:not(.keycap),
+label.hero-hint { opacity: 0.72; }
+.hero-cancel { margin-top: 8px; border-radius: 9999px; padding-left: 18px; padding-right: 18px; }
+
+.history-row { transition: background-color 900ms ease-in; }
+.history-row.new { background-color: alpha(@accent_bg_color, 0.12); transition: none; }
+.history-placeholder { padding: 6px; }
+
+/* ---- Badges, meters, model rows ----------------------------------------- */
+.badge {
+  padding: 1px 7px;
+  border-radius: 9999px;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+.badge.accent { color: @accent_color; background-color: alpha(@accent_bg_color, 0.14); }
+.badge.success { color: @success_color; background-color: alpha(@success_bg_color, 0.14); }
+.badge.warning { color: @warning_color; background-color: alpha(@warning_bg_color, 0.18); }
+.badge.neutral { background-color: alpha(currentColor, 0.1); }
+
+.dot-meter { color: @accent_color; }
+.model-description { opacity: 0.9; }
+.model-facts { margin-top: 2px; }
+
+/* ---- Shortcut keycaps ---------------------------------------------------- */
+.large-keycaps .keycap {
+  font-size: 1.25em;
+  min-width: 26px;
+  min-height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* ---- Onboarding --------------------------------------------------------- */
+.onboarding-body { font-size: 1.05em; }
+.onboarding-icon { color: @accent_color; }
+.feature-icon {
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 9999px;
+  color: @accent_color;
+  background-color: alpha(@accent_bg_color, 0.14);
+}
+.done-icon {
+  min-width: 96px;
+  min-height: 96px;
+  border-radius: 9999px;
+  color: @success_fg_color;
+  background-color: @success_bg_color;
+}
+.try-card textview,
+.try-card textview > text { background: none; }
+.try-text { font-size: 1.1em; }
+
+/* ---- Fallbacks for older libadwaita ------------------------------------- */
+.button-row-compat { min-height: 50px; }
+.button-row-compat label { font-weight: bold; }
+.button-row-compat.destructive-action { color: @destructive_color; }
+.button-row-compat.suggested-action { color: @accent_color; }

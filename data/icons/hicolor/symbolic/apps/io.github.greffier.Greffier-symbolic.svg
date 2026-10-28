@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- Greffier symbolic icon: sound level bars written down by a quill.
+       SPDX-License-Identifier: GPL-3.0-or-later -->
+  <g fill="#2e3436">
+    <rect x="0" y="9.5" width="2" height="4" rx="1"/>
+    <rect x="3" y="7" width="2" height="9" rx="1"/>
+    <rect x="6" y="8.5" width="2" height="6" rx="1"/>
+    <path fill-rule="evenodd" d="M9.2 10C8.9 5.9 11.4 2 16 0c.2 4.6-2.1 8.6-5.2 11.2Zm.75.15 5.1-8.95.6.35-5.1 8.95Z"/>
+    <path d="m8.6 13.8.4-2.7 1.9 1Z"/>
+  </g>
+</svg>

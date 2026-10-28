@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 The Greffier Contributors -->
+<component type="desktop-application">
+  <id>io.github.greffier.Greffier</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <name>Greffier</name>
+  <summary>Private voice dictation</summary>
+  <summary xml:lang="fr">Dictée vocale privée</summary>
+
+  <developer id="io.github.greffier">
+    <name>The Greffier Contributors</name>
+    <name xml:lang="fr">Les contributeurs de Greffier</name>
+  </developer>
+
+  <description>
+    <p>
+      Greffier turns your voice into text in any application of your GNOME desktop.
+      Press a keyboard shortcut, speak, and the text appears where your cursor is.
+    </p>
+    <p xml:lang="fr">
+      Greffier transforme votre voix en texte dans toutes les applications de votre bureau GNOME.
+      Appuyez sur un raccourci clavier, parlez, et le texte apparaît là où se trouve votre curseur.
+    </p>
+    <p>
+      Speech recognition runs entirely on your computer: your voice never leaves it, and no
+      account or internet connection is needed once a model is downloaded.
+    </p>
+    <p xml:lang="fr">
+      La reconnaissance vocale fonctionne entièrement sur votre ordinateur : votre voix ne le
+      quitte jamais, et aucun compte ni aucune connexion à Internet ne sont nécessaires une fois
+      le modèle téléchargé.
+    </p>
+    <ul>
+      <li>Fast and accurate recognition with NVIDIA Parakeet, with punctuation and capitalisation</li>
+      <li xml:lang="fr">Reconnaissance rapide et précise avec NVIDIA Parakeet, ponctuation et majuscules comprises</li>
+      <li>Choice of models: Canary, Whisper, Qwen3-ASR and Cohere Transcribe</li>
+      <li xml:lang="fr">Choix des modèles : Canary, Whisper, Qwen3-ASR et Cohere Transcribe</li>
+      <li>Toggle or push-to-talk shortcut, stop on silence and insertion while you speak</li>
+      <li xml:lang="fr">Raccourci à bascule ou à maintenir, arrêt sur silence et insertion pendant que vous parlez</li>
+      <li>Voice commands, French typography and your own replacements</li>
+      <li xml:lang="fr">Commandes vocales, typographie française et remplacements personnalisés</li>
+      <li>Optional GNOME Shell extension for a recording indicator and instant insertion</li>
+      <li xml:lang="fr">Extension GNOME Shell facultative pour un indicateur d’enregistrement et une insertion instantanée</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">io.github.greffier.Greffier.desktop</launchable>
+  <provides>
+    <binary>greffier</binary>
+  </provides>
+
+  <url type="homepage">https://github.com/greffier/greffier</url>
+  <url type="bugtracker">https://github.com/greffier/greffier/issues</url>
+  <url type="vcs-browser">https://github.com/greffier/greffier</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Ready to dictate, with your recent dictations</caption>
+      <caption xml:lang="fr">Prêt à dicter, avec vos dictées récentes</caption>
+      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/main-idle.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Listening while you speak</caption>
+      <caption xml:lang="fr">À l’écoute pendant que vous parlez</caption>
+      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/main-recording.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Choose a speech model the first time</caption>
+      <caption xml:lang="fr">Choix du modèle vocal au premier lancement</caption>
+      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/onboarding-model.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Manage speech recognition models</caption>
+      <caption xml:lang="fr">Gestion des modèles de reconnaissance vocale</caption>
+      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/preferences-models.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Set the dictation shortcut and mode</caption>
+      <caption xml:lang="fr">Réglage du raccourci et du mode de dictée</caption>
+      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/preferences-shortcut.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Check that everything works</caption>
+      <caption xml:lang="fr">Vérification du bon fonctionnement</caption>
+      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/diagnostics.png</image>
+    </screenshot>
+    <screenshot environment="gnome:dark">
+      <caption>Dark style</caption>
+      <caption xml:lang="fr">Style sombre</caption>
+      <image>https://raw.githubusercontent.com/greffier/greffier/main/docs/screenshots/main-idle-dark.png</image>
+    </screenshot>
+  </screenshots>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#99c1f1</color>
+    <color type="primary" scheme_preference="dark">#1a5fb4</color>
+  </branding>
+
+  <content_rating type="oars-1.1"/>
+
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </supports>
+  <recommends>
+    <internet>first-run</internet>
+  </recommends>
+
+  <keywords>
+    <keyword>dictation</keyword>
+    <keyword>speech recognition</keyword>
+    <keyword>speech-to-text</keyword>
+    <keyword>voice</keyword>
+    <keyword>transcription</keyword>
+    <keyword xml:lang="fr">dictée</keyword>
+    <keyword xml:lang="fr">reconnaissance vocale</keyword>
+    <keyword xml:lang="fr">voix</keyword>
+    <keyword xml:lang="fr">transcription</keyword>
+  </keywords>
+
+  <releases>
+    <release version="0.1.0" date="2026-10-28">
+      <description>
+        <p>First release.</p>
+        <p xml:lang="fr">Première version.</p>
+        <ul>
+          <li>Local dictation with Parakeet TDT 0.6B v3 and four other models</li>
+          <li xml:lang="fr">Dictée locale avec Parakeet TDT 0.6B v3 et quatre autres modèles</li>
+          <li>Setup assistant, model manager and diagnostics</li>
+          <li xml:lang="fr">Assistant de configuration, gestionnaire de modèles et diagnostic</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+</component>

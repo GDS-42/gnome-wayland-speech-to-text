@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Application
+Name=Greffier
+GenericName=Voice Dictation
+GenericName[fr]=Dictée vocale
+Comment=Dictate text into any application, privately
+Comment[fr]=Dictez du texte dans n’importe quelle application, en toute confidentialité
+Exec=greffier
+Icon=io.github.greffier.Greffier
+Terminal=false
+StartupNotify=true
+SingleMainWindow=true
+Categories=Utility;Accessibility;GTK;GNOME;
+# Translators: search terms, separated by semicolons
+Keywords=speech;voice;dictation;transcription;speech-to-text;microphone;parakeet;whisper;
+Keywords[fr]=parole;voix;dictée;transcription;reconnaissance vocale;microphone;parakeet;whisper;
+Actions=preferences;
+
+[Desktop Action preferences]
+Name=Preferences
+Name[fr]=Préférences
+Exec=greffier --preferences
