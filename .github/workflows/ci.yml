@@ -1,0 +1,161 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONUNBUFFERED: "1"
+  # shellcheck needs a UTF-8 locale for the French messages of the scripts.
+  LC_ALL: C.UTF-8
+
+jobs:
+  lint:
+    name: Lint and validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends shellcheck desktop-file-utils appstream
+          pipx install ruff
+          node --version
+
+      - name: ruff, shellcheck, node --check
+        run: make -k lint STRICT=1
+
+      - name: desktop-file-validate, appstreamcli validate
+        run: make validate STRICT=1
+
+  test-ubuntu:
+    name: Tests (Ubuntu 24.04)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            python3-gi python3-venv gir1.2-gtk-4.0 gir1.2-adw-1 \
+            gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 \
+            gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+            dbus dbus-daemon shellcheck desktop-file-utils
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-ubuntu-24.04-${{ hashFiles('pyproject.toml') }}
+
+      # The distribution's Python (not actions/setup-python): PyGObject comes
+      # from python3-gi and is only built for it.
+      - name: Create the virtualenv
+        run: |
+          /usr/bin/python3 -m venv --system-site-packages .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -e '.[dev]'
+
+      - name: Run the tests
+        run: dbus-run-session -- .venv/bin/python -m pytest -m "not slow and not gui" -ra
+
+  test-fedora:
+    name: Tests (Fedora latest)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    # Same image as docker.io/library/fedora:latest, from Fedora's own registry
+    # (no Docker Hub rate limit).
+    container: registry.fedoraproject.org/fedora:latest
+    steps:
+      - name: Install system dependencies
+        run: |
+          dnf -y install --setopt=install_weak_deps=False \
+            git make tar findutils which procps-ng \
+            python3 python3-pip python3-gobject gtk4 libadwaita \
+            gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-good \
+            dbus-daemon dbus-tools ShellCheck desktop-file-utils
+          python3 --version
+
+      - uses: actions/checkout@v5
+
+      - name: Create the virtualenv
+        run: |
+          python3 -m venv --system-site-packages /opt/greffier-venv
+          /opt/greffier-venv/bin/python -m pip install --upgrade pip
+          /opt/greffier-venv/bin/python -m pip install -e '.[dev]'
+
+      - name: Run the tests
+        run: dbus-run-session -- /opt/greffier-venv/bin/python -m pytest -m "not slow and not gui" -ra
+
+      # Exercises the Fedora code path of the installer (rpm -q, dnf command).
+      - name: Installer dry run
+        run: ./packaging/install.sh --dry-run --yes
+
+  release:
+    name: Release artifacts
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [lint, test-ubuntu, test-fedora]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends gettext zip unzip
+          python3 -m venv /tmp/build-venv
+          /tmp/build-venv/bin/python -m pip install --upgrade pip build
+
+      - name: Check that the tag matches the version
+        run: |
+          version="$(sed -n 's/^__version__ = "\(.*\)"/\1/p' greffier/__init__.py)"
+          echo "greffier/__init__.py: $version, tag: $GITHUB_REF_NAME"
+          test "v$version" = "$GITHUB_REF_NAME"
+
+      - name: Build the wheel, the sdist and the extension zip
+        run: |
+          make dist PYTHON=/tmp/build-venv/bin/python
+          make extension-zip
+          (cd dist && sha256sum -- * > SHA256SUMS)
+          ls -l dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: greffier-${{ github.ref_name }}
+          path: dist/*
+          if-no-files-found: error
+
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          # Release notes = this version's section of CHANGELOG.md.
+          awk -v v="$version" '
+            $0 ~ "^## \\[" v "\\]" { on = 1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/* --title "Greffier $version" --notes-file notes.md
+          fi

@@ -1,0 +1,93 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Greffier background dictation service (systemd *user* unit).
+#
+# Template: packaging/install.sh copies it to
+#   ~/.config/systemd/user/app-io.github.greffier.Greffier.Daemon.service
+# after replacing @BINDIR@ with the absolute bin/ directory of the Greffier
+# virtualenv (~/.local/share/greffier/venv/bin).
+#
+# The file name follows the "app-<application id>.service" convention of
+# https://systemd.io/DESKTOP_ENVIRONMENTS/ : xdg-desktop-portal derives the
+# application id of unsandboxed programs from the unit name, which the
+# GlobalShortcuts and RemoteDesktop portals need. Keep it in sync with
+# SYSTEMD_UNIT in greffier/const.py (docs/ARCHITECTURE.md, "Renaming").
+
+[Unit]
+Description=Greffier voice dictation service
+Documentation=https://github.com/greffier/greffier
+# The daemon is only useful inside a graphical session. After= makes it start
+# once gnome-session has imported WAYLAND_DISPLAY, DISPLAY, XDG_CURRENT_DESKTOP…
+# into the user manager; PartOf= stops it at logout together with the session.
+After=graphical-session.target
+PartOf=graphical-session.target
+# Restart=on-failure safety net: at most 5 starts per minute, then give up and
+# leave the failure visible in `systemctl --user status` instead of looping.
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+# Ready as soon as the process owns its well-known bus name (Gio.Application
+# registration). The same name is used for D-Bus activation, see
+# data/dbus/io.github.greffier.Greffier.Daemon.service.
+Type=dbus
+BusName=io.github.greffier.Greffier.Daemon
+ExecStart=@BINDIR@/greffier-daemon
+Restart=on-failure
+RestartSec=2
+# Loading a large model can take a while on slow disks; stopping must not
+# delay logout or shutdown by the default 90 s if a transcription is running.
+TimeoutStartSec=60
+TimeoutStopSec=10
+# Python logs reach the journal immediately (journalctl --user -u <this unit>).
+Environment=PYTHONUNBUFFERED=1
+# systemd's desktop conventions put applications bound to the graphical
+# session in app-graphical.slice. It is an implicit child of app.slice (no
+# unit file needed), where GNOME Shell already places launched applications
+# (app-gnome-*.scope), so resource accounting and systemd-oomd treat the
+# daemon like the other desktop applications. Portals read the unit name, not
+# the slice, so this does not change how Greffier is identified.
+Slice=app-graphical.slice
+
+# --- Hardening -------------------------------------------------------------
+# Only options that work in an unprivileged *user* manager (no mount or user
+# namespace needed) and that do not get in the way of PipeWire, D-Bus,
+# Wayland, the clipboard tools or the files in $HOME. Remember that seccomp
+# filters and NoNewPrivileges are inherited by every process the daemon
+# spawns (wl-copy, ydotool, a browser opened from a notification…).
+#
+# The daemon never needs to gain privileges (no sudo/pkexec, no setuid
+# helper): forbid it. Implied anyway by the seccomp options below.
+NoNewPrivileges=yes
+# Seccomp: no switching to another execution domain, no creating setuid or
+# setgid files, only native system calls (no 32-bit compat syscall entry
+# points). Nothing Greffier or its helpers do relies on these.
+LockPersonality=yes
+RestrictSUIDSGID=yes
+SystemCallArchitectures=native
+# Dictated text ends up in history.jsonl and config.toml: create every file
+# readable by the user only.
+UMask=0077
+#
+# Deliberately NOT set:
+# * ProtectHome= / ProtectSystem=strict: models, configuration and caches live
+#   in $HOME; in a user unit these also imply a private user and mount
+#   namespace, which would leak into Flatpak apps (bubblewrap) launched from
+#   the daemon and confuse the portals' process inspection.
+# * PrivateTmp=: ydotoold listens on /tmp/.ydotool_socket by default; it also
+#   needs user namespaces in a user unit.
+# * MemoryDenyWriteExecute=: PyGObject callbacks use libffi closures
+#   (writable+executable trampolines) and onnxruntime may generate code.
+# * RestrictRealtime=: the PipeWire client thread asks for realtime priority
+#   (directly or through RTKit); refusing it only causes audio glitches.
+# * RestrictNamespaces=, RestrictAddressFamilies=, SystemCallFilter=: they are
+#   inherited by applications the daemon may start (a browser opening a model
+#   page, Flatpak apps), whose own sandboxes need namespaces, netlink, etc.
+# * PrivateNetwork=: models and the catalog are downloaded from GitHub.
+# * PrivateDevices=, DevicePolicy=: need privileges in a user unit and would
+#   hide /dev/uinput (ydotool) and /dev/dri (CUDA/GPU providers).
+
+[Install]
+# `systemctl --user enable` = start automatically with every GNOME session.
+# Without it the daemon is still started on demand through D-Bus activation.
+WantedBy=graphical-session.target

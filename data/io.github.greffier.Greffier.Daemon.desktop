@@ -1,0 +1,19 @@
+[Desktop Entry]
+# Hidden entry naming the background service. GNOME Shell only displays
+# Gio.Notification messages from applications that have a desktop file whose
+# id matches the sender's application id, and the portals use it to show the
+# application name and icon in their consent dialogs.
+# packaging/install.sh replaces @BINDIR@ with an absolute path.
+Type=Application
+Name=Greffier
+GenericName=Voice dictation
+GenericName[fr]=Dictée vocale
+Comment=Background voice dictation service
+Comment[fr]=Service de dictée vocale en arrière-plan
+Icon=io.github.greffier.Greffier
+Exec=@BINDIR@/greffier-daemon
+DBusActivatable=true
+Terminal=false
+NoDisplay=true
+StartupNotify=false
+X-GNOME-UsesNotifications=true

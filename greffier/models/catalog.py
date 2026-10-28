@@ -188,9 +188,12 @@ class Catalog:
             log.error("built-in model catalog is unusable: %s", exc)
 
         cached: Catalog | None = None
+        # End-to-end tests serve archives from a loopback HTTP server; nothing
+        # else can relax the HTTPS requirement.
+        strict = os.environ.get("GREFFIER_TEST_ALLOW_LOOPBACK") != "1"
         if cache_file is not None:
             try:
-                cached = cls.from_file(Path(cache_file), https_only=True)
+                cached = cls.from_file(Path(cache_file), https_only=strict)
             except FileNotFoundError:
                 pass
             except (OSError, CatalogError) as exc:
