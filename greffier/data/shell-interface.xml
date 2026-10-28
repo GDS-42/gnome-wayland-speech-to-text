@@ -1,0 +1,51 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+  Interface exported by the optional GNOME Shell extension
+  (gnome-extension/greffier@greffier.github.io).
+  Bus name:    io.github.greffier.Greffier.Shell
+  Object path: /io/github/greffier/Greffier/Shell
+
+  Living inside gnome-shell gives the extension what Wayland clients cannot
+  have: setting the clipboard without keyboard focus, synthesising key presses
+  through a Clutter virtual keyboard, and knowing which kind of window has focus
+  (to pick Ctrl+Shift+V in terminals).
+
+  Security: every method checks that the caller is the current owner of
+  io.github.greffier.Greffier.Daemon and returns
+  org.freedesktop.DBus.Error.AccessDenied otherwise.
+-->
+<node>
+  <interface name="io.github.greffier.Greffier.Shell1">
+    <!-- Set CLIPBOARD and PRIMARY to text/plain;charset=utf-8 `text`. -->
+    <method name="SetClipboard">
+      <arg name="text" type="s" direction="in"/>
+    </method>
+    <!-- Current CLIPBOARD text; has_text=false if empty or not text. -->
+    <method name="GetClipboard">
+      <arg name="has_text" type="b" direction="out"/>
+      <arg name="text" type="s" direction="out"/>
+    </method>
+    <!-- Press the paste shortcut in the focused window.
+         shortcut: auto | ctrl-v | ctrl-shift-v | shift-insert
+         used: the shortcut actually sent (auto resolved). -->
+    <method name="Paste">
+      <arg name="shortcut" type="s" direction="in"/>
+      <arg name="used" type="s" direction="out"/>
+    </method>
+    <!-- Type text key by key (keyvals). Characters absent from the current
+         keyboard layout cannot be typed: returns how many were sent. -->
+    <method name="TypeText">
+      <arg name="text" type="s" direction="in"/>
+      <arg name="typed" type="u" direction="out"/>
+    </method>
+    <!-- wm_class / sandboxed app id of the focused window ("" if none);
+         is_terminal: heuristic used by Paste("auto"). -->
+    <method name="GetFocusInfo">
+      <arg name="wm_class" type="s" direction="out"/>
+      <arg name="is_terminal" type="b" direction="out"/>
+    </method>
+    <!-- Interface version, bumped on incompatible changes. -->
+    <property name="Version" type="u" access="read"/>
+  </interface>
+</node>

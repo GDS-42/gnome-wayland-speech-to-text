@@ -1,0 +1,221 @@
+{
+  "schema": 1,
+  "revision": "2026-10-28.1",
+  "min_app_version": "0.1.0",
+  "models": [
+    {
+      "id": "parakeet-tdt-0.6b-v3-int8",
+      "kind": "asr",
+      "name": "Parakeet TDT 0.6B v3",
+      "vendor": "NVIDIA",
+      "family": "nemo_transducer",
+      "revision": "2025-08-16",
+      "recommended": true,
+      "languages": ["bg", "cs", "da", "de", "el", "en", "es", "et", "fi", "fr", "hr", "hu", "it", "lt", "lv", "mt", "nl", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "uk"],
+      "language_mode": "auto",
+      "description": {
+        "fr": "Le meilleur choix pour le français : très précis, ponctuation et majuscules automatiques, très rapide sur processeur. 25 langues européennes détectées automatiquement.",
+        "en": "Best choice for French: very accurate, automatic punctuation and capitalisation, very fast on CPU. 25 European languages, detected automatically."
+      },
+      "license": "CC-BY-4.0",
+      "homepage": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+      "download": {
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2",
+        "sha256": "5793d0fd397c5778d2cf2126994d58e9d56b1be7c04d13c7a15bb1b4eafb16bf",
+        "size": 487170055,
+        "format": "tar.bz2",
+        "root": "sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8"
+      },
+      "files": {
+        "encoder": "encoder.int8.onnx",
+        "decoder": "decoder.int8.onnx",
+        "joiner": "joiner.int8.onnx",
+        "tokens": "tokens.txt"
+      },
+      "exclude": ["test_wavs"],
+      "disk_size": 670478772,
+      "ram_mb": 900,
+      "speed": 5,
+      "accuracy": 5,
+      "max_segment_s": 120,
+      "options": {}
+    },
+    {
+      "id": "canary-180m-flash-int8",
+      "kind": "asr",
+      "name": "Canary 180M Flash",
+      "vendor": "NVIDIA",
+      "family": "nemo_canary",
+      "revision": "2025-07-01",
+      "recommended": false,
+      "languages": ["de", "en", "es", "fr"],
+      "language_mode": "required",
+      "description": {
+        "fr": "Modèle léger (200 Mo) pour les machines modestes : français, anglais, allemand et espagnol, avec ponctuation.",
+        "en": "Lightweight model (200 MB) for modest machines: French, English, German and Spanish, with punctuation."
+      },
+      "license": "CC-BY-4.0",
+      "homepage": "https://huggingface.co/nvidia/canary-180m-flash",
+      "download": {
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-canary-180m-flash-en-es-de-fr-int8.tar.bz2",
+        "sha256": "7a38ed8b13f014ad632b09ff8d22e0c6f1359dd046af9235d281dfae841b9ab9",
+        "size": 153692328,
+        "format": "tar.bz2",
+        "root": "sherpa-onnx-nemo-canary-180m-flash-en-es-de-fr-int8"
+      },
+      "files": {
+        "encoder": "encoder.int8.onnx",
+        "decoder": "decoder.int8.onnx",
+        "tokens": "tokens.txt"
+      },
+      "exclude": ["test_wavs"],
+      "disk_size": 207170046,
+      "ram_mb": 450,
+      "speed": 4,
+      "accuracy": 4,
+      "max_segment_s": 30,
+      "options": {}
+    },
+    {
+      "id": "cohere-transcribe-14-lang-int8",
+      "kind": "asr",
+      "name": "Cohere Transcribe",
+      "vendor": "Cohere Labs",
+      "family": "cohere_transcribe",
+      "revision": "2026-04-01",
+      "recommended": false,
+      "languages": ["ar", "de", "el", "en", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "vi", "zh"],
+      "language_mode": "required",
+      "description": {
+        "fr": "Très haute précision et ponctuation soignée, 14 langues. Lourd : 2,9 Go sur disque et environ 3,5 Go de mémoire.",
+        "en": "Very high accuracy and careful punctuation, 14 languages. Heavy: 2.9 GB on disk and about 3.5 GB of RAM."
+      },
+      "license": "Apache-2.0",
+      "homepage": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026",
+      "download": {
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-cohere-transcribe-14-lang-int8-2026-04-01.tar.bz2",
+        "sha256": "bd582588d50685a795dcd2807ab77e11361b8312d96c53884682def45ab4206d",
+        "size": 1699791751,
+        "format": "tar.bz2",
+        "root": "sherpa-onnx-cohere-transcribe-14-lang-int8-2026-04-01"
+      },
+      "files": {
+        "encoder": "encoder.int8.onnx",
+        "decoder": "decoder.int8.onnx",
+        "tokens": "tokens.txt"
+      },
+      "exclude": ["test_wavs"],
+      "disk_size": 2888052330,
+      "ram_mb": 3500,
+      "speed": 3,
+      "accuracy": 5,
+      "max_segment_s": 30,
+      "options": {"use_punct": true, "use_itn": true}
+    },
+    {
+      "id": "qwen3-asr-0.6b-int8",
+      "kind": "asr",
+      "name": "Qwen3-ASR 0.6B",
+      "vendor": "Alibaba Qwen",
+      "family": "qwen3_asr",
+      "revision": "2026-03-25",
+      "recommended": false,
+      "languages": ["ar", "cs", "da", "de", "el", "en", "es", "fa", "fi", "fil", "fr", "hi", "hu", "id", "it", "ja", "ko", "mk", "ms", "nl", "pl", "pt", "ro", "ru", "sv", "th", "tr", "vi", "yue", "zh"],
+      "language_mode": "optional",
+      "description": {
+        "fr": "Modèle de type LLM, 30 langues et détection automatique. Plus lent sur processeur, mais robuste aux accents et au bruit.",
+        "en": "LLM-style model, 30 languages with automatic detection. Slower on CPU, but robust to accents and noise."
+      },
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/QwenLM/Qwen3-ASR",
+      "download": {
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-qwen3-asr-0.6B-int8-2026-03-25.tar.bz2",
+        "sha256": "393f8a14e2f5fb96746aaab342997a40641001fbd5bf9592a080a8329178ee96",
+        "size": 878702423,
+        "format": "tar.bz2",
+        "root": "sherpa-onnx-qwen3-asr-0.6B-int8-2026-03-25"
+      },
+      "files": {
+        "conv_frontend": "conv_frontend.onnx",
+        "encoder": "encoder.int8.onnx",
+        "decoder": "decoder.int8.onnx",
+        "tokenizer": "tokenizer"
+      },
+      "exclude": ["test_wavs"],
+      "disk_size": 987015675,
+      "ram_mb": 1650,
+      "speed": 2,
+      "accuracy": 4,
+      "max_segment_s": 30,
+      "options": {"max_new_tokens": 256}
+    },
+    {
+      "id": "whisper-turbo-int8",
+      "kind": "asr",
+      "name": "Whisper large-v3 turbo",
+      "vendor": "OpenAI",
+      "family": "whisper",
+      "revision": "2024-10-01",
+      "recommended": false,
+      "languages": ["*"],
+      "language_mode": "optional",
+      "description": {
+        "fr": "La référence multilingue : 99 langues. Nettement plus lent sur processeur que Parakeet.",
+        "en": "The multilingual reference: 99 languages. Much slower on CPU than Parakeet."
+      },
+      "license": "MIT",
+      "homepage": "https://huggingface.co/openai/whisper-large-v3-turbo",
+      "download": {
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-whisper-turbo.tar.bz2",
+        "sha256": "b11acbbcd660b44a8e0df33724feb5aaa709cf65668f2823d59f656312544f22",
+        "size": 563790207,
+        "format": "tar.bz2",
+        "root": "sherpa-onnx-whisper-turbo"
+      },
+      "files": {
+        "encoder": "turbo-encoder.int8.onnx",
+        "decoder": "turbo-decoder.int8.onnx",
+        "tokens": "turbo-tokens.txt"
+      },
+      "exclude": ["test_wavs"],
+      "disk_size": 1036613791,
+      "ram_mb": 1600,
+      "speed": 2,
+      "accuracy": 4,
+      "max_segment_s": 28,
+      "options": {}
+    },
+    {
+      "id": "silero-vad",
+      "kind": "vad",
+      "name": "Silero VAD",
+      "vendor": "Silero",
+      "family": "silero_vad",
+      "revision": "v5",
+      "recommended": false,
+      "languages": ["*"],
+      "language_mode": "auto",
+      "description": {
+        "fr": "Détection de la parole (découpage des longues dictées, arrêt automatique sur silence). Installé automatiquement.",
+        "en": "Voice activity detection (splits long dictations, auto-stop on silence). Installed automatically."
+      },
+      "license": "MIT",
+      "homepage": "https://github.com/snakers4/silero-vad",
+      "download": {
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/silero_vad.onnx",
+        "sha256": "9e2449e1087496d8d4caba907f23e0bd3f78d91fa552479bb9c23ac09cbb1fd6",
+        "size": 643854,
+        "format": "file",
+        "root": ""
+      },
+      "files": {"model": "silero_vad.onnx"},
+      "exclude": [],
+      "disk_size": 643854,
+      "ram_mb": 20,
+      "speed": 5,
+      "accuracy": 5,
+      "max_segment_s": 0,
+      "options": {}
+    }
+  ]
+}

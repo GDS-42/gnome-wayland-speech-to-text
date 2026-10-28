@@ -1,0 +1,128 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+  Public contract of the Greffier background service.
+  Bus name:    io.github.greffier.Greffier.Daemon   (session bus, D-Bus activatable)
+  Object path: /io/github/greffier/Greffier/Daemon
+
+  Conventions
+  * Structured payloads are JSON strings (UTF-8): they evolve without breaking
+    the D-Bus signature. Every documented key is always present.
+  * Errors are returned as D-Bus errors named io.github.greffier.Greffier.Error.<Code>
+    (NoModel, Busy, InvalidArgument, NotFound, Failed).
+  * All methods return quickly; long work (downloads, loading) is reported via signals.
+-->
+<node>
+  <interface name="io.github.greffier.Greffier.Daemon1">
+
+    <!-- ===== Dictation ===== -->
+    <!-- Start if idle, stop (and transcribe) if recording. Used by the GNOME shortcut. -->
+    <method name="Toggle"/>
+    <method name="Start"/>
+    <!-- Stop recording and transcribe what was captured. -->
+    <method name="Stop"/>
+    <!-- Stop recording and discard the audio. -->
+    <method name="Cancel"/>
+
+    <!-- {"state": State, "detail": str, "model": id|"", "model_name": str,
+          "model_loaded": bool, "recording_seconds": float,
+          "shortcut": {"accelerator": str, "backend": "gnome"|"portal"|"none", "mode": str,
+                       "active": bool, "message": str},
+          "injection": {"method": str, "keyboard": str, "clipboard": str}} -->
+    <method name="GetStatus">
+      <arg name="status" type="s" direction="out"/>
+    </method>
+
+    <!-- ===== Configuration (see greffier/config.py for the schema) ===== -->
+    <method name="GetConfig">
+      <arg name="config" type="s" direction="out"/>
+    </method>
+    <!-- Apply a partial nested patch, e.g. {"model": {"active": "…"}}.
+         Returns the full validated configuration. InvalidArgument on bad input. -->
+    <method name="SetConfig">
+      <arg name="patch" type="s" direction="in"/>
+      <arg name="config" type="s" direction="out"/>
+    </method>
+
+    <!-- ===== Models ===== -->
+    <!-- [ModelStatus…] see greffier/models/manager.py ModelStatus.to_dict() -->
+    <method name="ListModels">
+      <arg name="models" type="s" direction="out"/>
+    </method>
+    <!-- Download + verify + install in the background (ModelProgress signals). -->
+    <method name="InstallModel">
+      <arg name="id" type="s" direction="in"/>
+    </method>
+    <method name="CancelInstall">
+      <arg name="id" type="s" direction="in"/>
+    </method>
+    <method name="RemoveModel">
+      <arg name="id" type="s" direction="in"/>
+    </method>
+    <!-- Refresh the remote catalog; emits ModelsChanged. -->
+    <method name="CheckUpdates"/>
+
+    <!-- ===== Misc ===== -->
+    <!-- [{"text": str, "time": ISO-8601, "duration": float, "model": id, "language": str}…] newest first -->
+    <method name="GetHistory">
+      <arg name="history" type="s" direction="out"/>
+    </method>
+    <method name="ClearHistory"/>
+    <!-- [{"id": str, "name": str, "is_default": bool}…] -->
+    <method name="ListAudioDevices">
+      <arg name="devices" type="s" direction="out"/>
+    </method>
+    <!-- Environment report used by the GUI and `greffierctl doctor`:
+         {"version", "gnome_shell", "session_type", "sherpa_onnx", "cpu_threads",
+          "extension": {"installed", "enabled", "active"},
+          "portals": {"global_shortcuts", "remote_desktop", "registry"},
+          "tools": {"wl-copy", "ydotool"}, "audio_devices": int,
+          "checks": [{"id", "ok": bool, "level": "ok"|"warning"|"error", "message"}]} -->
+    <method name="GetDiagnostics">
+      <arg name="report" type="s" direction="out"/>
+    </method>
+    <!-- Inject arbitrary text with the configured method (diagnostics / tests). -->
+    <method name="InjectText">
+      <arg name="text" type="s" direction="in"/>
+    </method>
+    <method name="Quit"/>
+
+    <!-- ===== Signals ===== -->
+    <!-- state: see greffier.const.State; detail: human readable (localised) message -->
+    <signal name="StateChanged">
+      <arg name="state" type="s"/>
+      <arg name="detail" type="s"/>
+    </signal>
+    <!-- Microphone level in [0, 1], ~15 Hz, only while recording. -->
+    <signal name="Level">
+      <arg name="level" type="d"/>
+    </signal>
+    <!-- meta: {"duration": float, "model": id, "language": str, "partial": bool,
+                "injected": bool, "method": str} -->
+    <signal name="Transcribed">
+      <arg name="text" type="s"/>
+      <arg name="meta" type="s"/>
+    </signal>
+    <!-- phase: download | verify | extract | done | error | cancelled -->
+    <signal name="ModelProgress">
+      <arg name="id" type="s"/>
+      <arg name="phase" type="s"/>
+      <arg name="done" type="t"/>
+      <arg name="total" type="t"/>
+      <arg name="message" type="s"/>
+    </signal>
+    <signal name="ModelsChanged"/>
+    <signal name="ConfigChanged">
+      <arg name="config" type="s"/>
+    </signal>
+    <!-- level: info | warning | error — short user-facing messages (GUI toasts). -->
+    <signal name="Notice">
+      <arg name="level" type="s"/>
+      <arg name="message" type="s"/>
+    </signal>
+
+    <property name="State" type="s" access="read"/>
+    <property name="ActiveModel" type="s" access="read"/>
+    <property name="Version" type="s" access="read"/>
+  </interface>
+</node>

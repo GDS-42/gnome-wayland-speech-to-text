@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "greffier"
+version = "0.1.0"
+description = "Dictée vocale locale pour GNOME (Wayland) : Parakeet, Canary, Whisper… via sherpa-onnx"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+requires-python = ">=3.11"
+authors = [{ name = "Greffier contributors" }]
+keywords = ["speech-to-text", "dictation", "gnome", "wayland", "parakeet", "whisper", "sherpa-onnx"]
+classifiers = [
+  "Environment :: X11 Applications :: GTK",
+  "Intended Audience :: End Users/Desktop",
+  "Natural Language :: French",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+# PyGObject (GTK4, libadwaita, GStreamer bindings) comes from the distribution
+# (python3-gobject on Fedora) and is deliberately not listed here: building it
+# from PyPI needs a full C toolchain. See the "gi" extra for pip-only setups.
+dependencies = [
+  "numpy>=1.26",
+  "sherpa-onnx>=2.0,<3",
+]
+
+[project.optional-dependencies]
+gi = ["PyGObject>=3.48"]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+greffier-daemon = "greffier.daemon.app:main"
+greffierctl = "greffier.cli:main"
+
+[project.gui-scripts]
+greffier = "greffier.ui.app:main"
+
+[project.urls]
+Homepage = "https://github.com/greffier/greffier"
+Issues = "https://github.com/greffier/greffier/issues"
+
+[tool.setuptools.packages.find]
+include = ["greffier*"]
+
+[tool.setuptools.package-data]
+greffier = ["data/*.json", "data/*.xml", "data/sounds/*.wav", "data/locale/*.po", "ui/*.css"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "slow: needs a real downloaded model (set GREFFIER_TEST_MODELS_DIR)",
+  "gui: needs a display (broadway/wayland)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = ["E402"]  # gi.require_version() must run before gi.repository imports
