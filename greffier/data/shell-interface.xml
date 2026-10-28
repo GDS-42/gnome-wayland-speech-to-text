@@ -11,41 +11,57 @@
   through a Clutter virtual keyboard, and knowing which kind of window has focus
   (to pick Ctrl+Shift+V in terminals).
 
-  Security: every method checks that the caller is the current owner of
-  io.github.greffier.Greffier.Daemon and returns
-  org.freedesktop.DBus.Error.AccessDenied otherwise.
+  Security (extension side): a caller is accepted only if it is the current
+  owner of io.github.greffier.Greffier.Daemon AND its process runs in the
+  systemd unit app-io.github.greffier.Greffier.Daemon.service (or the
+  XDG-autostart scope/service of that desktop id), checked through
+  /proc/<pid>/cgroup. Others get org.freedesktop.DBus.Error.AccessDenied.
+  The clipboard can be written but never read through this interface.
+
+  Security (client side): the daemon only uses this interface when the unique
+  owner of io.github.greffier.Greffier.Shell is also the owner of
+  org.gnome.Shell (the extension shares gnome-shell's bus connection).
+
+  Version 2: GetClipboard and Paste were replaced by PasteText.
 -->
 <node>
   <interface name="io.github.greffier.Greffier.Shell1">
-    <!-- Set CLIPBOARD and PRIMARY to text/plain;charset=utf-8 `text`. -->
+    <!-- Set CLIPBOARD and PRIMARY to text/plain;charset=utf-8 `text`
+         (copy-only mode). Cancels a pending clipboard restoration. -->
     <method name="SetClipboard">
       <arg name="text" type="s" direction="in"/>
     </method>
-    <!-- Current CLIPBOARD text; has_text=false if empty or not text. -->
-    <method name="GetClipboard">
-      <arg name="has_text" type="b" direction="out"/>
-      <arg name="text" type="s" direction="out"/>
-    </method>
-    <!-- Press the paste shortcut in the focused window.
+    <!-- Paste `text` into the focused window: save the previous CLIPBOARD
+         text (if `restore`), set CLIPBOARD+PRIMARY, wait until no modifier
+         key is physically held (at most ~1 s), press the paste shortcut and,
+         ~400 ms later, put the previous text back unless the clipboard
+         changed meanwhile. Calls are serialised.
          shortcut: auto | ctrl-v | ctrl-shift-v | shift-insert
-         used: the shortcut actually sent (auto resolved). -->
-    <method name="Paste">
+         used: the shortcut actually sent (auto resolved).
+         Errors: io.github.greffier.Greffier.Shell.Error.ModifiersHeld when
+         keys were still held (the text is left in the clipboard),
+         org.freedesktop.DBus.Error.InvalidArgs for an unknown shortcut. -->
+    <method name="PasteText">
+      <arg name="text" type="s" direction="in"/>
       <arg name="shortcut" type="s" direction="in"/>
+      <arg name="restore" type="b" direction="in"/>
       <arg name="used" type="s" direction="out"/>
     </method>
-    <!-- Type text key by key (keyvals). Characters absent from the current
-         keyboard layout cannot be typed: returns how many were sent. -->
+    <!-- Type text (input method commit when a text field has focus, key
+         presses otherwise; waits for modifiers to be released first).
+         Characters absent from the current keyboard layout cannot be typed
+         with key presses: returns how many were sent. -->
     <method name="TypeText">
       <arg name="text" type="s" direction="in"/>
       <arg name="typed" type="u" direction="out"/>
     </method>
     <!-- wm_class / sandboxed app id of the focused window ("" if none);
-         is_terminal: heuristic used by Paste("auto"). -->
+         is_terminal: heuristic used by PasteText("auto"). -->
     <method name="GetFocusInfo">
       <arg name="wm_class" type="s" direction="out"/>
       <arg name="is_terminal" type="b" direction="out"/>
     </method>
-    <!-- Interface version, bumped on incompatible changes. -->
+    <!-- Interface version, bumped on incompatible changes (currently 2). -->
     <property name="Version" type="u" access="read"/>
   </interface>
 </node>

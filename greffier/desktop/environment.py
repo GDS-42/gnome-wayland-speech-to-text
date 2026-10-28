@@ -89,16 +89,25 @@ def ydotoold_socket_candidates() -> list[Path]:
 
 
 def ydotoold_socket() -> Path | None:
-    """Path of a usable (existing, writable) ydotoold socket, or ``None``."""
+    """Path of a usable ydotoold socket, or ``None``.
+
+    The socket must exist, be writable and belong to root or to us: anyone
+    can create ``/tmp/.ydotool_socket``, and a fake daemon there would
+    receive every key we send.
+    """
     for path in ydotoold_socket_candidates():
         try:
             st = path.stat()
         except OSError:
             continue
-        if stat.S_ISSOCK(st.st_mode) and os.access(path, os.R_OK | os.W_OK):
+        if not stat.S_ISSOCK(st.st_mode):
+            continue
+        if st.st_uid not in (0, os.getuid()):
+            log.debug("ignoring ydotoold socket %s owned by uid %d", path, st.st_uid)
+            continue
+        if os.access(path, os.R_OK | os.W_OK):
             return path
-        if stat.S_ISSOCK(st.st_mode):
-            log.debug("ydotoold socket %s exists but is not writable", path)
+        log.debug("ydotoold socket %s exists but is not writable", path)
     return None
 
 

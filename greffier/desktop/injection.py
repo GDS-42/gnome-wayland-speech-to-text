@@ -4,7 +4,9 @@ The :class:`Injector` composes a *clipboard* backend (GNOME Shell extension,
 then ``wl-copy``) and a *keyboard* backend (extension, then the RemoteDesktop
 portal, then ``ydotool``):
 
-* ``paste`` (and ``auto``): optionally save the previous text clipboard, set
+* ``paste`` (and ``auto``): with the extension, one ``PasteText`` call does
+  everything inside gnome-shell (the clipboard is never read over D-Bus).
+  Otherwise: optionally save the previous text clipboard (``wl-paste``), set
   CLIPBOARD+PRIMARY, wait for the clipboard to settle, press the paste
   shortcut, and ~400 ms later restore the previous text — only if the
   clipboard still holds what we pasted;
@@ -16,11 +18,17 @@ stays in the clipboard (``ok=True`` with an explanatory message).
 
 Injections are serialised: a second dictation waits until the first one is
 completely done, including the clipboard restoration.
+
+Keys are never pressed while the user may still hold the dictation shortcut:
+the extension waits until no modifier is down; the portal and ydotool paths
+wait until :data:`KEY_QUIET_MS` after the request (or after the last
+:meth:`Injector.note_shortcut_activity`).
 """
 
 from __future__ import annotations
 
 import logging
+import time
 from collections import deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
@@ -31,7 +39,7 @@ from gi.repository import Gio, GLib
 from greffier.config import InjectionConfig
 from greffier.desktop import environment, keysyms, portal
 from greffier.desktop.remote_desktop import RemoteDesktopKeyboard
-from greffier.desktop.shell_client import ShellClient
+from greffier.desktop.shell_client import ERROR_MODIFIERS_HELD, ShellClient
 from greffier.desktop.wlclipboard import WlClipboard
 from greffier.desktop.ydotool import Ydotool
 from greffier.i18n import _
@@ -41,6 +49,9 @@ log = logging.getLogger(__name__)
 RESTORE_DELAY_MS = 400  # time given to the target app to read the clipboard
 JOB_TIMEOUT_MS = 20_000  # watchdog: the queue never stalls longer than this
 PORTAL_FIRST_USE_TIMEOUT_MS = 120_000  # the consent dialog may stay open a while
+# Portal/ydotool cannot see the physical keyboard: leave the user this long
+# to release the shortcut's modifiers before pressing keys.
+KEY_QUIET_MS = 400
 
 KEYBOARD_ORDER = ("extension", "portal", "ydotool")
 CLIPBOARD_ORDER = ("extension", "wl-copy")
@@ -66,12 +77,14 @@ class InjectResult:
 
 
 class ClipboardBackend(Protocol):
-    """Something that can set and read the text clipboard."""
+    """Something that can set (and maybe read) the text clipboard."""
 
     name: str
     settle_ms: int
 
     def available(self) -> bool: ...
+
+    def can_read(self) -> bool: ...
 
     def set_text(self, text: str, callback: Callable[[bool, str], None]) -> None: ...
 
@@ -79,13 +92,18 @@ class ClipboardBackend(Protocol):
 
 
 class KeyboardBackend(Protocol):
-    """Something that can press keys in the focused window."""
+    """Something that can press keys in the focused window.
+
+    Backends either implement ``paste(shortcut, cb)`` (the clipboard is set
+    separately) or, like the extension, ``paste_text(text, shortcut, restore,
+    cb(ok, used, error, modifiers_held))`` doing clipboard + paste + restore
+    themselves. ``waits_for_modifiers = True`` means the backend waits for the
+    user to release modifier keys itself.
+    """
 
     name: str
 
     def available(self) -> bool: ...
-
-    def paste(self, shortcut: str, callback: Callable[[bool, str, str], None]) -> None: ...
 
     def type_text(self, text: str, callback: Callable[[bool, int, str], None]) -> None: ...
 
@@ -107,17 +125,21 @@ class ExtensionClipboard:
     def available(self) -> bool:
         return self._shell.available
 
+    def can_read(self) -> bool:
+        return False  # by design: Shell1 never exposes the clipboard
+
     def set_text(self, text: str, callback: Callable[[bool, str], None]) -> None:
         self._shell.set_clipboard(text, callback)
 
     def get_text(self, callback: Callable[[bool, str | None], None]) -> None:
-        self._shell.get_clipboard(callback)
+        GLib.idle_add(lambda: (callback(False, None), GLib.SOURCE_REMOVE)[1])
 
 
 class ExtensionKeyboard:
-    """Clutter virtual keyboard inside gnome-shell."""
+    """Clutter virtual keyboard inside gnome-shell (clipboard + paste in one call)."""
 
     name = "extension"
+    waits_for_modifiers = True
 
     def __init__(self, shell: ShellClient) -> None:
         self._shell = shell
@@ -125,8 +147,11 @@ class ExtensionKeyboard:
     def available(self) -> bool:
         return self._shell.available
 
-    def paste(self, shortcut: str, callback: Callable[[bool, str, str], None]) -> None:
-        self._shell.paste(shortcut, callback)
+    def paste_text(self, text: str, shortcut: str, restore: bool,
+                   callback: Callable[[bool, str, str, bool], None]) -> None:
+        self._shell.paste_text(text, shortcut, restore,
+                               lambda ok, used, err, name: callback(
+                                   ok, used, err, name == ERROR_MODIFIERS_HELD))
 
     def type_text(self, text: str, callback: Callable[[bool, int, str], None]) -> None:
         self._shell.type_text(text, callback)
@@ -167,7 +192,9 @@ class _Job:
     # previous clipboard text to put back (None: nothing to restore)
     saved: str | None = None
     saved_inherited: bool = False
-    clipboard: ClipboardBackend | None = None
+    clipboard: ClipboardBackend | None = None  # where the text was copied
+    reader: ClipboardBackend | None = None  # used to check before restoring
+    requested_at: float = field(default_factory=time.monotonic)
     timers: list[int] = field(default_factory=list)
 
 
@@ -182,6 +209,7 @@ class Injector:
 
     restore_delay_ms = RESTORE_DELAY_MS
     job_timeout_ms = JOB_TIMEOUT_MS
+    key_quiet_ms = KEY_QUIET_MS
 
     def __init__(
         self,
@@ -208,6 +236,7 @@ class Injector:
         self._counter = 0
         self._closed = False
         self._idle_id = 0
+        self._last_activity = 0.0
         self._probe = {
             "gnome_shell": "",
             "extension_info": None,
@@ -241,6 +270,12 @@ class Injector:
     def update_config(self, cfg: InjectionConfig) -> None:
         """Use ``cfg`` for the next injections (queued ones keep theirs)."""
         self._cfg = cfg
+
+    def note_shortcut_activity(self) -> None:
+        """Tell the Injector the dictation shortcut was just used (Toggle,
+        press or release): portal/ydotool key presses wait
+        :data:`KEY_QUIET_MS` after it."""
+        self._last_activity = time.monotonic()
 
     # -- backend selection ---------------------------------------------
     def _keyboard_candidates(self, cfg: InjectionConfig) -> list[KeyboardBackend]:
@@ -312,15 +347,19 @@ class Injector:
             from_settings = environment.extension_enabled_in_settings()
             enabled = bool(from_settings) if from_settings is not None else running
         state = info.get("state")
+        shell = self._shell
+        problem = shell.problem() if running and hasattr(shell, "problem") else ""
         return {
             "installed": installed or running,
             "enabled": enabled or running,
-            "active": running,
-            "compatible": bool(self._shell is not None and getattr(self._shell, "available",
-                                                                     False)),
-            "version": getattr(self._shell, "version", None) if running else None,
+            "active": running,  # Shell1 is exported (by someone)
+            "usable": bool(getattr(shell, "available", False)),
+            "trusted": bool(getattr(shell, "trusted", False)),
+            "compatible": bool(getattr(shell, "compatible", False)),
+            "version": getattr(shell, "version", None) if running else None,
             "state": int(state) if isinstance(state, (int, float)) else None,
             "error": str(info.get("error", "")) if info else "",
+            "message": problem,  # localised, e.g. "running but not trusted"
         }
 
     def diagnostics(self) -> dict[str, Any]:
@@ -530,18 +569,52 @@ class Injector:
             self._set_clipboard(job, job.text, self._clipboard_candidates(), copied)
 
     # ---- paste
+    @staticmethod
+    def _pastes_in_shell(keyboards: list[KeyboardBackend]) -> bool:
+        return bool(keyboards) and hasattr(keyboards[0], "paste_text")
+
     def _run_paste(self, job: _Job) -> None:
-        clipboards = self._clipboard_candidates()
         keyboards = self._keyboard_candidates(job.cfg)
+        generic = [kb for kb in keyboards if hasattr(kb, "paste")]
+        if self._pastes_in_shell(keyboards):
+            self._paste_in_shell(job, keyboards[0], generic)
+        else:
+            self._run_generic_paste(job, generic)
+
+    def _paste_in_shell(self, job: _Job, keyboard: Any,
+                        fallbacks: list[KeyboardBackend]) -> None:
+        """Clipboard + paste + restore in one extension call."""
+
+        def done(ok: bool, used: str, error: str, modifiers_held: bool) -> None:
+            if ok:
+                log.debug("pasted with %s via %s", used, keyboard.name)
+                self._complete(job, InjectResult(True, "paste", keyboard.name, keyboard.name))
+                return
+            if modifiers_held:
+                # The extension already put the text in the clipboard.
+                job.clipboard = next((c for c in self._clipboards if c.name == keyboard.name),
+                                     None)
+                self._copy_only(job, _("Keys were still held down, so the text was not "
+                                       "pasted."))
+                return
+            log.warning("paste through %s failed: %s", keyboard.name, error)
+            self._run_generic_paste(job, fallbacks)
+
+        keyboard.paste_text(job.text, job.cfg.paste_shortcut, job.cfg.restore_clipboard,
+                            self._guard(job, done))
+
+    def _run_generic_paste(self, job: _Job, keyboards: list[KeyboardBackend]) -> None:
+        clipboards = self._clipboard_candidates()
         if not clipboards:
             log.info("no clipboard backend: typing instead of pasting")
-            self._run_type(job, keyboards,
+            self._run_type(job, self._keyboard_candidates(job.cfg),
                            note=_("No clipboard access (install wl-clipboard or the extension): "
                                   "the text was typed instead."))
             return
         if not keyboards:
             self._copy_only(job, self._no_keyboard_reason(job.cfg))
             return
+        job.reader = next((c for c in clipboards if c.can_read()), None)
 
         def after_save(ok: bool, previous: str | None) -> None:
             if not job.saved_inherited:
@@ -550,21 +623,21 @@ class Injector:
 
         def after_set(clipboard: ClipboardBackend | None) -> None:
             if clipboard is None:
-                self._run_type(job, keyboards,
+                self._run_type(job, self._keyboard_candidates(job.cfg),
                                note=_("The clipboard could not be set: the text was typed "
                                       "instead."))
                 return
             job.clipboard = clipboard
             self._timer(job, clipboard.settle_ms,
-                        lambda: self._resolve_shortcut(job, keyboards, send_paste))
+                        lambda: self._resolve_shortcut(job, send_paste))
 
-        def send_paste(shortcut_for: Callable[[KeyboardBackend], str]) -> None:
-            self._try_paste(job, keyboards, shortcut_for)
+        def send_paste(shortcut: str) -> None:
+            self._try_paste(job, keyboards, shortcut)
 
-        if job.cfg.restore_clipboard and not job.saved_inherited:
-            clipboards[0].get_text(self._guard(job, after_save))
+        if job.cfg.restore_clipboard and not job.saved_inherited and job.reader is not None:
+            job.reader.get_text(self._guard(job, after_save))
         else:
-            after_save(True, job.saved)
+            after_save(job.saved_inherited, job.saved)
 
     def _no_keyboard_reason(self, cfg: InjectionConfig) -> str:
         if cfg.backend != "auto":
@@ -572,35 +645,42 @@ class Injector:
         return _("No way to simulate key presses was found (enable the Greffier GNOME Shell "
                  "extension, or allow remote desktop access).")
 
-    def _resolve_shortcut(
-        self,
-        job: _Job,
-        keyboards: list[KeyboardBackend],
-        then: Callable[[Callable[[KeyboardBackend], str]], None],
-    ) -> None:
-        """Work out the paste shortcut per backend (``auto`` → terminal check)."""
+    def _resolve_shortcut(self, job: _Job, then: Callable[[str], None]) -> None:
+        """Work out the paste shortcut (``auto`` → ask the extension about the
+        focused window when it is usable, else Ctrl+V)."""
         configured = job.cfg.paste_shortcut
-        if configured != "auto":
-            then(lambda _kb: configured)
-            return
-        needs_focus_info = any(kb.name != "extension" for kb in keyboards)
         shell = self._shell
-        if not needs_focus_info or shell is None or not getattr(shell, "available", False):
-            then(lambda kb: "auto" if kb.name == "extension" else "ctrl-v")
+        if configured != "auto":
+            then(configured)
+            return
+        if shell is None or not getattr(shell, "available", False):
+            then("ctrl-v")
             return
 
         def got(ok: bool, wm_class: str, is_terminal: bool) -> None:
             resolved = "ctrl-shift-v" if ok and is_terminal else "ctrl-v"
             log.debug("focused window %r → %s", wm_class, resolved)
-            then(lambda kb: "auto" if kb.name == "extension" else resolved)
+            then(resolved)
 
         shell.get_focus_info(self._guard(job, got))
+
+    def _when_quiet(self, job: _Job, keyboard: Any, fn: Callable[[], None]) -> None:
+        """Run ``fn`` once the user had time to release the shortcut's keys."""
+        if getattr(keyboard, "waits_for_modifiers", False):
+            fn()
+            return
+        not_before = max(job.requested_at, self._last_activity) + self.key_quiet_ms / 1000
+        remaining = int((not_before - time.monotonic()) * 1000)
+        if remaining > 0:
+            self._timer(job, remaining, fn)
+        else:
+            fn()
 
     def _try_paste(
         self,
         job: _Job,
         keyboards: list[KeyboardBackend],
-        shortcut_for: Callable[[KeyboardBackend], str],
+        shortcut: str,
         errors: list[str] | None = None,
     ) -> None:
         errors = errors if errors is not None else []
@@ -617,24 +697,26 @@ class Injector:
                 log.warning("paste through %s failed: %s", keyboard.name, error)
                 if keyboard.name == "portal" and error:
                     errors.append(error)
-                self._try_paste(job, rest, shortcut_for, errors)
+                self._try_paste(job, rest, shortcut, errors)
                 return
             assert job.clipboard is not None
             self._deliver(job, InjectResult(True, "paste", keyboard.name, job.clipboard.name))
             log.debug("pasted with %s via %s", used, keyboard.name)
             self._timer(job, self.restore_delay_ms, lambda: self._restore(job))
 
-        keyboard.paste(shortcut_for(keyboard), self._guard(job, pasted))
+        self._when_quiet(job, keyboard,
+                         lambda: keyboard.paste(shortcut, self._guard(job, pasted)))
 
     def _restore(self, job: _Job) -> None:
         """Put the previous text back if nobody changed the clipboard meanwhile."""
-        saved, clipboard = job.saved, job.clipboard
-        if saved is None or clipboard is None or saved == job.text:
+        saved, clipboard, reader = job.saved, job.clipboard, job.reader
+        if saved is None or clipboard is None or reader is None or saved == job.text:
             self._finish(job)
             return
         nxt = self._queue[0] if self._queue else None
         if (nxt is not None and nxt.cfg.restore_clipboard
-                and self._effective_method(nxt.cfg) == "paste"):
+                and self._effective_method(nxt.cfg) == "paste"
+                and not self._pastes_in_shell(self._keyboard_candidates(nxt.cfg))):
             # The next dictation will overwrite the clipboard anyway: hand the
             # original contents over instead of restoring twice.
             nxt.saved, nxt.saved_inherited = saved, True
@@ -648,10 +730,10 @@ class Injector:
                 return
             clipboard.set_text(saved, self._guard(job, lambda _ok, _err="": self._finish(job)))
 
-        if not clipboard.available():
+        if not (reader.available() and clipboard.available()):
             self._finish(job)
             return
-        clipboard.get_text(self._guard(job, checked))
+        reader.get_text(self._guard(job, checked))
 
     # ---- type
     def _run_type(
@@ -686,7 +768,8 @@ class Injector:
                 return
             self._complete(job, InjectResult(True, "type", keyboard.name, "none", message))
 
-        keyboard.type_text(job.text, self._guard(job, typed))
+        self._when_quiet(job, keyboard,
+                         lambda: keyboard.type_text(job.text, self._guard(job, typed)))
 
     # -- shutdown ------------------------------------------------------
     def close(self) -> None:

@@ -1,7 +1,8 @@
-"""ShellClient: name-owner tracking, Version check, calls; Injector over it."""
+"""ShellClient: owner/trust tracking, Version check, calls; Injector over it."""
 
 from __future__ import annotations
 
+import json
 import sys
 from collections.abc import Iterator
 from pathlib import Path
@@ -10,55 +11,80 @@ import pytest
 from gi.repository import GLib
 
 sys.path.insert(0, str(Path(__file__).parent / "fixtures" / "desktop"))
-from glibtest import PrivateBus, export_object, run_until  # noqa: E402
+from glibtest import PrivateBus, run_until  # noqa: E402
 
 from greffier import paths  # noqa: E402
 from greffier.config import InjectionConfig  # noqa: E402
 from greffier.const import SHELL_DBUS_IFACE, SHELL_DBUS_NAME, SHELL_DBUS_PATH  # noqa: E402
 from greffier.desktop.injection import ExtensionClipboard, ExtensionKeyboard, Injector  # noqa: E402
-from greffier.desktop.shell_client import ShellClient  # noqa: E402
+from greffier.desktop.shell_client import (  # noqa: E402
+    ERROR_ACCESS_DENIED,
+    ERROR_MODIFIERS_HELD,
+    ShellClient,
+)
 
 XML = paths.package_data("shell-interface.xml").read_text()
 
 
-class FakeExtension:
-    """Shell1 implemented in Python, like the GNOME Shell extension."""
+class DBusFailure(Exception):
+    def __init__(self, name: str, message: str) -> None:
+        super().__init__(message)
+        self.name = name
 
-    def __init__(self, bus: PrivateBus, version: int = 1) -> None:
+
+class FakeExtension:
+    """Shell1 v2 implemented in Python; owns org.gnome.Shell like gnome-shell."""
+
+    def __init__(self, bus: PrivateBus, version: int = 2, *, gnome_shell: bool = True) -> None:
         self.bus = bus
         self.conn = bus.connect()
         self.clipboard: str | None = "before"
-        self.primary: str | None = None
         self.calls: list[tuple[str, tuple]] = []
         self.terminal = False
-        export_object(self.conn, SHELL_DBUS_PATH, XML, self.handle,
-                      {f"{SHELL_DBUS_IFACE}.Version": GLib.Variant("u", version)})
+        self.fail: DBusFailure | None = None
+        self.gnome_shell = gnome_shell
+        self._register(version)
+
+    def _register(self, version: int) -> None:
+        from gi.repository import Gio
+
+        node = Gio.DBusNodeInfo.new_for_xml(XML)
+
+        def on_call(_conn, _sender, _path, _iface, method, params, invocation):
+            self.calls.append((method, params.unpack()))
+            if self.fail is not None:
+                invocation.return_dbus_error(self.fail.name, str(self.fail))
+                return
+            invocation.return_value(self.handle(method, params.unpack()))
+
+        def on_get(*_args):
+            return GLib.Variant("u", version)
+
+        self.conn.register_object(SHELL_DBUS_PATH, node.lookup_interface(SHELL_DBUS_IFACE),
+                                  on_call, on_get, None)
 
     def own(self) -> None:
+        if self.gnome_shell:
+            self.bus.own_name(self.conn, "org.gnome.Shell")
         self.bus.own_name(self.conn, SHELL_DBUS_NAME)
 
     def release(self) -> None:
         self.bus.release_name(self.conn, SHELL_DBUS_NAME)
 
-    def handle(self, _iface, method, params, _sender):
-        args = params.unpack()
-        self.calls.append((method, args))
+    def handle(self, method, args):
         if method == "SetClipboard":
-            self.clipboard = self.primary = args[0]
+            self.clipboard = args[0]
             return None
-        if method == "GetClipboard":
-            has = self.clipboard is not None
-            return GLib.Variant("(bs)", (has, self.clipboard or ""))
-        if method == "Paste":
-            used = args[0] if args[0] != "auto" else (
+        if method == "PasteText":
+            text, shortcut, _restore = args
+            self.clipboard = text
+            used = shortcut if shortcut != "auto" else (
                 "ctrl-shift-v" if self.terminal else "ctrl-v")
             return GLib.Variant("(s)", (used,))
         if method == "TypeText":
             return GLib.Variant("(u)", (len(args[0]),))
-        if method == "GetFocusInfo":
-            return GLib.Variant("(sb)", ("org.gnome.Ptyxis" if self.terminal else "gedit",
-                                         self.terminal))
-        return RuntimeError("unknown")
+        return GLib.Variant("(sb)", ("org.gnome.Ptyxis" if self.terminal else "gedit",
+                                     self.terminal))
 
 
 @pytest.fixture
@@ -76,24 +102,63 @@ def test_availability_follows_name_owner(private_bus) -> None:
     assert not client.available and client.owner is None
     ext.own()
     assert run_until(lambda: client.available)
-    assert client.version == 1 and client.running
+    assert client.version == 2 and client.trusted and client.problem() == ""
     ext.release()
     assert run_until(lambda: not client.available)
     assert changes == [True, False]
     client.close()
 
 
-def test_incompatible_version_is_ignored(private_bus) -> None:
-    ext = FakeExtension(private_bus, version=2)
-    ext.own()
+def test_impostor_not_owned_by_gnome_shell_is_ignored(private_bus) -> None:
+    shell = private_bus.connect()
+    private_bus.own_name(shell, "org.gnome.Shell")  # the real gnome-shell
+    impostor = FakeExtension(private_bus, gnome_shell=False)
+    impostor.own()
+    client = ShellClient(private_bus.connect())
+    assert run_until(lambda: client.running and client.version == 2)
+    assert not client.trusted and not client.available
+    assert "ignored" in client.problem()
+    got = []
+    client.set_clipboard("secret", lambda *a: got.append(a))
+    assert run_until(lambda: got)
+    assert got[0][0] is False and impostor.calls == []
+    client.close()
+
+
+def test_impostor_without_gnome_shell_is_ignored(private_bus) -> None:
+    FakeExtension(private_bus, gnome_shell=False).own()
     client = ShellClient(private_bus.connect())
     assert run_until(lambda: client.running)
-    assert client.version == 2
     assert not client.available
+
+
+def test_old_extension_is_ignored(private_bus) -> None:
+    FakeExtension(private_bus, version=1).own()
+    client = ShellClient(private_bus.connect())
+    assert run_until(lambda: client.running and client.version == 1)
+    assert client.trusted and not client.compatible and not client.available
+    assert "update it" in client.problem()
+    client.close()
+
+
+def test_access_denied_disables_until_owner_changes(private_bus) -> None:
+    ext = FakeExtension(private_bus)
+    ext.own()
+    client = ShellClient(private_bus.connect())
+    assert run_until(lambda: client.available)
+    ext.fail = DBusFailure(ERROR_ACCESS_DENIED, "Only the Greffier service may use this")
     got = []
-    client.set_clipboard("x", lambda *a: got.append(a))
+    client.paste_text("x", "auto", True, lambda *a: got.append(a))
     assert run_until(lambda: got)
-    assert got[0][0] is False and ext.calls == []
+    assert got[0][0] is False and got[0][3] == ERROR_ACCESS_DENIED
+    assert client.denied and not client.available
+    assert "refused" in client.problem() and "app-io.github" in client.problem()
+    # a restarted gnome-shell (new unique name) gets a new chance
+    ext.conn.close_sync(None)
+    assert run_until(lambda: not client.running)
+    ext2 = FakeExtension(private_bus)
+    ext2.own()
+    assert run_until(lambda: client.available)
     client.close()
 
 
@@ -104,20 +169,20 @@ def test_calls_round_trip(private_bus) -> None:
     assert run_until(lambda: client.available)
     got: dict[str, tuple] = {}
     client.set_clipboard("é€", lambda *a: got.setdefault("set", a))
-    assert run_until(lambda: "set" in got)
-    client.get_clipboard(lambda *a: got.setdefault("get", a))
-    client.paste("auto", lambda *a: got.setdefault("paste", a))
+    client.paste_text("salut", "auto", False, lambda *a: got.setdefault("paste", a))
     client.type_text("abc", lambda *a: got.setdefault("type", a))
     client.get_focus_info(lambda *a: got.setdefault("focus", a))
-    assert run_until(lambda: len(got) == 5)
+    assert run_until(lambda: len(got) == 4)
     assert got["set"] == (True, "")
-    assert got["get"] == (True, "é€")
-    assert got["paste"] == (True, "ctrl-v", "")
+    assert got["paste"] == (True, "ctrl-v", "", "")
     assert got["type"] == (True, 3, "")
     assert got["focus"] == (True, "gedit", False)
-    ext.clipboard = None
-    client.get_clipboard(lambda *a: got.__setitem__("get", a))
-    assert run_until(lambda: got["get"] == (True, None))
+    assert ("PasteText", ("salut", "auto", False)) in ext.calls
+    ext.fail = DBusFailure(ERROR_MODIFIERS_HELD, "Modifier keys are still held down")
+    client.paste_text("x", "auto", True, lambda *a: got.__setitem__("held", a))
+    assert run_until(lambda: "held" in got)
+    assert got["held"][3] == ERROR_MODIFIERS_HELD
+    assert client.available  # not a refusal
     client.close()
 
 
@@ -131,15 +196,33 @@ def test_injector_over_extension(private_bus) -> None:
     inj = Injector(conn, InjectionConfig(), shell=shell,
                    clipboards=[ExtensionClipboard(shell)], keyboards=[ExtensionKeyboard(shell)],
                    check_screen_lock=False)
-    inj.restore_delay_ms = 50
     results = []
     inj.inject("git status", results.append)
     assert run_until(lambda: results and not inj.busy)
-    assert results[0].ok and results[0].keyboard == "extension"
-    assert [m for m, _a in ext.calls] == ["GetClipboard", "SetClipboard", "Paste",
-                                          "GetClipboard", "SetClipboard"]
-    assert ext.calls[1] == ("SetClipboard", ("git status ",))
-    assert ext.calls[2] == ("Paste", ("auto",))
-    assert ext.clipboard == "before" and ext.primary == "before"
+    assert results[0].ok and (results[0].keyboard, results[0].clipboard) == ("extension",
+                                                                             "extension")
+    assert ext.calls == [("PasteText", ("git status ", "auto", True))]  # one call, no reads
+    report = inj.diagnostics()
+    json.dumps(report)
+    assert report["extension"]["active"] and report["extension"]["usable"]
+    assert report["extension"]["message"] == ""
+    inj.close()
+    shell.close()
+
+
+def test_diagnostics_reports_untrusted_extension(private_bus) -> None:
+    shell_conn = private_bus.connect()
+    private_bus.own_name(shell_conn, "org.gnome.Shell")
+    FakeExtension(private_bus, gnome_shell=False).own()
+    conn = private_bus.connect()
+    shell = ShellClient(conn)
+    assert run_until(lambda: shell.running and shell.version == 2)
+    inj = Injector(conn, InjectionConfig(), shell=shell,
+                   clipboards=[ExtensionClipboard(shell)], keyboards=[ExtensionKeyboard(shell)],
+                   check_screen_lock=False)
+    ext_report = inj.diagnostics()["extension"]
+    assert ext_report["active"] and not ext_report["usable"] and not ext_report["trusted"]
+    assert "ignored" in ext_report["message"]
+    assert inj.describe()["keyboard"] == "none"
     inj.close()
     shell.close()

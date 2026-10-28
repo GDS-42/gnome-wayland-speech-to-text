@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // io.github.greffier.Greffier.Shell1 (greffier/data/shell-interface.xml),
-// exported on the session bus. Only the current owner of the Greffier
-// service name may call it: anything else gets AccessDenied.
+// exported on gnome-shell's own session bus connection (the service checks
+// that the owner of our name is also the owner of org.gnome.Shell).
+//
+// A caller must (1) currently own the Greffier service name and (2) run in
+// the service's systemd unit (see trust.js); anything else gets AccessDenied.
+// The clipboard can be written, never read, through this interface.
 
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import St from 'gi://St';
 
-import {SHELL_API_VERSION, SHELL_IFACE, SHELL_NAME, SHELL_PATH} from './constants.js';
+import {ERROR_MODIFIERS_HELD, SHELL_API_VERSION, SHELL_IFACE, SHELL_NAME, SHELL_PATH}
+    from './constants.js';
+import {ModifiersHeldError, Paster} from './paste.js';
+import {SenderVerifier} from './trust.js';
 
 // Keep in sync with greffier/data/shell-interface.xml.
 const SHELL_XML = `
@@ -16,12 +22,10 @@ const SHELL_XML = `
     <method name="SetClipboard">
       <arg name="text" type="s" direction="in"/>
     </method>
-    <method name="GetClipboard">
-      <arg name="has_text" type="b" direction="out"/>
-      <arg name="text" type="s" direction="out"/>
-    </method>
-    <method name="Paste">
+    <method name="PasteText">
+      <arg name="text" type="s" direction="in"/>
       <arg name="shortcut" type="s" direction="in"/>
+      <arg name="restore" type="b" direction="in"/>
       <arg name="used" type="s" direction="out"/>
     </method>
     <method name="TypeText">
@@ -39,7 +43,14 @@ const SHELL_XML = `
 const ACCESS_DENIED = 'org.freedesktop.DBus.Error.AccessDenied';
 const INVALID_ARGS = 'org.freedesktop.DBus.Error.InvalidArgs';
 const FAILED = 'org.freedesktop.DBus.Error.Failed';
-const CLIPBOARD_READ_TIMEOUT_MS = 1000;
+
+function errorName(e) {
+    if (e instanceof ModifiersHeldError)
+        return ERROR_MODIFIERS_HELD;
+    if (e instanceof RangeError)
+        return INVALID_ARGS;
+    return FAILED;
+}
 
 export class ShellService {
     /**
@@ -51,11 +62,14 @@ export class ShellService {
         this._daemon = daemon;
         this._impl = null;
         this._ownerId = 0;
-        this._timeouts = new Set();
+        this._verifier = null;
+        this._paster = null;
         this._destroyed = false;
     }
 
     start() {
+        this._verifier = new SenderVerifier();
+        this._paster = new Paster(this._keyboard);
         this._impl = Gio.DBusExportedObject.wrapJSObject(SHELL_XML, this);
         this._impl.export(Gio.DBus.session, SHELL_PATH);
         this._ownerId = Gio.bus_own_name_on_connection(Gio.DBus.session, SHELL_NAME,
@@ -68,108 +82,75 @@ export class ShellService {
     }
 
     // -- authorization -------------------------------------------------------
-    _authorize(invocation, handler) {
+    /**
+     * Run `handler` (which returns a value, a Promise or undefined) for an
+     * authorised caller and send its result with `outSignature`.
+     *
+     * @param {Gio.DBusMethodInvocation} invocation the call
+     * @param {string|null} outSignature reply signature, e.g. '(s)'
+     * @param {function(): any} handler the method body
+     */
+    _serve(invocation, outSignature, handler) {
         const sender = invocation.get_sender();
-        const run = () => {
+        const deny = () => invocation.return_dbus_error(ACCESS_DENIED,
+            'Only the Greffier service may use this interface');
+        const run = async () => {
             if (this._destroyed) {
                 invocation.return_dbus_error(FAILED, 'Greffier extension disabled');
                 return;
             }
             try {
-                handler();
+                const value = await handler();
+                invocation.return_value(outSignature ? new GLib.Variant(outSignature, value)
+                    : null);
             } catch (e) {
-                const name = e instanceof RangeError ? INVALID_ARGS : FAILED;
-                invocation.return_dbus_error(name, e.message);
+                invocation.return_dbus_error(errorName(e), e.message);
             }
         };
-        if (sender && sender === this._daemon.owner) {
-            run();
-            return;
+        const checkProcess = () => {
+            if (this._destroyed) {
+                deny();
+                return;
+            }
+            this._verifier.verify(sender, ok => (ok ? run() : deny()));
+        };
+        if (!sender) {
+            deny();
+        } else if (sender === this._daemon?.owner) {
+            checkProcess();
+        } else {
+            // The cached owner may lag behind a service that just started.
+            this._daemon?.queryOwner(owner => (owner === sender ? checkProcess() : deny()));
         }
-        // The cached owner may lag behind a service that just started:
-        // ask the bus before refusing.
-        this._daemon.queryOwner(owner => {
-            if (sender && owner === sender)
-                run();
-            else
-                invocation.return_dbus_error(ACCESS_DENIED,
-                    'Only the Greffier service may use this interface');
-        });
-    }
-
-    _addTimeout(ms, fn) {
-        const id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, ms, () => {
-            this._timeouts.delete(id);
-            fn();
-            return GLib.SOURCE_REMOVE;
-        });
-        GLib.Source.set_name_by_id(id, '[greffier] dbus timeout');
-        this._timeouts.add(id);
-        return id;
-    }
-
-    _removeTimeout(id) {
-        if (this._timeouts.delete(id))
-            GLib.source_remove(id);
     }
 
     // -- methods -------------------------------------------------------------
     SetClipboardAsync([text], invocation) {
-        this._authorize(invocation, () => {
-            const clipboard = St.Clipboard.get_default();
-            clipboard.set_text(St.ClipboardType.CLIPBOARD, text);
-            clipboard.set_text(St.ClipboardType.PRIMARY, text);
-            invocation.return_value(null);
-        });
+        this._serve(invocation, null, () => this._paster.setClipboard(text));
     }
 
-    GetClipboardAsync(_params, invocation) {
-        this._authorize(invocation, () => {
-            let answered = false;
-            const reply = value => {
-                if (answered)
-                    return;
-                answered = true;
-                this._removeTimeout(timeoutId);
-                const hasText = typeof value === 'string';
-                invocation.return_value(new GLib.Variant('(bs)', [hasText, hasText ? value : '']));
-            };
-            // A misbehaving clipboard owner must not leave the caller hanging.
-            const timeoutId = this._addTimeout(CLIPBOARD_READ_TIMEOUT_MS, () => reply(null));
-            St.Clipboard.get_default().get_text(St.ClipboardType.CLIPBOARD,
-                (_clipboard, text) => reply(text ?? null));
-        });
-    }
-
-    PasteAsync([shortcut], invocation) {
-        this._authorize(invocation, () => {
-            const used = this._keyboard.paste(shortcut);
-            invocation.return_value(new GLib.Variant('(s)', [used]));
-        });
+    PasteTextAsync([text, shortcut, restore], invocation) {
+        this._serve(invocation, '(s)', async () => [
+            await this._paster.pasteText(text, shortcut, restore)]);
     }
 
     TypeTextAsync([text], invocation) {
-        this._authorize(invocation, () => {
-            this._keyboard.typeText(text).then(count => {
-                invocation.return_value(new GLib.Variant('(u)', [count]));
-            }).catch(e => {
-                invocation.return_dbus_error(FAILED, e.message);
-            });
+        this._serve(invocation, '(u)', async () => {
+            // Keys typed while the user still holds Super/Alt would be shortcuts.
+            await this._paster.waitForModifiers();
+            return [await this._keyboard.typeText(text)];
         });
     }
 
     GetFocusInfoAsync(_params, invocation) {
-        this._authorize(invocation, () => {
+        this._serve(invocation, '(sb)', () => {
             const {wmClass, isTerminal} = this._keyboard.focusInfo();
-            invocation.return_value(new GLib.Variant('(sb)', [wmClass, isTerminal]));
+            return [wmClass, isTerminal];
         });
     }
 
     destroy() {
         this._destroyed = true;
-        for (const id of this._timeouts)
-            GLib.source_remove(id);
-        this._timeouts.clear();
         if (this._ownerId) {
             Gio.bus_unown_name(this._ownerId);
             this._ownerId = 0;
@@ -178,6 +159,10 @@ export class ShellService {
             this._impl.unexport();
             this._impl = null;
         }
+        this._paster?.destroy();
+        this._paster = null;
+        this._verifier?.destroy();
+        this._verifier = null;
         this._keyboard = null;
         this._daemon = null;
     }

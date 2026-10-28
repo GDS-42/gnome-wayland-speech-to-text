@@ -43,13 +43,17 @@ def later(fn, ms: int = 1) -> None:
 class FakeClipboard:
     def __init__(self, world: World, name: str = "extension", settle_ms: int = 30, *,
                  available: bool = True, fail_set: bool = False, fail_get: bool = False,
-                 hang: bool = False) -> None:
+                 hang: bool = False, readable: bool = True) -> None:
         self.world, self.name, self.settle_ms = world, name, settle_ms
         self._available, self.fail_set, self.fail_get, self.hang = (
             available, fail_set, fail_get, hang)
+        self.readable = readable
 
     def available(self) -> bool:
         return self._available
+
+    def can_read(self) -> bool:
+        return self.readable
 
     def set_text(self, text, callback) -> None:
         self.world.record("set", self.name, text)
@@ -90,6 +94,34 @@ class FakeKeyboard:
         later(lambda: callback(not self.fail, 0 if self.fail else count, ""))
 
 
+class FakeShellKeyboard:
+    """Like ExtensionKeyboard: clipboard + paste + restore in one call."""
+
+    name = "extension"
+    waits_for_modifiers = True
+
+    def __init__(self, world: World, *, fail: str = "") -> None:
+        self.world, self.fail = world, fail  # fail: "" | "modifiers" | "error"
+
+    def available(self) -> bool:
+        return True
+
+    def paste_text(self, text, shortcut, restore, callback) -> None:
+        self.world.record("paste_text", text, shortcut, restore)
+        if self.fail == "error":
+            later(lambda: callback(False, shortcut, "AccessDenied", False))
+            return
+        self.world.clipboard = text  # the shell sets it before pressing keys
+        if self.fail == "modifiers":
+            later(lambda: callback(False, shortcut, "held", True))
+            return
+        later(lambda: callback(True, "ctrl-v", "", False))
+
+    def type_text(self, text, callback) -> None:
+        self.world.record("type", self.name, text)
+        later(lambda: callback(True, len(text), ""))
+
+
 class FakeShell:
     def __init__(self, terminal: bool) -> None:
         self.available = True
@@ -111,6 +143,7 @@ def make(world: World, cfg: InjectionConfig | None = None, *, clipboards=None, k
     inj = Injector(None, cfg or InjectionConfig(), clipboards=clipboards, keyboards=keyboards,
                    shell=shell, check_screen_lock=False)
     inj.restore_delay_ms = restore_ms
+    inj.key_quiet_ms = 0  # covered by test_quiet_delay_before_portal_keys
     return inj
 
 
@@ -134,7 +167,7 @@ def test_paste_sequence_and_restore() -> None:
     assert world.events() == [
         ("get", "extension"),  # save the previous clipboard
         ("set", "extension", "Bonjour "),  # trailing space separates dictations
-        ("paste", "extension", "auto", "Bonjour "),  # the extension resolves auto itself
+        ("paste", "extension", "ctrl-v", "Bonjour "),  # generic path: auto → ctrl-v
         ("get", "extension"),  # still ours?
         ("set", "extension", "old"),  # restore
     ]
@@ -350,10 +383,10 @@ def test_queue_serialises_and_restores_original_once() -> None:
     assert events == [
         ("get", "extension"),
         ("set", "extension", "one "),
-        ("paste", "extension", "auto", "one "),
+        ("paste", "extension", "ctrl-v", "one "),
         # no restore in between: the original is handed to the next dictation
         ("set", "extension", "two "),
-        ("paste", "extension", "auto", "two "),
+        ("paste", "extension", "ctrl-v", "two "),
         ("get", "extension"),
         ("set", "extension", "old"),
     ]
@@ -497,3 +530,97 @@ def test_watchdog_after_copy_reports_clipboard() -> None:
     result = inject(inj, "texte")
     assert (result.ok, result.method, result.clipboard) == (True, "clipboard", "extension")
     assert "too long" in result.message and world.clipboard == "texte "
+
+
+# --------------------------------------------------------------------------- #
+# extension (PasteText) path and key quiet time
+# --------------------------------------------------------------------------- #
+
+
+def test_paste_in_shell_is_one_call() -> None:
+    world = World("old")
+    clipboards = [FakeClipboard(world, "extension", readable=False),
+                  FakeClipboard(world, "wl-copy")]
+    keyboards = [FakeShellKeyboard(world), FakeKeyboard(world, "portal")]
+    inj = make(world, InjectionConfig(paste_shortcut="auto"), clipboards=clipboards,
+               keyboards=keyboards)
+    assert inj.describe()["keyboard"] == "extension"
+    got: list[InjectResult] = []
+    inj.inject("Bonjour", got.append)
+    assert run_until(lambda: got)
+    assert got[0] == InjectResult(True, "paste", "extension", "extension", "")
+    assert not inj.busy  # the extension restores on its own; nothing to hold
+    assert world.events() == [("paste_text", "Bonjour ", "auto", True)]
+
+
+def test_paste_in_shell_modifiers_held_keeps_text() -> None:
+    world = World("old")
+    clipboards = [FakeClipboard(world, "extension", readable=False)]
+    keyboards = [FakeShellKeyboard(world, fail="modifiers"), FakeKeyboard(world, "portal")]
+    result = inject(make(world, clipboards=clipboards, keyboards=keyboards), "texte")
+    assert (result.ok, result.method, result.clipboard) == (True, "clipboard", "extension")
+    assert "held down" in result.message and "Ctrl+V" in result.message
+    assert world.clipboard == "texte "
+    assert [e[0] for e in world.events()] == ["paste_text"]  # no blind portal retry
+
+
+def test_paste_in_shell_failure_falls_back_to_portal() -> None:
+    world = World("old")
+    clipboards = [FakeClipboard(world, "extension", readable=False),
+                  FakeClipboard(world, "wl-copy")]
+    keyboards = [FakeShellKeyboard(world, fail="error"), FakeKeyboard(world, "portal")]
+    result = inject(make(world, clipboards=clipboards, keyboards=keyboards), "x")
+    assert result == InjectResult(True, "paste", "portal", "extension", "")
+    # saved and verified through the readable backend (wl-paste)
+    assert world.events() == [
+        ("paste_text", "x ", "auto", True),
+        ("get", "wl-copy"),
+        ("set", "extension", "x "),
+        ("paste", "portal", "ctrl-v", "x "),
+        ("get", "wl-copy"),
+        ("set", "extension", "old"),
+    ]
+
+
+def test_no_restore_without_a_readable_clipboard() -> None:
+    world = World("old")
+    inj = make(world, clipboards=[FakeClipboard(world, "extension", readable=False)],
+               keyboards=[FakeKeyboard(world, "portal")])
+    assert inject(inj, "x").ok
+    assert [e[0] for e in world.events()] == ["set", "paste"]
+    assert world.clipboard == "x "
+
+
+def test_quiet_delay_before_portal_keys() -> None:
+    world = World(None)
+    inj = make(world, InjectionConfig(restore_clipboard=False),
+               keyboards=[FakeKeyboard(world, "portal")])
+    inj.key_quiet_ms = 300
+    start = time.monotonic()
+    inject(inj, "a")
+    assert world.time_of("paste") - start >= 0.29  # the user may still hold Super+Alt
+    world.log.clear()
+    run_for(0.35)
+    inj.note_shortcut_activity()  # e.g. the shortcut was released just now
+    start = time.monotonic()
+    inject(inj, "b")
+    assert world.time_of("paste") - start >= 0.29
+
+
+def test_quiet_delay_not_applied_to_extension() -> None:
+    world = World(None)
+    inj = make(world, clipboards=[FakeClipboard(world, readable=False)],
+               keyboards=[FakeShellKeyboard(world)])
+    inj.key_quiet_ms = 2000
+    start = time.monotonic()
+    assert inject(inj, "a").ok
+    assert time.monotonic() - start < 1  # the extension waits for modifiers itself
+
+
+def test_quiet_delay_before_typing() -> None:
+    world = World()
+    inj = make(world, InjectionConfig(method="type"), keyboards=[FakeKeyboard(world, "ydotool")])
+    inj.key_quiet_ms = 250
+    start = time.monotonic()
+    inject(inj, "a")
+    assert world.time_of("type") - start >= 0.24

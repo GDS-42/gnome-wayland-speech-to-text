@@ -389,7 +389,15 @@ class Controller:
     # Dictation
     # ===================================================================== #
 
+    def _note_shortcut(self) -> None:
+        """The user may still be holding the shortcut's modifiers: tell the injector."""
+        try:
+            self.deps.injector.note_shortcut_activity()
+        except Exception:
+            log.exception("note_shortcut_activity failed")
+
     def toggle(self) -> None:
+        self._note_shortcut()  # Toggle normally comes from the GNOME shortcut
         if self._recorder is not None:
             self.stop()
         else:
@@ -674,6 +682,7 @@ class Controller:
             self._notice("info" if status.active else "warning", status.message)
 
     def _on_hotkey_pressed(self) -> None:
+        self._note_shortcut()
         try:
             if self.cfg.shortcut.mode == "push-to-talk":
                 self.start_recording()
@@ -683,6 +692,7 @@ class Controller:
             pass  # already reported to the user
 
     def _on_hotkey_released(self) -> None:
+        self._note_shortcut()
         if self.cfg.shortcut.mode == "push-to-talk":
             self.stop()
 

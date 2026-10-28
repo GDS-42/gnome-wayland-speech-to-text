@@ -95,6 +95,16 @@ function keyvalFor(char) {
     return keyval || (UNICODE_KEYSYM_FLAG | cp);
 }
 
+/**
+ * Throw a RangeError (→ InvalidArgs) for an unknown paste shortcut name.
+ *
+ * @param {string} shortcut auto | ctrl-v | ctrl-shift-v | shift-insert
+ */
+export function checkShortcut(shortcut) {
+    if (shortcut !== 'auto' && !PASTE_CHORDS[shortcut])
+        throw new RangeError(`Unknown paste shortcut “${shortcut}”`);
+}
+
 export class VirtualKeyboard {
     constructor() {
         this._device = null;
@@ -156,12 +166,11 @@ export class VirtualKeyboard {
      * @returns {string} the shortcut actually sent
      */
     paste(shortcut) {
+        checkShortcut(shortcut);
         let used = shortcut;
         if (used === 'auto')
             used = this.focusInfo().isTerminal ? 'ctrl-shift-v' : 'ctrl-v';
         const chord = PASTE_CHORDS[used];
-        if (!chord)
-            throw new RangeError(`Unknown paste shortcut “${shortcut}”`);
 
         const useCodes = preferKeycodes();
         const mods = useCodes ? chord.modCodes : chord.mods;

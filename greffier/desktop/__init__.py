@@ -9,6 +9,8 @@ Start-up order in the daemon::
     injector = Injector(bus, cfg.injection)    # bus = connection owning DAEMON_ID
     hotkeys = HotkeyManager(bus, on_pressed, on_released, toggle_command)
     hotkeys.apply(cfg.shortcut, callback)
+    # on Toggle / shortcut press / release (portal and ydotool wait ~400 ms after it):
+    injector.note_shortcut_activity()
 """
 
 from __future__ import annotations

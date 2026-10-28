@@ -151,3 +151,43 @@ def test_stylesheet_classes_are_used() -> None:
     js = "\n".join(p.read_text() for p in JS_FILES)
     for cls in set(re.findall(r"\.(greffier-[\w-]+)", css)):
         assert cls in js, cls
+
+
+CGROUP_CASES = {
+    # systemd user unit (D-Bus/systemd activation): accepted
+    "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
+    "app-io.github.greffier.Greffier.Daemon.service\n": True,
+    # XDG autostart launched by gnome-session / gnome-shell: accepted
+    "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
+    "app-gnome-io.github.greffier.Greffier.Daemon-4242.scope\n": True,
+    # systemd-xdg-autostart-generator unit: accepted
+    "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
+    "app-io.github.greffier.Greffier.Daemon@autostart.service\n": True,
+    # hybrid hierarchy: name=systemd line
+    "12:memory:/x\n1:name=systemd:/user.slice/app-io.github.greffier.Greffier.Daemon.service\n"
+    "0::/\n": True,
+    # a terminal, another app, look-alikes, other controllers: refused
+    "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
+    "app-org.gnome.Terminal.slice/vte-spawn-1234.scope\n": False,
+    "0::/user.slice/app-io.github.greffier.Greffier.Daemon.service/evil.scope\n": False,
+    "0::/user.slice/app-gnome-io.github.greffier.Greffier.Daemon-x1.scope\n": False,
+    "0::/app-io.github.greffier.Greffier.DaemonX.service\n": False,
+    "4:memory:/app-io.github.greffier.Greffier.Daemon.service\n0::/\n": False,
+    "": False,
+}
+
+
+def test_cgroup_verdicts_with_gjs(tmp_path: Path) -> None:
+    gjs = shutil.which("gjs")
+    if gjs is None:
+        pytest.skip("gjs is not installed")
+    script = tmp_path / "check.js"
+    script.write_text(
+        f"import {{cgroupAllowed}} from '{(EXT_DIR / 'trust.js').as_uri()}';\n"
+        f"const cases = {json.dumps(CGROUP_CASES)};\n"
+        "const out = {};\n"
+        "for (const [text, _] of Object.entries(cases)) out[text] = cgroupAllowed(text).ok;\n"
+        "print(JSON.stringify(out));\n")
+    proc = subprocess.run([gjs, "-m", str(script)], capture_output=True, text=True, timeout=30)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == CGROUP_CASES

@@ -233,3 +233,22 @@ def test_ydotool_legacy_dialect(fake_bin, ydotoold, monkeypatch) -> None:
     assert run(tool.type_text, "abc") == (True, "")
     argv = (fake_bin / "ydotool.argv").read_text().splitlines()
     assert argv == ["", "key ctrl+v", "key shift+Insert", "type --key-delay 4 -- abc"]
+
+
+def test_ydotoold_socket_of_another_user_is_ignored(tmp_path, monkeypatch) -> None:
+    path = tmp_path / "foreign.sock"
+    sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+    sock.bind(str(path))
+    try:
+        monkeypatch.setenv("YDOTOOL_SOCKET", str(path))
+        monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path / "run"))
+        assert environment.ydotoold_socket() == path
+        real_uid = os.getuid()
+        monkeypatch.setattr(os, "getuid", lambda: real_uid + 12345)
+        if real_uid != 0:  # root-owned sockets are always trusted
+            assert environment.ydotoold_socket() != path
+        else:
+            os.chown(path, 4242, 4242)
+            assert environment.ydotoold_socket() != path
+    finally:
+        sock.close()

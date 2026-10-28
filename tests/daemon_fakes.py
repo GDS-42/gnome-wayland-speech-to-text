@@ -189,6 +189,9 @@ class FakeInjector:
     def update_config(self, cfg) -> None:
         self.config = cfg
 
+    def note_shortcut_activity(self) -> None:
+        self.shortcut_notes = getattr(self, "shortcut_notes", 0) + 1
+
     def describe(self) -> dict:
         return {"method": "paste", "keyboard": "extension", "clipboard": "extension"}
 

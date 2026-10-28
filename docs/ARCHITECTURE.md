@@ -94,7 +94,16 @@ Backends, in `auto` preference order:
 * clipboard: **extension** (`St.Clipboard`) → **wl-copy** → none.
 
 The paste shortcut defaults to `auto`: Ctrl+Shift+V when the extension reports
-a terminal has focus, Ctrl+V otherwise.
+a terminal has focus, Ctrl+V otherwise. With the extension the whole
+save → set → paste → restore sequence runs inside gnome-shell
+(`Shell1.PasteText`), after waiting for the user to release the shortcut's
+modifiers; the extension never hands the clipboard content to anyone.
+
+Trust between the two sides (see [SECURITY.md](../SECURITY.md)): the extension
+only serves the current owner of the daemon's bus name *and* only if that
+process runs in the `app-io.github.greffier.Greffier.Daemon.service` cgroup;
+the daemon only uses `…Shell` when it is owned by the same connection as
+`org.gnome.Shell`. The daemon's name cannot be replaced while it runs.
 
 ## 4. Shortcuts
 
