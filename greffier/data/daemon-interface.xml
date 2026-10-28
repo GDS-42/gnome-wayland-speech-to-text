@@ -45,7 +45,10 @@
     </method>
 
     <!-- ===== Models ===== -->
-    <!-- [ModelStatus…] see greffier/models/manager.py ModelStatus.to_dict() -->
+    <!-- [ModelStatus…]: greffier/models/manager.py ModelStatus.to_dict() (catalog entry +
+         "installed", "installed_revision", "update_available", "orphaned", "size_on_disk")
+         plus "active": bool (selected and installed), "loaded": bool (in memory) and
+         "install": {"phase", "done", "total"} while downloading, else null. -->
     <method name="ListModels">
       <arg name="models" type="s" direction="out"/>
     </method>

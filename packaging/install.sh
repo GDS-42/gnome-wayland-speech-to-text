@@ -611,6 +611,9 @@ if [ -f "${SRC_DIR}/data/${APP_ID}.desktop" ]; then
   install_file "${SRC_DIR}/data/${APP_ID}.desktop" "${APPS_DIR}/${APP_ID}.desktop"
   GUI_DESKTOP=1
   ok "Lanceur de l'application (${APP_ID}.desktop)"
+  if [ -f "${SRC_DIR}/data/dbus/${APP_ID}.service" ]; then
+    install_file "${SRC_DIR}/data/dbus/${APP_ID}.service" "${DBUS_DIR}/${APP_ID}.service"
+  fi
 else
   warn "data/${APP_ID}.desktop absent du dépôt : pas d'entrée « Greffier » dans la vue des applications."
 fi

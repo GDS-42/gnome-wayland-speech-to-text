@@ -67,7 +67,8 @@ NO_MODEL ──install/select──▶ LOADING ──ok──▶ IDLE ──Star
 3. `Stop`: the audio goes to a single worker thread. Recordings longer than the
    model's `max_segment_s` are split on pauses by the VAD.
 4. The text is post-processed (voice commands, replacements, optional French
-   typography) and handed to the `Injector` on the main thread.
+   typography) and handed to the `Injector` on the main thread, which appends
+   the separating space (`injection.trailing_space`) and serialises injections.
 
 Threading rule: **GLib main thread for all state and D-Bus; one worker thread
 for model loading/transcription; one worker thread per download; GStreamer
@@ -235,7 +236,8 @@ def portal.register_host_app(bus, app_id) -> bool   # once, before any other por
 | `~/.cache/greffier/catalog.json` | last remote catalog |
 | `~/.local/state/greffier/history.jsonl` | history, only if `general.persist_history` |
 | `~/.config/systemd/user/app-io.github.greffier.Greffier.Daemon.service` | autostart unit |
-| `~/.local/share/dbus-1/services/io.github.greffier.Greffier.Daemon.service` | D-Bus activation |
+| `~/.local/share/dbus-1/services/io.github.greffier.Greffier.Daemon.service` | D-Bus activation of the service |
+| `~/.local/share/dbus-1/services/io.github.greffier.Greffier.service` | D-Bus activation of the window (`DBusActivatable=true`) |
 
 `GREFFIER_HOME` relocates config/data/cache/state (tests, portable use).
 

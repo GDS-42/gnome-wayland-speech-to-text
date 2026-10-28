@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# D-Bus activation of the Greffier *window* (template: @BINDIR@ is replaced by
+# packaging/install.sh). With DBusActivatable=true in the .desktop file, GNOME
+# and the daemon (when a notification is clicked) start the GUI through the
+# bus: it then runs in its own systemd unit instead of inheriting the
+# daemon's cgroup and restrictions.
+[D-BUS Service]
+Name=io.github.greffier.Greffier
+Exec=@BINDIR@/greffier --gapplication-service

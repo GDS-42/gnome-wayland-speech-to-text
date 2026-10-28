@@ -9,6 +9,7 @@ Exec=greffier
 Icon=io.github.greffier.Greffier
 Terminal=false
 StartupNotify=true
+DBusActivatable=true
 SingleMainWindow=true
 Categories=Utility;Accessibility;GTK;GNOME;
 # Translators: search terms, separated by semicolons
