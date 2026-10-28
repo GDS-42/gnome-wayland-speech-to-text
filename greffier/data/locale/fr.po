@@ -1,0 +1,2675 @@
+# French translation for Greffier.
+# Copyright (C) 2026 The Greffier Contributors
+# This file is distributed under the same license as the Greffier package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Greffier 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/greffier/greffier/issues\n"
+"POT-Creation-Date: 2026-10-28 14:53+0000\n"
+"PO-Revision-Date: 2026-10-28 15:00+0000\n"
+"Last-Translator: The Greffier Contributors\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: greffier/audio/capture.py:107
+msgid "GStreamer could not be initialised."
+msgstr "Impossible d’initialiser GStreamer."
+
+#: greffier/audio/capture.py:114
+#, python-brace-format
+msgid ""
+"The GStreamer element “{element}” is missing. Install the GStreamer base and "
+"good plugins."
+msgstr ""
+"L’élément GStreamer « {element} » est manquant. Installez les greffons "
+"GStreamer « base » et « good »."
+
+#: greffier/audio/capture.py:237
+#, python-brace-format
+msgid "Audio file not found: {path}"
+msgstr "Fichier audio introuvable : {path}"
+
+#: greffier/audio/capture.py:269
+#, python-brace-format
+msgid "Cannot decode {path}."
+msgstr "Impossible de décoder {path}."
+
+#: greffier/audio/capture.py:281
+#, python-brace-format
+msgid "Decoding {path} timed out."
+msgstr "Délai dépassé lors du décodage de {path}."
+
+#: greffier/audio/capture.py:447
+#, python-brace-format
+msgid "Invalid audio source “{source}”: {error}"
+msgstr "Source audio « {source} » non valide : {error}"
+
+#: greffier/audio/capture.py:467
+msgid "Cannot connect to the audio source."
+msgstr "Impossible de se connecter à la source audio."
+
+#: greffier/audio/capture.py:480
+msgid "Cannot build the recording pipeline."
+msgstr "Impossible de créer la chaîne d’enregistrement."
+
+#: greffier/audio/capture.py:502
+msgid "The microphone did not start in time."
+msgstr "Le microphone n’a pas démarré à temps."
+
+#: greffier/audio/capture.py:505
+msgid "The microphone cannot be opened."
+msgstr "Impossible d’ouvrir le microphone."
+
+#: greffier/audio/capture.py:512
+msgid ""
+"No microphone was found. Check that a microphone is connected and that "
+"PipeWire or PulseAudio is running."
+msgstr ""
+"Aucun microphone n’a été trouvé. Vérifiez qu’un microphone est branché et que"
+" PipeWire ou PulseAudio est en cours d’exécution."
+
+#: greffier/cli.py:34
+#, python-brace-format
+msgid "Cannot connect to the session bus: {error}"
+msgstr "Impossible de se connecter au bus de session : {error}"
+
+#: greffier/cli.py:91
+#, python-brace-format
+msgid "State: {state}"
+msgstr "État : {state}"
+
+#: greffier/cli.py:94
+msgid "none"
+msgstr "aucun"
+
+#: greffier/cli.py:95
+msgid "loaded"
+msgstr "chargé"
+
+#: greffier/cli.py:95
+msgid "not loaded"
+msgstr "non chargé"
+
+#: greffier/cli.py:96
+#, python-brace-format
+msgid "Model: {model} ({loaded})"
+msgstr "Modèle : {model} ({loaded})"
+
+#: greffier/cli.py:98 greffier/cli.py:123
+msgid "active"
+msgstr "actif"
+
+#: greffier/cli.py:98
+msgid "inactive"
+msgstr "inactif"
+
+#: greffier/cli.py:99
+#, python-brace-format
+msgid "Shortcut: {accel} — {mode}, {backend}, {state}"
+msgstr "Raccourci : {accel} — {mode}, {backend}, {state}"
+
+#: greffier/cli.py:105
+#, python-brace-format
+msgid "Text insertion: {method} (keyboard: {keyboard}, clipboard: {clipboard})"
+msgstr ""
+"Insertion du texte : {method} (clavier : {keyboard}, presse-papiers : "
+"{clipboard})"
+
+#: greffier/cli.py:125
+msgid "installed"
+msgstr "installé"
+
+#: greffier/cli.py:127
+msgid "update available"
+msgstr "mise à jour disponible"
+
+#: greffier/cli.py:129
+msgid "recommended"
+msgstr "recommandé"
+
+#: greffier/cli.py:131
+msgid "installing"
+msgstr "installation en cours"
+
+#: greffier/cli.py:143
+#, python-brace-format
+msgid "{id} removed."
+msgstr "{id} supprimé."
+
+#: greffier/cli.py:147
+#, python-brace-format
+msgid "Active model: {id}"
+msgstr "Modèle actif : {id}"
+
+#: greffier/cli.py:154
+msgid "Checking for updates in the background; see `greffierctl models list`."
+msgstr ""
+"Recherche de mises à jour en arrière-plan ; consultez « greffierctl models "
+"list »."
+
+#: greffier/cli.py:156
+#, python-brace-format
+msgid "Unknown action {action}"
+msgstr "Action inconnue : {action}"
+
+#: greffier/cli.py:171
+msgid "Downloading"
+msgstr "Téléchargement"
+
+#: greffier/cli.py:171
+msgid "Verifying"
+msgstr "Vérification"
+
+#: greffier/cli.py:172
+msgid "Extracting"
+msgstr "Extraction"
+
+#: greffier/cli.py:179
+#, python-brace-format
+msgid "{id} installed."
+msgstr "{id} installé."
+
+#: greffier/cli.py:182 greffier/models/download.py:74
+msgid "Installation cancelled."
+msgstr "Installation annulée."
+
+#: greffier/cli.py:184
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "Échec de l’installation : {error}"
+
+#: greffier/cli.py:195
+msgid "The Greffier service stopped during the installation."
+msgstr "Le service Greffier s’est arrêté pendant l’installation."
+
+#: greffier/cli.py:224
+#, python-brace-format
+msgid "Unknown setting {key}"
+msgstr "Paramètre inconnu : {key}"
+
+#: greffier/cli.py:231
+msgid "Usage: greffierctl config set section.key value"
+msgstr "Utilisation : greffierctl config set section.clé valeur"
+
+#: greffier/cli.py:255
+msgid "No microphone found."
+msgstr "Aucun microphone trouvé."
+
+#: greffier/cli.py:285
+msgid "Control the Greffier dictation service."
+msgstr "Piloter le service de dictée Greffier."
+
+#: greffier/cli.py:290
+msgid "start or stop dictation"
+msgstr "démarrer ou arrêter la dictée"
+
+#: greffier/cli.py:291
+msgid "start dictation"
+msgstr "démarrer la dictée"
+
+#: greffier/cli.py:292
+msgid "stop and transcribe"
+msgstr "arrêter et transcrire"
+
+#: greffier/cli.py:293
+msgid "stop and discard the recording"
+msgstr "arrêter et abandonner l’enregistrement"
+
+#: greffier/cli.py:294
+msgid "stop the service"
+msgstr "arrêter le service"
+
+#: greffier/cli.py:299
+msgid "show the current state"
+msgstr "afficher l’état actuel"
+
+#: greffier/cli.py:303
+msgid "list, install, update or remove models"
+msgstr "lister, installer, mettre à jour ou supprimer des modèles"
+
+#: greffier/cli.py:308
+msgid "include support models"
+msgstr "inclure les modèles auxiliaires"
+
+#: greffier/cli.py:309
+msgid "do not wait for the download"
+msgstr "ne pas attendre la fin du téléchargement"
+
+#: greffier/cli.py:312
+msgid "read or change settings"
+msgstr "lire ou modifier les paramètres"
+
+#: greffier/cli.py:318
+msgid "show recent dictations"
+msgstr "afficher les dictées récentes"
+
+#: greffier/cli.py:324
+msgid "list microphones"
+msgstr "lister les microphones"
+
+#: greffier/cli.py:328
+msgid "check the installation"
+msgstr "vérifier l’installation"
+
+#: greffier/cli.py:343
+msgid "a model id is required"
+msgstr "un identifiant de modèle est requis"
+
+#: greffier/cli.py:347
+#, python-brace-format
+msgid "Error: {error}"
+msgstr "Erreur : {error}"
+
+#: greffier/daemon/app.py:149
+msgid "Greffier background service (voice dictation)."
+msgstr "Service d’arrière-plan de Greffier (dictée vocale)."
+
+#: greffier/daemon/app.py:151
+msgid "debug logging"
+msgstr "afficher les messages de débogage"
+
+#: greffier/daemon/controller.py:194 greffier/daemon/controller.py:1034
+#: greffier/ui/client.py:60
+msgid "No speech recognition model is installed."
+msgstr "Aucun modèle de reconnaissance vocale n’est installé."
+
+#: greffier/daemon/controller.py:196
+#, python-brace-format
+msgid "Loading {name}…"
+msgstr "Chargement de {name}…"
+
+#: greffier/daemon/controller.py:235
+msgid "Dictation problem"
+msgstr "Problème de dictée"
+
+#: greffier/daemon/controller.py:282
+#, python-brace-format
+msgid "Now using {name}."
+msgstr "Greffier utilise désormais {name}."
+
+#: greffier/daemon/controller.py:334
+#, python-brace-format
+msgid "Could not load the model: {error}"
+msgstr "Impossible de charger le modèle : {error}"
+
+#: greffier/daemon/controller.py:414
+msgid "No speech recognition model is installed. Open Greffier to choose one."
+msgstr ""
+"Aucun modèle de reconnaissance vocale n’est installé. Ouvrez Greffier pour en"
+" choisir un."
+
+#: greffier/daemon/controller.py:425
+msgid ""
+"The voice detection model is missing: automatic stop and live insertion are "
+"disabled."
+msgstr ""
+"Le modèle de détection de la voix est absent : l’arrêt automatique et "
+"l’insertion au fil de la parole sont désactivés."
+
+#: greffier/daemon/controller.py:445
+#, python-brace-format
+msgid "Cannot open the microphone: {error}"
+msgstr "Impossible d’ouvrir le microphone : {error}"
+
+#: greffier/daemon/controller.py:519
+msgid "Dictation cancelled."
+msgstr "Dictée annulée."
+
+#: greffier/daemon/controller.py:526
+msgid "Maximum dictation length reached."
+msgstr "Durée maximale de dictée atteinte."
+
+#: greffier/daemon/controller.py:556
+#, python-brace-format
+msgid "Microphone error: {error}"
+msgstr "Erreur du microphone : {error}"
+
+#: greffier/daemon/controller.py:585
+msgid "The model is not loaded."
+msgstr "Le modèle n’est pas chargé."
+
+#: greffier/daemon/controller.py:605
+#, python-brace-format
+msgid "Transcription failed: {error}"
+msgstr "Échec de la transcription : {error}"
+
+#: greffier/daemon/controller.py:620
+msgid "Nothing was heard."
+msgstr "Aucune parole détectée."
+
+#: greffier/daemon/controller.py:644
+msgid "The text could not be inserted."
+msgstr "Impossible d’insérer le texte."
+
+#: greffier/daemon/controller.py:647
+msgid "Text copied to the clipboard"
+msgstr "Texte copié dans le presse-papiers"
+
+#: greffier/daemon/controller.py:648
+msgid "Paste it with Ctrl+V."
+msgstr "Collez-le avec Ctrl+V."
+
+#: greffier/daemon/controller.py:650 greffier/ui/app.py:120
+#: greffier/ui/preferences.py:146
+msgid "Dictation"
+msgstr "Dictée"
+
+#: greffier/daemon/controller.py:677
+#, python-brace-format
+msgid "Cannot set up the keyboard shortcut: {error}"
+msgstr "Impossible de configurer le raccourci clavier : {error}"
+
+#: greffier/daemon/controller.py:720 greffier/models/manager.py:175
+#, python-brace-format
+msgid "Unknown model: {id}"
+msgstr "Modèle inconnu : {id}"
+
+#: greffier/daemon/controller.py:722 greffier/models/manager.py:178
+#, python-brace-format
+msgid "{name} is already being installed."
+msgstr "{name} est déjà en cours d’installation."
+
+#: greffier/daemon/controller.py:767
+#, python-brace-format
+msgid "Download of {name} cancelled."
+msgstr "Téléchargement de {name} annulé."
+
+#: greffier/daemon/controller.py:769 greffier/models/manager.py:259
+#, python-brace-format
+msgid "Could not install {name}: {error}"
+msgstr "Impossible d’installer {name} : {error}"
+
+#: greffier/daemon/controller.py:778
+#, python-brace-format
+msgid "{name} is installed."
+msgstr "{name} est installé."
+
+#: greffier/daemon/controller.py:780
+msgid "Model ready"
+msgstr "Modèle prêt"
+
+#: greffier/daemon/controller.py:781
+#, python-brace-format
+msgid "{name} is installed and ready to use."
+msgstr "{name} est installé et prêt à l’emploi."
+
+#: greffier/daemon/controller.py:792
+#, python-brace-format
+msgid "{id} is not being installed."
+msgstr "{id} n’est pas en cours d’installation."
+
+#: greffier/daemon/controller.py:797
+msgid "Cancel the download first."
+msgstr "Annulez d’abord le téléchargement."
+
+#: greffier/daemon/controller.py:799
+#, python-brace-format
+msgid "{id} is not installed."
+msgstr "{id} n’est pas installé."
+
+#: greffier/daemon/controller.py:860
+#, python-brace-format
+msgid "Could not check for updates: {error}"
+msgstr "Impossible de rechercher des mises à jour : {error}"
+
+#: greffier/daemon/controller.py:868
+#, python-brace-format
+msgid "Update available: {names}"
+msgstr "Mise à jour disponible : {names}"
+
+#: greffier/daemon/controller.py:871
+msgid "Model updates available"
+msgstr "Mises à jour de modèles disponibles"
+
+#: greffier/daemon/controller.py:873
+msgid "Your models are up to date."
+msgstr "Vos modèles sont à jour."
+
+#: greffier/daemon/controller.py:915
+#, python-brace-format
+msgid "Cannot save the settings: {error}"
+msgstr "Impossible d’enregistrer les paramètres : {error}"
+
+#: greffier/daemon/controller.py:934
+#, python-brace-format
+msgid "Cannot change the start-up setting: {error}"
+msgstr "Impossible de modifier le lancement à la connexion : {error}"
+
+#: greffier/daemon/controller.py:1029
+msgid "GNOME on Wayland session"
+msgstr "Session GNOME sous Wayland"
+
+#: greffier/daemon/controller.py:1030
+msgid ""
+"Greffier is designed for GNOME on Wayland; other sessions may only partly "
+"work."
+msgstr ""
+"Greffier est conçu pour GNOME sous Wayland ; dans les autres sessions, il "
+"risque de ne fonctionner qu’en partie."
+
+#: greffier/daemon/controller.py:1033
+#, python-brace-format
+msgid "Model: {name}"
+msgstr "Modèle : {name}"
+
+#: greffier/daemon/controller.py:1036
+#, python-brace-format
+msgid "The model failed to load: {error}"
+msgstr "Le chargement du modèle a échoué : {error}"
+
+#: greffier/daemon/controller.py:1040
+msgid "Voice detection is installed"
+msgstr "La détection de la voix est installée"
+
+#: greffier/daemon/controller.py:1041
+msgid ""
+"Voice detection is not installed (long dictations and auto-stop are "
+"degraded)."
+msgstr ""
+"La détection de la voix n’est pas installée (dictées longues et arrêt "
+"automatique moins fiables)."
+
+#: greffier/daemon/controller.py:1044
+#, python-brace-format
+msgid "Shortcut {accel} is active"
+msgstr "Le raccourci {accel} est actif"
+
+#: greffier/daemon/controller.py:1045
+msgid "The keyboard shortcut is not active."
+msgstr "Le raccourci clavier n’est pas actif."
+
+#: greffier/daemon/controller.py:1050
+msgid "The GNOME Shell extension is active"
+msgstr "L’extension GNOME Shell est active"
+
+#: greffier/daemon/controller.py:1054
+msgid ""
+"The GNOME Shell extension is installed but not active (log out and back in, "
+"then enable it in Extensions)."
+msgstr ""
+"L’extension GNOME Shell est installée mais inactive (fermez la session puis "
+"reconnectez-vous, et activez-la dans Extensions)."
+
+#: greffier/daemon/controller.py:1057
+msgid "Install the Greffier GNOME Shell extension for the best experience."
+msgstr ""
+"Installez l’extension GNOME Shell de Greffier pour un fonctionnement optimal."
+
+#: greffier/daemon/controller.py:1062
+#, python-brace-format
+msgid "Text is inserted with: {backend}"
+msgstr "Insertion du texte : {backend}"
+
+#: greffier/daemon/controller.py:1065
+msgid ""
+"No way to simulate the paste shortcut: text will only be copied to the "
+"clipboard."
+msgstr ""
+"Impossible de simuler le raccourci pour coller : le texte sera uniquement "
+"copié dans le presse-papiers."
+
+#: greffier/daemon/controller.py:1069
+msgid ""
+"No microphone found (check GNOME Settings › Privacy & Security › Microphone)."
+msgstr ""
+"Aucun microphone trouvé (vérifiez Paramètres › Vie privée et sécurité › "
+"Microphone)."
+
+#: greffier/daemon/controller.py:1083
+msgid "the Greffier GNOME Shell extension"
+msgstr "l’extension GNOME Shell de Greffier"
+
+#: greffier/daemon/controller.py:1084
+msgid "the remote desktop portal"
+msgstr "le portail Bureau distant"
+
+#: greffier/daemon/controller.py:1093
+#, python-brace-format
+msgid "{n} microphone found"
+msgid_plural "{n} microphones found"
+msgstr[0] "{n} microphone trouvé"
+msgstr[1] "{n} microphones trouvés"
+
+#: greffier/daemon/service.py:30
+#, python-brace-format
+msgid "Invalid JSON: {error}"
+msgstr "JSON non valide : {error}"
+
+#: greffier/daemon/service.py:69
+msgid "The service is still starting."
+msgstr "Le service est encore en cours de démarrage."
+
+#: greffier/daemon/service.py:76
+msgid "The settings patch must be a JSON object."
+msgstr "La modification des paramètres doit être un objet JSON."
+
+#: greffier/desktop/autostart.py:104
+msgid "Voice dictation service"
+msgstr "Service de dictée vocale"
+
+#: greffier/desktop/autostart.py:135
+#, python-brace-format
+msgid "Could not update {path}: {error}"
+msgstr "Impossible de mettre à jour {path} : {error}"
+
+#: greffier/desktop/autostart.py:184
+#, python-brace-format
+msgid "Could not run systemctl: {error}"
+msgstr "Impossible d’exécuter systemctl : {error}"
+
+#: greffier/desktop/autostart.py:186 greffier/desktop/autostart.py:224
+#, python-brace-format
+msgid "systemctl --user {verb} failed: {error}"
+msgstr "Échec de systemctl --user {verb} : {error}"
+
+#: greffier/desktop/global_shortcuts.py:203
+#, python-brace-format
+msgid "“{accelerator}” cannot be used as a global shortcut."
+msgstr "« {accelerator} » ne peut pas servir de raccourci global."
+
+#: greffier/desktop/global_shortcuts.py:209
+msgid ""
+"The GlobalShortcuts portal is not available (it needs GNOME 48 or later)."
+msgstr ""
+"Le portail GlobalShortcuts n’est pas disponible (il nécessite GNOME 48 ou "
+"plus récent)."
+
+#: greffier/desktop/global_shortcuts.py:218
+msgid "The global shortcut was not confirmed."
+msgstr "Le raccourci global n’a pas été confirmé."
+
+#: greffier/desktop/global_shortcuts.py:220
+#, python-brace-format
+msgid "The GlobalShortcuts portal failed: {error}"
+msgstr "Échec du portail GlobalShortcuts : {error}"
+
+#: greffier/desktop/global_shortcuts.py:222
+msgid "The GlobalShortcuts portal could not bind the shortcut."
+msgstr "Le portail GlobalShortcuts n’a pas pu associer le raccourci."
+
+#: greffier/desktop/gnome_keybinding.py:249
+#, python-brace-format
+msgid "“{name}”"
+msgstr "« {name} »"
+
+#: greffier/desktop/gnome_keybinding.py:250
+#, python-brace-format
+msgid ""
+"{shortcut} is also used by {names}: only one of them will work. Change one of"
+" them in Settings › Keyboard › Keyboard Shortcuts."
+msgstr ""
+"{shortcut} est aussi utilisé par {names} : un seul fonctionnera. Modifiez "
+"l’un des raccourcis dans Paramètres › Clavier › Raccourcis clavier."
+
+#: greffier/desktop/gnome_keybinding.py:259
+msgid ""
+"GNOME keyboard shortcuts are not available (gnome-settings-daemon is "
+"missing)."
+msgstr ""
+"Les raccourcis clavier de GNOME ne sont pas disponibles (gnome-settings-"
+"daemon est absent)."
+
+#: greffier/desktop/gnome_keybinding.py:262
+#, python-brace-format
+msgid "“{accelerator}” is not a valid shortcut."
+msgstr "« {accelerator} » n’est pas un raccourci valide."
+
+#: greffier/desktop/hotkeys.py:104
+msgid "The global shortcut was removed by the system."
+msgstr "Le raccourci global a été supprimé par le système."
+
+#: greffier/desktop/hotkeys.py:170
+msgid ""
+"Push-to-talk needs the GlobalShortcuts portal; the GNOME shortcut works in "
+"toggle mode."
+msgstr ""
+"Le mode « Appuyer pour parler » nécessite le portail GlobalShortcuts ; le "
+"raccourci GNOME fonctionne en mode « Marche/arrêt »."
+
+#: greffier/desktop/hotkeys.py:180
+msgid ""
+"Push-to-talk needs the GlobalShortcuts portal (GNOME 48 or later); the "
+"shortcut works in toggle mode instead."
+msgstr ""
+"Le mode « Appuyer pour parler » nécessite le portail GlobalShortcuts (GNOME "
+"48 ou plus récent) ; le raccourci fonctionne donc en mode « Marche/arrêt »."
+
+#: greffier/desktop/hotkeys.py:191
+#, python-brace-format
+msgid ""
+"No way to register a global shortcut was found: set one up in your desktop "
+"settings that runs “{command}”."
+msgstr ""
+"Impossible d’enregistrer un raccourci global : créez-en un dans les "
+"paramètres de votre bureau qui exécute « {command} »."
+
+#: greffier/desktop/hotkeys.py:214
+msgid "Dictate (hold to talk)"
+msgstr "Dicter (maintenir pour parler)"
+
+#: greffier/desktop/hotkeys.py:215
+msgid "Start or stop dictation"
+msgstr "Démarrer ou arrêter la dictée"
+
+#: greffier/desktop/hotkeys.py:224
+#, python-brace-format
+msgid "The system assigned {trigger} to Greffier instead of {accelerator}."
+msgstr "Le système a attribué {trigger} à Greffier au lieu de {accelerator}."
+
+#: greffier/desktop/hotkeys.py:232
+#, python-brace-format
+msgid ""
+"Push-to-talk is unavailable ({reason}); the shortcut works in toggle mode "
+"instead."
+msgstr ""
+"Le mode « Appuyer pour parler » n’est pas disponible ({reason}) ; le "
+"raccourci fonctionne donc en mode « Marche/arrêt »."
+
+#: greffier/desktop/injection.py:455
+msgid ""
+"Inserting the text took too long. The text is in the clipboard: press Ctrl+V "
+"to paste it."
+msgstr ""
+"L’insertion du texte a pris trop de temps. Le texte est dans le presse-"
+"papiers : appuyez sur Ctrl+V pour le coller."
+
+#: greffier/desktop/injection.py:460
+msgid "Inserting the text took too long and was abandoned."
+msgstr "L’insertion du texte a pris trop de temps et a été abandonnée."
+
+#: greffier/desktop/injection.py:507
+msgid "The screen is locked."
+msgstr "L’écran est verrouillé."
+
+#: greffier/desktop/injection.py:520
+msgid ""
+"Could not copy the text: install wl-clipboard or enable the Greffier GNOME "
+"Shell extension."
+msgstr ""
+"Impossible de copier le texte : installez wl-clipboard ou activez l’extension"
+" GNOME Shell de Greffier."
+
+#: greffier/desktop/injection.py:525
+msgid "Text copied to the clipboard: press Ctrl+V to paste it."
+msgstr ""
+"Texte copié dans le presse-papiers : appuyez sur Ctrl+V pour le coller."
+
+#: greffier/desktop/injection.py:558
+msgid ""
+"The text could not be copied either: install wl-clipboard or enable the "
+"Greffier GNOME Shell extension."
+msgstr ""
+"Le texte n’a pas pu être copié non plus : installez wl-clipboard ou activez "
+"l’extension GNOME Shell de Greffier."
+
+#: greffier/desktop/injection.py:564
+msgid "The text is in the clipboard: press Ctrl+V to paste it."
+msgstr ""
+"Le texte est dans le presse-papiers : appuyez sur Ctrl+V pour le coller."
+
+#: greffier/desktop/injection.py:597
+msgid "Keys were still held down, so the text was not pasted."
+msgstr "Des touches étaient encore enfoncées : le texte n’a pas été collé."
+
+#: greffier/desktop/injection.py:611
+msgid ""
+"No clipboard access (install wl-clipboard or the extension): the text was "
+"typed instead."
+msgstr ""
+"Pas d’accès au presse-papiers (installez wl-clipboard ou l’extension) : le "
+"texte a été saisi au clavier à la place."
+
+#: greffier/desktop/injection.py:627
+msgid "The clipboard could not be set: the text was typed instead."
+msgstr ""
+"Impossible de remplir le presse-papiers : le texte a été saisi au clavier à "
+"la place."
+
+#: greffier/desktop/injection.py:644
+#, python-brace-format
+msgid "The keyboard backend “{name}” is not available."
+msgstr "La simulation du clavier par « {name} » n’est pas disponible."
+
+#: greffier/desktop/injection.py:645
+msgid ""
+"No way to simulate key presses was found (enable the Greffier GNOME Shell "
+"extension, or allow remote desktop access)."
+msgstr ""
+"Aucun moyen de simuler des frappes au clavier n’a été trouvé (activez "
+"l’extension GNOME Shell de Greffier ou autorisez l’accès au bureau distant)."
+
+#: greffier/desktop/injection.py:691
+msgid "Simulating the paste shortcut failed."
+msgstr "La simulation du raccourci pour coller a échoué."
+
+#: greffier/desktop/injection.py:756
+msgid ""
+"Typed with ydotool, which assumes a US keyboard layout: accented characters "
+"may be wrong."
+msgstr ""
+"Saisi avec ydotool, qui suppose une disposition de clavier américaine : les "
+"caractères accentués peuvent être incorrects."
+
+#: greffier/desktop/injection.py:759
+msgid ""
+"Some characters could not be typed with the current keyboard layout; the full"
+" text is in the clipboard."
+msgstr ""
+"Certains caractères n’ont pas pu être saisis avec la disposition de clavier "
+"actuelle ; le texte complet est dans le presse-papiers."
+
+#: greffier/desktop/remote_desktop.py:152
+#: greffier/desktop/remote_desktop.py:244
+#: greffier/desktop/remote_desktop.py:273
+#: greffier/desktop/remote_desktop.py:350
+msgid "The remote desktop session was closed."
+msgstr "La session de bureau distant a été fermée."
+
+#: greffier/desktop/remote_desktop.py:180
+msgid ""
+"Remote keyboard access was refused. To allow it, turn on “Allow Remote "
+"Interaction”, then press “Share” in the dialog."
+msgstr ""
+"L’accès au clavier à distance a été refusé. Pour l’autoriser, activez "
+"« Autoriser l’interaction à distance », puis cliquez sur « Partager » dans la"
+" boîte de dialogue."
+
+#: greffier/desktop/remote_desktop.py:183
+#, python-brace-format
+msgid "The remote desktop portal failed: {error}"
+msgstr "Échec du portail Bureau distant : {error}"
+
+#: greffier/desktop/remote_desktop.py:184
+msgid "The remote desktop portal could not start a session."
+msgstr "Le portail Bureau distant n’a pas pu démarrer de session."
+
+#: greffier/desktop/remote_desktop.py:227
+msgid "Keyboard access was not granted by the remote desktop portal."
+msgstr "Le portail Bureau distant n’a pas accordé l’accès au clavier."
+
+#: greffier/desktop/remote_desktop.py:338
+msgid "The remote desktop portal rejected a key event."
+msgstr "Le portail Bureau distant a rejeté un événement clavier."
+
+#: greffier/desktop/shell_client.py:177
+msgid ""
+"Something other than GNOME Shell claims to be the Greffier extension: it is "
+"ignored."
+msgstr ""
+"Un programme autre que GNOME Shell se fait passer pour l’extension Greffier :"
+" il est ignoré."
+
+#: greffier/desktop/shell_client.py:180
+#, python-brace-format
+msgid ""
+"The Greffier GNOME Shell extension does not match this version of Greffier "
+"(interface {found}, needs {needed} or later): update it."
+msgstr ""
+"L’extension GNOME Shell de Greffier ne correspond pas à cette version de "
+"Greffier (interface {found}, {needed} ou plus récente requise) : mettez-la à "
+"jour."
+
+#: greffier/desktop/shell_client.py:183
+#, python-brace-format
+msgid ""
+"The Greffier GNOME Shell extension refused this service, which must run as "
+"{unit} (not from a terminal); the remote desktop portal is used instead."
+msgstr ""
+"L’extension GNOME Shell de Greffier a refusé ce service, qui doit fonctionner"
+" en tant que {unit} (et non depuis un terminal) ; le portail Bureau distant "
+"est utilisé à la place."
+
+#: greffier/models/archive.py:46
+#, python-brace-format
+msgid "The model archive contains an unsafe entry: {name} ({reason})."
+msgstr "L’archive du modèle contient une entrée suspecte : {name} ({reason})."
+
+#: greffier/models/archive.py:51
+#, python-brace-format
+msgid "The model archive is damaged: {error}"
+msgstr "L’archive du modèle est endommagée : {error}"
+
+#: greffier/models/archive.py:63
+msgid "link"
+msgstr "lien"
+
+#: greffier/models/archive.py:65
+msgid "special file"
+msgstr "fichier spécial"
+
+#: greffier/models/archive.py:67
+msgid "invalid name"
+msgstr "nom non valide"
+
+#: greffier/models/archive.py:69
+msgid "absolute path"
+msgstr "chemin absolu"
+
+#: greffier/models/archive.py:72
+msgid "parent directory reference"
+msgstr "référence au dossier parent"
+
+#: greffier/models/archive.py:77 greffier/models/archive.py:79
+#: greffier/models/archive.py:84 greffier/models/archive.py:188
+msgid "outside the model directory"
+msgstr "en dehors du dossier du modèle"
+
+#: greffier/models/archive.py:110
+#, python-brace-format
+msgid "Unsupported model archive format: {format}"
+msgstr "Format d’archive de modèle non pris en charge : {format}"
+
+#: greffier/models/archive.py:127 greffier/models/archive.py:195
+msgid "duplicate entry"
+msgstr "entrée en double"
+
+#: greffier/models/archive.py:150
+msgid "The model catalog entry is invalid (no 'model' file)."
+msgstr ""
+"L’entrée du catalogue pour ce modèle n’est pas valide (pas de fichier "
+"« model »)."
+
+#: greffier/models/archive.py:197
+msgid "The model archive is larger than announced in the catalog."
+msgstr "L’archive du modèle est plus volumineuse qu’annoncé dans le catalogue."
+
+#: greffier/models/download.py:85
+#, python-brace-format
+msgid "{size} bytes"
+msgstr "{size} octets"
+
+#: greffier/models/download.py:86
+#, python-brace-format
+msgid "{size} GB"
+msgstr "{size} Go"
+
+#: greffier/models/download.py:86
+#, python-brace-format
+msgid "{size} MB"
+msgstr "{size} Mo"
+
+#: greffier/models/download.py:86
+#, python-brace-format
+msgid "{size} TB"
+msgstr "{size} To"
+
+#: greffier/models/download.py:86
+#, python-brace-format
+msgid "{size} kB"
+msgstr "{size} ko"
+
+#: greffier/models/download.py:91
+msgctxt "decimal separator"
+msgid "."
+msgstr ","
+
+#: greffier/models/download.py:195
+msgid "the server redirected to an insecure address"
+msgstr "le serveur a redirigé vers une adresse non sécurisée"
+
+#: greffier/models/download.py:197
+#, python-brace-format
+msgid "the server answered with error {status}"
+msgstr "le serveur a répondu par l’erreur {status}"
+
+#: greffier/models/download.py:202
+#, python-brace-format
+msgid "the secure connection could not be verified ({detail})"
+msgstr "la connexion sécurisée n’a pas pu être vérifiée ({detail})"
+
+#: greffier/models/download.py:206
+msgid "the server did not answer in time"
+msgstr "le serveur n’a pas répondu à temps"
+
+#: greffier/models/download.py:208 greffier/models/download.py:427
+msgid "the connection was interrupted"
+msgstr "la connexion a été interrompue"
+
+#: greffier/models/download.py:210
+#, python-brace-format
+msgid "cannot reach the server ({detail})"
+msgstr "impossible de joindre le serveur ({detail})"
+
+#: greffier/models/download.py:255
+#, python-brace-format
+msgid "Not enough disk space in {path}: {needed} needed, {free} available."
+msgstr ""
+"Espace disque insuffisant dans {path} : {needed} nécessaires, {free} "
+"disponibles."
+
+#: greffier/models/download.py:267
+msgid "The model catalog entry is invalid (checksum or size)."
+msgstr ""
+"L’entrée du catalogue pour ce modèle n’est pas valide (somme de contrôle ou "
+"taille)."
+
+#: greffier/models/download.py:365
+#, python-brace-format
+msgid ""
+"The downloaded file does not have the expected size ({actual} bytes instead "
+"of {expected}). It has been deleted; please try again later."
+msgstr ""
+"Le fichier téléchargé n’a pas la taille attendue ({actual} octets au lieu de "
+"{expected}). Il a été supprimé ; réessayez plus tard."
+
+#: greffier/models/download.py:450
+#, python-brace-format
+msgid "Cannot write the download to disk: {error}"
+msgstr "Impossible d’écrire le téléchargement sur le disque : {error}"
+
+#: greffier/models/download.py:493
+msgid ""
+"The downloaded file is corrupted (checksum mismatch). It has been deleted; "
+"please try again."
+msgstr ""
+"Le fichier téléchargé est corrompu (somme de contrôle incorrecte). Il a été "
+"supprimé ; réessayez."
+
+#: greffier/models/download.py:519
+#, python-brace-format
+msgid "Download failed: {error}"
+msgstr "Échec du téléchargement : {error}"
+
+#: greffier/models/download.py:524
+#, python-brace-format
+msgid "Download failed after several attempts: {error}"
+msgstr "Échec du téléchargement après plusieurs tentatives : {error}"
+
+#: greffier/models/manager.py:217
+#, python-brace-format
+msgid "The model archive does not contain the file {file}."
+msgstr "L’archive du modèle ne contient pas le fichier {file}."
+
+#: greffier/models/manager.py:270
+#, python-brace-format
+msgid "Invalid model identifier: {id}"
+msgstr "Identifiant de modèle non valide : {id}"
+
+#: greffier/models/manager.py:274
+#, python-brace-format
+msgid "{name} cannot be removed while it is being installed."
+msgstr "Impossible de supprimer {name} pendant son installation."
+
+#: greffier/models/manager.py:284
+#, python-brace-format
+msgid "Could not remove {name}: {error}"
+msgstr "Impossible de supprimer {name} : {error}"
+
+#: greffier/stt/engine.py:171
+#, python-brace-format
+msgid ""
+"The model “{name}” uses an unsupported engine family “{family}”. Update "
+"Greffier to use it."
+msgstr ""
+"Le modèle « {name} » utilise une famille de moteur non prise en charge "
+"(« {family} »). Mettez à jour Greffier pour l’utiliser."
+
+#: greffier/stt/families.py:167
+#, python-brace-format
+msgid "Could not load the model “{name}”: {error}"
+msgstr "Impossible de charger le modèle « {name} » : {error}"
+
+#: greffier/stt/families.py:217
+#, python-brace-format
+msgid ""
+"The model “{name}” is misconfigured: its catalog entry has no “{role}” file."
+msgstr ""
+"Le modèle « {name} » est mal configuré : son entrée de catalogue n’a pas de "
+"fichier « {role} »."
+
+#: greffier/stt/families.py:225
+#, python-brace-format
+msgid ""
+"The model “{name}” is incomplete ({files} missing). Reinstall it from the "
+"model list."
+msgstr ""
+"Le modèle « {name} » est incomplet (il manque {files}). Réinstallez-le depuis"
+" la liste des modèles."
+
+#: greffier/stt/families.py:234
+msgid "The speech recognition model is not loaded."
+msgstr "Le modèle de reconnaissance vocale n’est pas chargé."
+
+#: greffier/stt/families.py:246
+#, python-brace-format
+msgid "Speech recognition failed: {error}"
+msgstr "Échec de la reconnaissance vocale : {error}"
+
+#: greffier/stt/vad.py:60
+#, python-brace-format
+msgid "The voice detection model is missing: {path}"
+msgstr "Le modèle de détection de la voix est absent : {path}"
+
+#: greffier/stt/vad.py:75
+#, python-brace-format
+msgid "Could not load the voice detection model: {error}"
+msgstr "Impossible de charger le modèle de détection de la voix : {error}"
+
+#: greffier/ui/app.py:33
+msgid "Open the preferences"
+msgstr "Ouvrir les préférences"
+
+#: greffier/ui/app.py:35
+msgid "Open the speech model manager"
+msgstr "Ouvrir le gestionnaire de modèles"
+
+#: greffier/ui/app.py:37
+msgid "Show the version and exit"
+msgstr "Afficher la version et quitter"
+
+#: greffier/ui/app.py:111
+msgid "Dictate while held, in any application"
+msgstr "Maintenir pour dicter, dans n’importe quelle application"
+
+#: greffier/ui/app.py:112
+msgid "Start or stop dictation, in any application"
+msgstr "Démarrer ou arrêter la dictée, dans n’importe quelle application"
+
+#: greffier/ui/app.py:113
+msgid "Cancel dictation"
+msgstr "Annuler la dictée"
+
+#: greffier/ui/app.py:115
+msgid "Preferences"
+msgstr "Préférences"
+
+#: greffier/ui/app.py:116
+msgid "Keyboard shortcuts"
+msgstr "Raccourcis clavier"
+
+#: greffier/ui/app.py:117
+msgid "Close window"
+msgstr "Fermer la fenêtre"
+
+#: greffier/ui/app.py:118
+msgid "Quit"
+msgstr "Quitter"
+
+#: greffier/ui/app.py:120 greffier/ui/preferences.py:69
+msgid "General"
+msgstr "Général"
+
+#: greffier/ui/app.py:149
+msgid "The Greffier Contributors"
+msgstr "Les contributeurs de Greffier"
+
+#: greffier/ui/app.py:154
+msgid "© 2026 The Greffier Contributors"
+msgstr "© 2026 Les contributeurs de Greffier"
+
+#: greffier/ui/app.py:155
+msgid ""
+"Local and private voice dictation for GNOME. Speech recognition runs entirely"
+" on your computer."
+msgstr ""
+"Dictée vocale locale et confidentielle pour GNOME. La reconnaissance vocale "
+"s’effectue entièrement sur votre ordinateur."
+
+#: greffier/ui/app.py:158
+msgid "translator-credits"
+msgstr "Les contributeurs de Greffier"
+
+#: greffier/ui/app.py:161 greffier/ui/models_page.py:443
+msgid "Speech Recognition"
+msgstr "Reconnaissance vocale"
+
+#: greffier/ui/app.py:168
+msgid "Speech Models"
+msgstr "Modèles de reconnaissance vocale"
+
+#: greffier/ui/client.py:61
+msgid "Greffier is busy. Try again in a moment."
+msgstr "Greffier est occupé. Réessayez dans un instant."
+
+#: greffier/ui/client.py:62
+msgid "The setting could not be changed."
+msgstr "Impossible de modifier ce paramètre."
+
+#: greffier/ui/client.py:63
+msgid "This item no longer exists."
+msgstr "Cet élément n’existe plus."
+
+#: greffier/ui/client.py:64 greffier/ui/client.py:72
+msgid "Something went wrong."
+msgstr "Un problème est survenu."
+
+#: greffier/ui/client.py:68 greffier/ui/client.py:307
+msgid "The Greffier service is not running."
+msgstr "Le service Greffier n’est pas lancé."
+
+#: greffier/ui/client.py:71
+msgid "The Greffier service is not responding."
+msgstr "Le service Greffier ne répond pas."
+
+#: greffier/ui/client.py:79
+msgid "The service sent an invalid reply."
+msgstr "Le service a renvoyé une réponse non valide."
+
+#: greffier/ui/client.py:273
+msgid "The session bus is not available."
+msgstr "Le bus de session n’est pas disponible."
+
+#: greffier/ui/diagnostics.py:34
+msgid ""
+"The first time you dictate, GNOME asks for permission: turn on “Allow Remote "
+"Interaction”, then click “Share”."
+msgstr ""
+"La première fois que vous dictez, GNOME demande une autorisation : activez "
+"« Autoriser l’interaction à distance », puis cliquez sur « Partager »."
+
+#: greffier/ui/diagnostics.py:52
+msgid ""
+"Shortcuts and text insertion may only partly work outside GNOME on Wayland."
+msgstr ""
+"En dehors de GNOME sous Wayland, les raccourcis et l’insertion du texte "
+"risquent de ne fonctionner qu’en partie."
+
+#: greffier/ui/diagnostics.py:54
+msgid "Download a speech model to start dictating."
+msgstr ""
+"Téléchargez un modèle de reconnaissance vocale pour commencer à dicter."
+
+#: greffier/ui/diagnostics.py:55
+#, python-brace-format
+msgid ""
+"Try another model, or read the service log with “journalctl --user -u "
+"{unit}”."
+msgstr ""
+"Essayez un autre modèle ou consultez le journal du service avec « journalctl "
+"--user -u {unit} »."
+
+#: greffier/ui/diagnostics.py:57
+msgid "Long dictations and stopping on silence work better with it."
+msgstr "Elle améliore les dictées longues et l’arrêt sur silence."
+
+#: greffier/ui/diagnostics.py:58
+msgid "Choose another shortcut, or check GNOME Settings › Keyboard."
+msgstr "Choisissez un autre raccourci ou vérifiez Paramètres › Clavier."
+
+#: greffier/ui/diagnostics.py:59
+msgid ""
+"It shows a recording indicator in the top bar and inserts text instantly."
+msgstr ""
+"Elle affiche un indicateur d’enregistrement dans la barre supérieure et "
+"insère le texte instantanément."
+
+#: greffier/ui/diagnostics.py:61
+msgid ""
+"Install the GNOME Shell extension, or turn on “Allow Remote Interaction” when"
+" GNOME asks for permission."
+msgstr ""
+"Installez l’extension GNOME Shell ou activez « Autoriser l’interaction à "
+"distance » quand GNOME demande l’autorisation."
+
+#: greffier/ui/diagnostics.py:63
+msgid ""
+"Plug in a microphone, or allow access in GNOME Settings › Privacy & Security."
+msgstr ""
+"Branchez un microphone ou autorisez l’accès dans Paramètres › Vie privée et "
+"sécurité."
+
+#: greffier/ui/diagnostics.py:103
+msgid "System"
+msgstr "Système"
+
+#: greffier/ui/diagnostics.py:111
+msgid "Checks"
+msgstr "Vérifications"
+
+#: greffier/ui/diagnostics.py:112
+msgid "What Greffier needs to work well on this computer."
+msgstr "Ce dont Greffier a besoin pour bien fonctionner sur cet ordinateur."
+
+#: greffier/ui/diagnostics.py:114
+msgid "Check Again"
+msgstr "Vérifier à nouveau"
+
+#: greffier/ui/diagnostics.py:122 greffier/ui/models_page.py:456
+msgid "Checking…"
+msgstr "Vérification…"
+
+#: greffier/ui/diagnostics.py:128
+msgid "Details"
+msgstr "Détails"
+
+#: greffier/ui/diagnostics.py:131
+msgid "Version"
+msgstr "Version"
+
+#: greffier/ui/diagnostics.py:132
+msgid "GNOME Shell"
+msgstr "GNOME Shell"
+
+#: greffier/ui/diagnostics.py:133
+msgid "Session"
+msgstr "Session"
+
+#: greffier/ui/diagnostics.py:134
+msgid "Speech Engine"
+msgstr "Moteur de reconnaissance"
+
+#: greffier/ui/diagnostics.py:135 greffier/ui/models_page.py:479
+msgid "Processor Threads"
+msgstr "Threads du processeur"
+
+#: greffier/ui/diagnostics.py:136 greffier/ui/onboarding.py:294
+#: greffier/ui/preferences.py:365
+msgid "GNOME Shell Extension"
+msgstr "Extension GNOME Shell"
+
+#: greffier/ui/diagnostics.py:137
+msgid "Portals"
+msgstr "Portails"
+
+#: greffier/ui/diagnostics.py:138
+msgid "Command-Line Tools"
+msgstr "Outils en ligne de commande"
+
+#: greffier/ui/diagnostics.py:148
+msgid "Troubleshooting"
+msgstr "Dépannage"
+
+#: greffier/ui/diagnostics.py:149
+msgid "Copy _Report"
+msgstr "Copier le _rapport"
+
+#: greffier/ui/diagnostics.py:150
+msgid "Run _Setup Assistant Again"
+msgstr "Relancer l’_assistant de configuration"
+
+#: greffier/ui/diagnostics.py:154 greffier/ui/preferences.py:73
+msgid "Background Service"
+msgstr "Service d’arrière-plan"
+
+#: greffier/ui/diagnostics.py:155
+msgid "Greffier Service"
+msgstr "Service Greffier"
+
+#: greffier/ui/diagnostics.py:198 greffier/ui/window.py:448
+msgid "The Greffier service is not running"
+msgstr "Le service Greffier n’est pas lancé"
+
+#: greffier/ui/diagnostics.py:199
+msgid "Dictation, shortcuts and models need it."
+msgstr "La dictée, les raccourcis et les modèles en ont besoin."
+
+#: greffier/ui/diagnostics.py:233
+msgid "_Choose…"
+msgstr "_Choisir…"
+
+#: greffier/ui/diagnostics.py:235
+msgid "_Models…"
+msgstr "_Modèles…"
+
+#: greffier/ui/diagnostics.py:237
+msgid "_Install"
+msgstr "_Installer"
+
+#: greffier/ui/diagnostics.py:239
+msgid "_Change…"
+msgstr "_Modifier…"
+
+#: greffier/ui/diagnostics.py:242 greffier/ui/onboarding.py:436
+msgid "_Open Extensions"
+msgstr "_Ouvrir Extensions"
+
+#: greffier/ui/diagnostics.py:243 greffier/ui/onboarding.py:442
+msgid "_Learn More"
+msgstr "_En savoir plus"
+
+#: greffier/ui/diagnostics.py:245
+msgid "_Sound Settings"
+msgstr "Paramètres du _son"
+
+#: greffier/ui/diagnostics.py:253
+msgid "No"
+msgstr "Non"
+
+#: greffier/ui/diagnostics.py:253
+msgid "Yes"
+msgstr "Oui"
+
+#: greffier/ui/diagnostics.py:256
+#, python-brace-format
+msgid "{gui} (service {service})"
+msgstr "{gui} (service {service})"
+
+#: greffier/ui/diagnostics.py:259
+msgctxt "extension"
+msgid "Active"
+msgstr "Active"
+
+#: greffier/ui/diagnostics.py:261
+msgid "Enabled, active after logging in again"
+msgstr "Activée, active après reconnexion"
+
+#: greffier/ui/diagnostics.py:263
+msgid "Installed, not enabled"
+msgstr "Installée, non activée"
+
+#: greffier/ui/diagnostics.py:265
+msgctxt "extension"
+msgid "Not installed"
+msgstr "Non installée"
+
+#: greffier/ui/diagnostics.py:268
+msgid "Unknown"
+msgstr "Inconnue"
+
+#: greffier/ui/diagnostics.py:271
+msgid "Not detected"
+msgstr "Non détecté"
+
+#: greffier/ui/diagnostics.py:274
+msgctxt "engine"
+msgid "Not installed"
+msgstr "Non installé"
+
+#: greffier/ui/diagnostics.py:278 greffier/ui/diagnostics.py:282
+#, python-brace-format
+msgid "{label}: {value}"
+msgstr "{label} : {value}"
+
+#: greffier/ui/diagnostics.py:280
+msgid "Global Shortcuts"
+msgstr "Raccourcis globaux"
+
+#: greffier/ui/diagnostics.py:281
+msgid "Remote Desktop"
+msgstr "Bureau distant"
+
+#: greffier/ui/diagnostics.py:284 greffier/ui/preferences.py:223
+msgid "None"
+msgstr "Aucun"
+
+#: greffier/ui/diagnostics.py:293
+msgid "Report copied to clipboard"
+msgstr "Rapport copié dans le presse-papiers"
+
+#: greffier/ui/diagnostics.py:301 greffier/ui/window.py:185
+msgid "Starting…"
+msgstr "Démarrage…"
+
+#: greffier/ui/diagnostics.py:302
+msgid "Start"
+msgstr "Démarrer"
+
+#: greffier/ui/diagnostics.py:307
+#, python-brace-format
+msgid "Running, version {version}"
+msgstr "En cours d’exécution, version {version}"
+
+#: greffier/ui/diagnostics.py:308
+msgid "Running"
+msgstr "En cours d’exécution"
+
+#: greffier/ui/diagnostics.py:309 greffier/ui/diagnostics.py:325
+msgid "_Stop"
+msgstr "A_rrêter"
+
+#: greffier/ui/diagnostics.py:313
+msgid "Not running"
+msgstr "Arrêté"
+
+#: greffier/ui/diagnostics.py:314 greffier/ui/window.py:449
+msgid "_Start"
+msgstr "_Démarrer"
+
+#: greffier/ui/diagnostics.py:321
+msgid "Stop the Greffier Service?"
+msgstr "Arrêter le service Greffier ?"
+
+#: greffier/ui/diagnostics.py:322
+msgid ""
+"The dictation shortcut will not work until the service starts again, for "
+"example at your next login."
+msgstr ""
+"Le raccourci de dictée ne fonctionnera plus jusqu’au prochain démarrage du "
+"service, par exemple à votre prochaine connexion."
+
+#: greffier/ui/diagnostics.py:324 greffier/ui/history.py:198
+#: greffier/ui/models_page.py:361 greffier/ui/preferences.py:122
+#: greffier/ui/preferences.py:530 greffier/ui/shortcut_dialog.py:60
+#: greffier/ui/window.py:90
+msgid "_Cancel"
+msgstr "_Annuler"
+
+#: greffier/ui/diagnostics.py:333 greffier/ui/window.py:463
+#, python-brace-format
+msgid "Could not start the service: {error}"
+msgstr "Impossible de démarrer le service : {error}"
+
+#: greffier/ui/history.py:49
+msgid "Copy"
+msgstr "Copier"
+
+#: greffier/ui/history.py:52
+msgid "Copy Text"
+msgstr "Copier le texte"
+
+#: greffier/ui/history.py:62
+#, python-brace-format
+msgid "Duration: {duration}"
+msgstr "Durée : {duration}"
+
+#: greffier/ui/history.py:64
+#, python-brace-format
+msgid "Model: {model}"
+msgstr "Modèle : {model}"
+
+#: greffier/ui/history.py:88
+msgid "Copied to clipboard"
+msgstr "Copié dans le presse-papiers"
+
+#: greffier/ui/history.py:98
+msgid "Recent Dictations"
+msgstr "Dictées récentes"
+
+#: greffier/ui/history.py:103 greffier/ui/history.py:199
+#: greffier/ui/preferences.py:123
+msgid "_Clear"
+msgstr "_Effacer"
+
+#: greffier/ui/history.py:104
+msgid "Clear History"
+msgstr "Effacer l’historique"
+
+#: greffier/ui/history.py:167
+msgid "History Is Turned Off"
+msgstr "L’historique est désactivé"
+
+#: greffier/ui/history.py:169
+msgid "Turn it on in Preferences to find your recent dictations here."
+msgstr ""
+"Activez-le dans les préférences pour retrouver ici vos dictées récentes."
+
+#: greffier/ui/history.py:171
+msgid "No Dictations Yet"
+msgstr "Aucune dictée pour l’instant"
+
+#: greffier/ui/history.py:172
+msgid "Your recent dictations will appear here."
+msgstr "Vos dictées récentes apparaîtront ici."
+
+#: greffier/ui/history.py:196 greffier/ui/preferences.py:120
+msgid "Clear History?"
+msgstr "Effacer l’historique ?"
+
+#: greffier/ui/history.py:197 greffier/ui/preferences.py:121
+msgid "Your recent dictations will be permanently deleted."
+msgstr "Vos dictées récentes seront définitivement supprimées."
+
+#: greffier/ui/mic_button.py:124
+msgid "Listening. Activate to stop and insert the text."
+msgstr "À l’écoute. Activez pour arrêter et insérer le texte."
+
+#: greffier/ui/mic_button.py:124
+msgid "Stop Dictation"
+msgstr "Arrêter la dictée"
+
+#: greffier/ui/mic_button.py:126
+msgid "Transcribing"
+msgstr "Transcription en cours"
+
+#: greffier/ui/mic_button.py:126
+msgid "Your speech is being converted to text."
+msgstr "Vos paroles sont en cours de transcription."
+
+#: greffier/ui/mic_button.py:128 greffier/ui/mic_button.py:131
+msgid "Start Dictation"
+msgstr "Démarrer la dictée"
+
+#: greffier/ui/mic_button.py:128
+msgid "The speech model is loading."
+msgstr "Le modèle de reconnaissance vocale est en cours de chargement."
+
+#: greffier/ui/mic_button.py:132
+msgid "Records your voice and types the text into the focused window."
+msgstr "Enregistre votre voix et saisit le texte dans la fenêtre active."
+
+#: greffier/ui/models_page.py:36
+msgid "Downloading…"
+msgstr "Téléchargement…"
+
+#: greffier/ui/models_page.py:37
+msgid "Verifying…"
+msgstr "Vérification…"
+
+#: greffier/ui/models_page.py:38
+msgid "Installing…"
+msgstr "Installation…"
+
+#: greffier/ui/models_page.py:64
+#, python-brace-format
+msgid "{value} out of {max}"
+msgstr "{value} sur {max}"
+
+#: greffier/ui/models_page.py:202
+msgid "Speed"
+msgstr "Vitesse"
+
+#: greffier/ui/models_page.py:203
+msgid "Accuracy"
+msgstr "Précision"
+
+#: greffier/ui/models_page.py:209
+#, python-brace-format
+msgid "{size} on disk"
+msgstr "{size} sur disque"
+
+#. Translators: memory needed by a model, e.g. "900 MB RAM"
+#: greffier/ui/models_page.py:213
+#, python-brace-format
+msgid "{size} RAM"
+msgstr "{size} RAM"
+
+#: greffier/ui/models_page.py:232
+msgid "Recommended"
+msgstr "Recommandé"
+
+#: greffier/ui/models_page.py:234
+msgctxt "model"
+msgid "Active"
+msgstr "Actif"
+
+#: greffier/ui/models_page.py:236
+msgid "Installed"
+msgstr "Installé"
+
+#: greffier/ui/models_page.py:238
+msgid "Update Available"
+msgstr "Nouvelle version"
+
+#: greffier/ui/models_page.py:267
+msgid "Cancel Download"
+msgstr "Annuler le téléchargement"
+
+#: greffier/ui/models_page.py:275
+msgid "_Download"
+msgstr "_Télécharger"
+
+#: greffier/ui/models_page.py:276
+#, python-brace-format
+msgid "Download {name} ({size})"
+msgstr "Télécharger {name} ({size})"
+
+#: greffier/ui/models_page.py:279
+msgid "_Update"
+msgstr "_Mettre à jour"
+
+#: greffier/ui/models_page.py:280
+#, python-brace-format
+msgid "Download the new version of {name}"
+msgstr "Télécharger la nouvelle version de {name}"
+
+#: greffier/ui/models_page.py:282
+msgid "_Use"
+msgstr "_Utiliser"
+
+#: greffier/ui/models_page.py:283
+#, python-brace-format
+msgid "Use {name} for dictation"
+msgstr "Utiliser {name} pour la dictée"
+
+#: greffier/ui/models_page.py:287 greffier/ui/onboarding.py:413
+msgid "Ready"
+msgstr "Prêt"
+
+#: greffier/ui/models_page.py:290
+msgid "Remove"
+msgstr "Supprimer"
+
+#: greffier/ui/models_page.py:302
+#, python-brace-format
+msgid "{done} of {total} · {percent}"
+msgstr "{done} sur {total} · {percent}"
+
+#: greffier/ui/models_page.py:338
+#, python-brace-format
+msgid "Could not download {name}: {error}"
+msgstr "Impossible de télécharger {name} : {error}"
+
+#: greffier/ui/models_page.py:353
+#, python-brace-format
+msgid ""
+"The model files ({size}) will be deleted from this computer. You can download"
+" it again later."
+msgstr ""
+"Les fichiers du modèle ({size}) seront supprimés de cet ordinateur. Vous "
+"pourrez le télécharger à nouveau plus tard."
+
+#: greffier/ui/models_page.py:358
+msgid ""
+"This is the only installed model: dictation will not work until you download "
+"another one."
+msgstr ""
+"C’est le seul modèle installé : la dictée ne fonctionnera plus tant que vous "
+"n’en aurez pas téléchargé un autre."
+
+#: greffier/ui/models_page.py:360
+#, python-brace-format
+msgid "Remove {name}?"
+msgstr "Supprimer {name} ?"
+
+#: greffier/ui/models_page.py:362
+msgid "_Remove"
+msgstr "_Supprimer"
+
+#: greffier/ui/models_page.py:393
+msgid "Loading the model list…"
+msgstr "Chargement de la liste des modèles…"
+
+#: greffier/ui/models_page.py:433
+msgid "Models"
+msgstr "Modèles"
+
+#: greffier/ui/models_page.py:444
+msgid "Models run entirely on this computer, without sending anything online."
+msgstr ""
+"Les modèles fonctionnent entièrement sur cet ordinateur, sans rien envoyer en"
+" ligne."
+
+#: greffier/ui/models_page.py:449
+msgid "Check for _Updates"
+msgstr "Rechercher des mises à _jour"
+
+#: greffier/ui/models_page.py:466
+msgid "Language"
+msgstr "Langue"
+
+#: greffier/ui/models_page.py:467
+msgid "Spoken Language"
+msgstr "Langue parlée"
+
+#: greffier/ui/models_page.py:477
+msgid "Performance"
+msgstr "Performances"
+
+#: greffier/ui/models_page.py:480
+msgid "0 chooses automatically"
+msgstr "0 : choix automatique"
+
+#: greffier/ui/models_page.py:484
+msgid "Hardware Acceleration"
+msgstr "Accélération matérielle"
+
+#: greffier/ui/models_page.py:485
+msgid "NVIDIA graphics cards need the CUDA libraries"
+msgstr "Les cartes graphiques NVIDIA nécessitent les bibliothèques CUDA"
+
+#: greffier/ui/models_page.py:486
+msgid "None (Processor)"
+msgstr "Aucune (processeur)"
+
+#: greffier/ui/models_page.py:487
+msgid "NVIDIA CUDA"
+msgstr "NVIDIA CUDA"
+
+#: greffier/ui/models_page.py:491
+msgid "Load at Startup"
+msgstr "Charger au démarrage"
+
+#: greffier/ui/models_page.py:492
+msgid "Dictation starts instantly, but uses memory while idle"
+msgstr "La dictée démarre aussitôt, mais la mémoire reste occupée au repos"
+
+#: greffier/ui/models_page.py:498
+msgid "Free Memory After"
+msgstr "Libérer la mémoire après"
+
+#: greffier/ui/models_page.py:499
+msgid "Minutes of inactivity; 0 keeps the model loaded"
+msgstr "Minutes d’inactivité ; 0 garde le modèle chargé"
+
+#: greffier/ui/models_page.py:505
+msgid "Updates"
+msgstr "Mises à jour"
+
+#: greffier/ui/models_page.py:506
+msgid "Check for Updates Automatically"
+msgstr "Rechercher automatiquement les mises à jour"
+
+#: greffier/ui/models_page.py:507
+msgid "Look for new and improved models once a day"
+msgstr "Chercher chaque jour des modèles nouveaux ou améliorés"
+
+#: greffier/ui/models_page.py:510
+msgid "Catalog Address"
+msgstr "Adresse du catalogue"
+
+#: greffier/ui/models_page.py:527
+msgid "Install a model first"
+msgstr "Installez d’abord un modèle"
+
+#: greffier/ui/models_page.py:534
+#, python-brace-format
+msgid "{name} recognises the language automatically"
+msgstr "{name} reconnaît la langue automatiquement"
+
+#: greffier/ui/models_page.py:539
+msgid "Choose the language you dictate in"
+msgstr "Choisissez la langue de vos dictées"
+
+#: greffier/ui/models_page.py:540
+#, python-brace-format
+msgid "“Automatic” lets {name} detect it"
+msgstr "« Automatique » laisse {name} la détecter"
+
+#: greffier/ui/models_page.py:563
+#, python-brace-format
+msgid "{n} update available"
+msgid_plural "{n} updates available"
+msgstr[0] "{n} mise à jour disponible"
+msgstr[1] "{n} mises à jour disponibles"
+
+#: greffier/ui/models_page.py:565
+msgid "All installed models are up to date"
+msgstr "Tous les modèles installés sont à jour"
+
+#: greffier/ui/onboarding.py:169
+msgid "Welcome to Greffier"
+msgstr "Bienvenue dans Greffier"
+
+#: greffier/ui/onboarding.py:170
+msgid "Dictate text into any application with a keyboard shortcut."
+msgstr ""
+"Dictez du texte dans n’importe quelle application grâce à un raccourci "
+"clavier."
+
+#: greffier/ui/onboarding.py:174
+msgid "Private"
+msgstr "Confidentiel"
+
+#: greffier/ui/onboarding.py:175
+msgid "Speech recognition runs on this computer. Your voice never leaves it."
+msgstr ""
+"La reconnaissance vocale s’effectue sur cet ordinateur. Votre voix ne le "
+"quitte jamais."
+
+#: greffier/ui/onboarding.py:176
+msgid "Works Offline"
+msgstr "Fonctionne hors ligne"
+
+#: greffier/ui/onboarding.py:177
+msgid "Once a model is downloaded, no internet connection is needed."
+msgstr ""
+"Une fois le modèle téléchargé, aucune connexion à Internet n’est nécessaire."
+
+#: greffier/ui/onboarding.py:178
+msgid "Works Everywhere"
+msgstr "Fonctionne partout"
+
+#: greffier/ui/onboarding.py:179
+msgid "The text is typed into the focused window, in any application."
+msgstr ""
+"Le texte est saisi dans la fenêtre active, quelle que soit l’application."
+
+#: greffier/ui/onboarding.py:196
+msgid "_Get Started"
+msgstr "_Commencer"
+
+#: greffier/ui/onboarding.py:201
+msgid "Choose a Speech Model"
+msgstr "Choisissez un modèle"
+
+#: greffier/ui/onboarding.py:202
+msgid ""
+"Models are downloaded once, then run on this computer. The recommended model "
+"suits most people."
+msgstr ""
+"Les modèles sont téléchargés une seule fois, puis fonctionnent sur cet "
+"ordinateur. Le modèle recommandé convient dans la plupart des cas."
+
+#: greffier/ui/onboarding.py:207 greffier/ui/onboarding.py:377
+msgid "Show _Other Models"
+msgstr "Afficher d’_autres modèles"
+
+#: greffier/ui/onboarding.py:212 greffier/ui/onboarding.py:253
+#: greffier/ui/onboarding.py:310 greffier/ui/onboarding.py:392
+#: greffier/ui/onboarding.py:399
+msgid "_Continue"
+msgstr "_Continuer"
+
+#: greffier/ui/onboarding.py:225
+msgid "Your Dictation Shortcut"
+msgstr "Votre raccourci de dictée"
+
+#: greffier/ui/onboarding.py:231
+msgid "C_hange Shortcut…"
+msgstr "_Modifier le raccourci…"
+
+#: greffier/ui/onboarding.py:241 greffier/ui/preferences.py:179
+msgid "Toggle"
+msgstr "Marche/arrêt"
+
+#: greffier/ui/onboarding.py:242 greffier/ui/preferences.py:179
+msgid "Press the shortcut to start, press it again to stop"
+msgstr "Appuyez sur le raccourci pour démarrer, puis à nouveau pour arrêter"
+
+#: greffier/ui/onboarding.py:245 greffier/ui/preferences.py:181
+msgid "Push to Talk"
+msgstr "Appuyer pour parler"
+
+#: greffier/ui/onboarding.py:246 greffier/ui/preferences.py:181
+msgid "Hold the shortcut while you speak. Requires GNOME 48 or later"
+msgstr ""
+"Maintenez le raccourci enfoncé pendant que vous parlez. Nécessite GNOME 48 ou"
+" plus récent"
+
+#: greffier/ui/onboarding.py:258
+msgid "Try It Out"
+msgstr "Faites un essai"
+
+#: greffier/ui/onboarding.py:270
+msgid "Dictation test area"
+msgstr "Zone de test de la dictée"
+
+#: greffier/ui/onboarding.py:273
+msgid "Your words will appear here"
+msgstr "Vos paroles s’afficheront ici"
+
+#: greffier/ui/onboarding.py:302
+msgid "Allow Remote Interaction"
+msgstr "Autoriser l’interaction à distance"
+
+#: greffier/ui/onboarding.py:319
+msgid "All Set"
+msgstr "Tout est prêt"
+
+#: greffier/ui/onboarding.py:321
+msgid "_Start Using Greffier"
+msgstr "_Commencer à utiliser Greffier"
+
+#: greffier/ui/onboarding.py:339
+msgid ""
+"Hold it down in any application while you speak. The text appears at your "
+"cursor when you release it."
+msgstr ""
+"Maintenez-le enfoncé dans n’importe quelle application pendant que vous "
+"parlez. Le texte apparaît à l’emplacement du curseur quand vous le relâchez."
+
+#: greffier/ui/onboarding.py:342
+msgid ""
+"Press it in any application to start dictating, then again to stop. The text "
+"appears at your cursor."
+msgstr ""
+"Appuyez dessus dans n’importe quelle application pour commencer à dicter, "
+"puis à nouveau pour arrêter. Le texte apparaît à l’emplacement du curseur."
+
+#: greffier/ui/onboarding.py:350
+msgid "Click in the box below, then click the microphone and say a few words."
+msgstr ""
+"Cliquez dans la zone ci-dessous, puis cliquez sur le microphone et dites "
+"quelques mots."
+
+#: greffier/ui/onboarding.py:352
+msgid ""
+"Click the microphone in the Greffier window to dictate. You can set a "
+"shortcut in Preferences."
+msgstr ""
+"Cliquez sur le microphone dans la fenêtre de Greffier pour dicter. Vous "
+"pouvez définir un raccourci dans les préférences."
+
+#: greffier/ui/onboarding.py:355
+#, python-brace-format
+msgid ""
+"Click in the box below, hold {shortcut} and say a few words, then release it."
+msgstr ""
+"Cliquez dans la zone ci-dessous, maintenez {shortcut} et dites quelques mots,"
+" puis relâchez."
+
+#: greffier/ui/onboarding.py:357
+#, python-brace-format
+msgid ""
+"Hold {shortcut} in any application to dictate. Greffier keeps working in the "
+"background, even when this window is closed."
+msgstr ""
+"Maintenez {shortcut} dans n’importe quelle application pour dicter. Greffier "
+"continue de fonctionner en arrière-plan, même lorsque cette fenêtre est "
+"fermée."
+
+#: greffier/ui/onboarding.py:361
+#, python-brace-format
+msgid ""
+"Click in the box below, press {shortcut} and say a few words, then press it "
+"again."
+msgstr ""
+"Cliquez dans la zone ci-dessous, appuyez sur {shortcut} et dites quelques "
+"mots, puis appuyez à nouveau."
+
+#: greffier/ui/onboarding.py:363
+#, python-brace-format
+msgid ""
+"Press {shortcut} in any application to dictate. Greffier keeps working in the"
+" background, even when this window is closed."
+msgstr ""
+"Appuyez sur {shortcut} dans n’importe quelle application pour dicter. "
+"Greffier continue de fonctionner en arrière-plan, même lorsque cette fenêtre "
+"est fermée."
+
+#: greffier/ui/onboarding.py:376
+msgid "Show _Fewer Models"
+msgstr "Afficher _moins de modèles"
+
+#: greffier/ui/onboarding.py:395
+msgid "_Continue While Downloading"
+msgstr "_Continuer sans attendre"
+
+#: greffier/ui/onboarding.py:396
+msgid "The download goes on in the background."
+msgstr "Le téléchargement se poursuit en arrière-plan."
+
+#: greffier/ui/onboarding.py:400
+msgid "Download a model to continue."
+msgstr "Téléchargez un modèle pour continuer."
+
+#: greffier/ui/onboarding.py:408 greffier/ui/window.py:198
+msgid "Listening…"
+msgstr "À l’écoute…"
+
+#: greffier/ui/onboarding.py:409 greffier/ui/window.py:206
+msgid "Transcribing…"
+msgstr "Transcription…"
+
+#: greffier/ui/onboarding.py:410
+msgid "Loading the model…"
+msgstr "Chargement du modèle…"
+
+#: greffier/ui/onboarding.py:411
+msgid "Waiting for the model download…"
+msgstr "Téléchargement du modèle…"
+
+#: greffier/ui/onboarding.py:412
+msgid "Something went wrong"
+msgstr "Un problème est survenu"
+
+#: greffier/ui/onboarding.py:429
+msgid "Active: a recording indicator appears in the top bar while you dictate."
+msgstr ""
+"Active : un indicateur d’enregistrement apparaît dans la barre supérieure "
+"pendant la dictée."
+
+#: greffier/ui/onboarding.py:434
+msgid ""
+"Installed but not active. Log out and back in, then enable it in Extensions."
+msgstr ""
+"Installée mais inactive. Fermez la session puis reconnectez-vous, et activez-"
+"la dans Extensions."
+
+#: greffier/ui/onboarding.py:440
+msgid ""
+"Optional. It shows a recording indicator in the top bar and inserts text "
+"faster and more reliably."
+msgstr ""
+"Facultative. Elle affiche un indicateur d’enregistrement dans la barre "
+"supérieure et insère le texte plus vite et de façon plus fiable."
+
+#: greffier/ui/onboarding.py:454 greffier/ui/preferences.py:322
+msgid ""
+"Hold the shortcut while you speak. Not available: requires GNOME 48 or later"
+msgstr ""
+"Maintenez le raccourci enfoncé pendant que vous parlez. Indisponible : "
+"nécessite GNOME 48 ou plus récent"
+
+#: greffier/ui/preferences.py:75
+msgid "Start at Login"
+msgstr "Lancer à la connexion"
+
+#: greffier/ui/preferences.py:76
+msgid "Keep dictation available as soon as you log in"
+msgstr "Rendre la dictée disponible dès l’ouverture de la session"
+
+#: greffier/ui/preferences.py:80
+msgid "Feedback"
+msgstr "Sons et notifications"
+
+#: greffier/ui/preferences.py:82
+msgid "Play a sound when recording starts and stops"
+msgstr "Émettre un son au début et à la fin de l’enregistrement"
+
+#: greffier/ui/preferences.py:82
+msgid "Sounds"
+msgstr "Sons"
+
+#: greffier/ui/preferences.py:85
+msgid "Errors, finished downloads and updates"
+msgstr "Erreurs, téléchargements terminés et mises à jour"
+
+#: greffier/ui/preferences.py:85
+msgid "Notifications"
+msgstr "Notifications"
+
+#: greffier/ui/preferences.py:88
+msgid "Show Each Transcription"
+msgstr "Afficher chaque transcription"
+
+#: greffier/ui/preferences.py:89
+msgid "Also display the dictated text in a notification"
+msgstr "Afficher aussi le texte dicté dans une notification"
+
+#: greffier/ui/preferences.py:97
+msgid "History"
+msgstr "Historique"
+
+#: greffier/ui/preferences.py:98
+msgid ""
+"Recent dictations are listed in the main window so that you can copy them "
+"again."
+msgstr ""
+"Les dictées récentes sont listées dans la fenêtre principale pour que vous "
+"puissiez les copier à nouveau."
+
+#: greffier/ui/preferences.py:101
+msgid "Dictations to Keep"
+msgstr "Dictées à conserver"
+
+#: greffier/ui/preferences.py:102
+msgid "0 turns the history off"
+msgstr "0 désactive l’historique"
+
+#: greffier/ui/preferences.py:105
+msgid "Keep After Restart"
+msgstr "Conserver après redémarrage"
+
+#: greffier/ui/preferences.py:106
+msgid "Save recent dictations on disk. Off by default for privacy"
+msgstr ""
+"Enregistrer les dictées récentes sur le disque. Désactivé par défaut, par "
+"souci de confidentialité"
+
+#: greffier/ui/preferences.py:114
+msgid "_Clear History"
+msgstr "_Effacer l’historique"
+
+#: greffier/ui/preferences.py:130
+msgid "History cleared"
+msgstr "Historique effacé"
+
+#: greffier/ui/preferences.py:153
+msgid "Keyboard Shortcut"
+msgstr "Raccourci clavier"
+
+#: greffier/ui/preferences.py:154 greffier/ui/preferences.py:250
+msgid "Start and Stop Dictation"
+msgstr "Démarrer et arrêter la dictée"
+
+#: greffier/ui/preferences.py:158
+msgid "Reset to Default"
+msgstr "Rétablir le raccourci par défaut"
+
+#: greffier/ui/preferences.py:162
+msgid "Change…"
+msgstr "Modifier…"
+
+#: greffier/ui/preferences.py:177
+msgid "Mode"
+msgstr "Mode"
+
+#: greffier/ui/preferences.py:189
+msgid "Recording"
+msgstr "Enregistrement"
+
+#: greffier/ui/preferences.py:190
+msgid "Microphone"
+msgstr "Microphone"
+
+#: greffier/ui/preferences.py:191 greffier/ui/preferences.py:301
+msgid "System Default"
+msgstr "Par défaut du système"
+
+#: greffier/ui/preferences.py:195
+msgid "Stop on Silence"
+msgstr "Arrêt sur silence"
+
+#: greffier/ui/preferences.py:196
+msgid "Stop recording automatically when you stop speaking"
+msgstr "Arrêter automatiquement l’enregistrement quand vous cessez de parler"
+
+#: greffier/ui/preferences.py:201
+msgid "Silence Delay"
+msgstr "Délai de silence"
+
+#: greffier/ui/preferences.py:202
+msgid "Seconds of silence before stopping"
+msgstr "Secondes de silence avant l’arrêt"
+
+#: greffier/ui/preferences.py:208
+msgid "Maximum Duration"
+msgstr "Durée maximale"
+
+#: greffier/ui/preferences.py:209
+msgid "Seconds before recording stops in any case"
+msgstr "Secondes avant l’arrêt forcé de l’enregistrement"
+
+#: greffier/ui/preferences.py:213
+msgid "Insert While Speaking"
+msgstr "Insérer au fil de la parole"
+
+#: greffier/ui/preferences.py:214
+msgid "Insert the text at each pause instead of when you stop"
+msgstr "Insérer le texte à chaque pause plutôt qu’à la fin"
+
+#: greffier/ui/preferences.py:219
+msgid "Advanced"
+msgstr "Avancé"
+
+#: greffier/ui/preferences.py:221
+msgid "Shortcut Method"
+msgstr "Type de raccourci"
+
+#: greffier/ui/preferences.py:222 greffier/ui/preferences.py:348
+#: greffier/ui/preferences.py:356 greffier/ui/preferences.py:365
+#: greffier/ui/util.py:63
+msgid "Automatic"
+msgstr "Automatique"
+
+#: greffier/ui/preferences.py:222
+msgid "GNOME Custom Shortcut"
+msgstr "Raccourci personnalisé GNOME"
+
+#: greffier/ui/preferences.py:223
+msgid "Global Shortcuts Portal"
+msgstr "Portail des raccourcis globaux"
+
+#: greffier/ui/preferences.py:250
+msgid "Hold to Dictate"
+msgstr "Maintenir pour dicter"
+
+#: greffier/ui/preferences.py:259
+msgid "A GNOME custom shortcut for toggle mode, the portal for push to talk"
+msgstr ""
+"Raccourci personnalisé GNOME en mode « Marche/arrêt », portail en mode "
+"« Appuyer pour parler »"
+
+#: greffier/ui/preferences.py:260
+msgid "Listed in GNOME Settings › Keyboard › Custom Shortcuts"
+msgstr "Visible dans Paramètres › Clavier › Raccourcis personnalisés"
+
+#: greffier/ui/preferences.py:261
+msgid "Requires GNOME 48 or later"
+msgstr "Nécessite GNOME 48 ou plus récent"
+
+#: greffier/ui/preferences.py:262
+msgid "Bind “greffierctl toggle” to a key yourself"
+msgstr "Associez vous-même « greffierctl toggle » à une touche"
+
+#: greffier/ui/preferences.py:274
+msgid "The shortcut is not active"
+msgstr "Le raccourci n’est pas actif"
+
+#: greffier/ui/preferences.py:293
+msgid "Shortcut disabled"
+msgstr "Raccourci désactivé"
+
+#: greffier/ui/preferences.py:309
+msgid "Unavailable Microphone"
+msgstr "Microphone indisponible"
+
+#: greffier/ui/preferences.py:339
+msgid "Text"
+msgstr "Texte"
+
+#: greffier/ui/preferences.py:344
+msgid "Insertion"
+msgstr "Insertion"
+
+#: greffier/ui/preferences.py:345
+msgid "How the dictated text reaches the focused application."
+msgstr "Comment le texte dicté parvient à l’application active."
+
+#: greffier/ui/preferences.py:347
+msgid "Method"
+msgstr "Méthode"
+
+#: greffier/ui/preferences.py:348
+msgid "Paste"
+msgstr "Coller"
+
+#: greffier/ui/preferences.py:348
+msgid "Type"
+msgstr "Saisir au clavier"
+
+#: greffier/ui/preferences.py:349
+msgid "Copy Only"
+msgstr "Copier seulement"
+
+#: greffier/ui/preferences.py:354
+msgid "Paste Shortcut"
+msgstr "Raccourci pour coller"
+
+#: greffier/ui/preferences.py:355
+msgid "Automatic uses Ctrl+Shift+V in terminals"
+msgstr "Automatique : Ctrl+Maj+V dans les terminaux"
+
+#: greffier/ui/preferences.py:364
+msgid "Keyboard Backend"
+msgstr "Simulation du clavier"
+
+#: greffier/ui/preferences.py:366
+msgid "Remote Desktop Portal"
+msgstr "Portail Bureau distant"
+
+#: greffier/ui/preferences.py:372
+msgid "Restore Clipboard"
+msgstr "Restaurer le presse-papiers"
+
+#: greffier/ui/preferences.py:373
+msgid "Put back what the clipboard held before pasting"
+msgstr "Remettre l’ancien contenu du presse-papiers après le collage"
+
+#: greffier/ui/preferences.py:377
+msgid "Add a Space After Each Dictation"
+msgstr "Ajouter une espace après chaque dictée"
+
+#: greffier/ui/preferences.py:378
+msgid "Keeps consecutive dictations apart"
+msgstr "Sépare les dictées successives"
+
+#: greffier/ui/preferences.py:383
+msgid "Processing"
+msgstr "Traitement"
+
+#: greffier/ui/preferences.py:384 greffier/ui/preferences.py:430
+msgid "Voice Commands"
+msgstr "Commandes vocales"
+
+#: greffier/ui/preferences.py:385
+msgid "Say “à la ligne” or “nouveau paragraphe” to format the text"
+msgstr ""
+"Dites « à la ligne » ou « nouveau paragraphe » pour mettre en forme le texte"
+
+#: greffier/ui/preferences.py:388
+msgid "List of Voice Commands"
+msgstr "Liste des commandes vocales"
+
+#: greffier/ui/preferences.py:398
+msgid "French Typography"
+msgstr "Typographie française"
+
+#: greffier/ui/preferences.py:399
+msgid "Narrow no-break spaces before ; : ! ? and inside « »"
+msgstr "Espaces fines insécables avant ; : ! ? et à l’intérieur des « »"
+
+#: greffier/ui/preferences.py:405
+msgid "Replacements"
+msgstr "Remplacements"
+
+#: greffier/ui/preferences.py:406
+msgid "Fix words the model often gets wrong, or expand your own abbreviations."
+msgstr ""
+"Corrigez les mots que le modèle transcrit souvent mal, ou développez vos "
+"propres abréviations."
+
+#: greffier/ui/preferences.py:409 greffier/ui/preferences.py:531
+msgid "_Add"
+msgstr "A_jouter"
+
+#: greffier/ui/preferences.py:416
+msgid "No replacements"
+msgstr "Aucun remplacement"
+
+#: greffier/ui/preferences.py:433
+msgid "Say them on their own, between two sentences:"
+msgstr "Dites-les isolément, entre deux phrases :"
+
+#: greffier/ui/preferences.py:449
+msgid "Pastes the text: works with accents and any layout"
+msgstr ""
+"Colle le texte : fonctionne avec les accents et toutes les dispositions de "
+"clavier"
+
+#: greffier/ui/preferences.py:450
+msgid "Copies, presses the paste shortcut, restores the clipboard"
+msgstr ""
+"Copie, appuie sur le raccourci pour coller, puis restaure le presse-papiers"
+
+#: greffier/ui/preferences.py:451
+msgid "Types key by key; some characters may be skipped"
+msgstr "Saisit touche par touche ; certains caractères peuvent être omis"
+
+#: greffier/ui/preferences.py:452
+msgid "Only copies the text; paste it yourself"
+msgstr "Copie seulement le texte ; collez-le vous-même"
+
+#: greffier/ui/preferences.py:460
+msgid "GNOME Shell extension"
+msgstr "extension GNOME Shell"
+
+#: greffier/ui/preferences.py:460
+msgid "Remote Desktop portal"
+msgstr "portail Bureau distant"
+
+#: greffier/ui/preferences.py:461
+msgid "none available"
+msgstr "aucun disponible"
+
+#: greffier/ui/preferences.py:463
+#, python-brace-format
+msgid "Currently in use: {backend}"
+msgstr "En cours d’utilisation : {backend}"
+
+#: greffier/ui/preferences.py:464
+msgid "Which component presses the keys"
+msgstr "Composant qui simule les frappes au clavier"
+
+#: greffier/ui/preferences.py:490
+msgid "Edit"
+msgstr "Modifier"
+
+#: greffier/ui/preferences.py:494
+msgid "Delete"
+msgstr "Supprimer"
+
+#: greffier/ui/preferences.py:514
+#, python-brace-format
+msgid "“{spoken}” removed"
+msgstr "« {spoken} » supprimé"
+
+#: greffier/ui/preferences.py:520
+msgid "Add Replacement"
+msgstr "Ajouter un remplacement"
+
+#: greffier/ui/preferences.py:520
+msgid "Edit Replacement"
+msgstr "Modifier le remplacement"
+
+#: greffier/ui/preferences.py:521
+msgid ""
+"When the model writes the first text, the second one is inserted instead. "
+"Matching ignores case and only applies to whole words."
+msgstr ""
+"Quand le modèle écrit le premier texte, le second est inséré à sa place. La "
+"correspondance ignore la casse et ne porte que sur des mots entiers."
+
+#: greffier/ui/preferences.py:525
+msgid "When I Say"
+msgstr "Quand je dis"
+
+#: greffier/ui/preferences.py:526
+msgid "Write"
+msgstr "Écrire"
+
+#: greffier/ui/preferences.py:531
+msgid "_Save"
+msgstr "_Enregistrer"
+
+#: greffier/ui/shortcut_dialog.py:54
+msgid "Set Shortcut"
+msgstr "Définir le raccourci"
+
+#: greffier/ui/shortcut_dialog.py:62
+msgid "_Set"
+msgstr "_Définir"
+
+#: greffier/ui/shortcut_dialog.py:74
+msgid "Press the new shortcut"
+msgstr "Appuyez sur le nouveau raccourci"
+
+#: greffier/ui/shortcut_dialog.py:77
+msgid "Hold it while you speak."
+msgstr "Maintenez-le enfoncé pendant que vous parlez."
+
+#: greffier/ui/shortcut_dialog.py:78
+msgid "It starts and stops dictation in any application."
+msgstr "Il démarre et arrête la dictée dans n’importe quelle application."
+
+#: greffier/ui/shortcut_dialog.py:80
+msgid "Press Esc to cancel or Backspace to disable the shortcut."
+msgstr ""
+"Appuyez sur Échap pour annuler ou sur Retour arrière pour désactiver le "
+"raccourci."
+
+#: greffier/ui/shortcut_dialog.py:94
+msgid ""
+"Press the key combination to use, Escape to cancel or Backspace to disable "
+"the shortcut."
+msgstr ""
+"Appuyez sur la combinaison de touches à utiliser, sur Échap pour annuler ou "
+"sur Retour arrière pour désactiver le raccourci."
+
+#: greffier/ui/shortcut_dialog.py:124
+msgid "Use at least one modifier key such as Super, Ctrl or Alt."
+msgstr "Utilisez au moins une touche de modification comme Super, Ctrl ou Alt."
+
+#: greffier/ui/shortcut_dialog.py:133
+#, python-brace-format
+msgid "New shortcut: {shortcut}"
+msgstr "Nouveau raccourci : {shortcut}"
+
+#: greffier/ui/util.py:79
+msgid "Multilingual"
+msgstr "Multilingue"
+
+#: greffier/ui/util.py:83
+#, python-brace-format
+msgid "{n} language"
+msgid_plural "{n} languages"
+msgstr[0] "{n} langue"
+msgstr[1] "{n} langues"
+
+#. Translators: e.g. "25 languages, detected automatically"
+#: greffier/ui/util.py:86
+#, python-brace-format
+msgid "{languages}, detected automatically"
+msgstr "{languages}, détection automatique"
+
+#. Translators: a percentage; French uses "{percent} %"
+#: greffier/ui/util.py:121
+#, python-brace-format
+msgid "{percent}%"
+msgstr "{percent} %"
+
+#. Translators: GLib.DateTime.format() codes, 12-hour and 24-hour clock
+#: greffier/ui/util.py:157
+msgid "%-l:%M %p"
+msgstr "%-l:%M %p"
+
+#: greffier/ui/util.py:157
+msgid "%H:%M"
+msgstr "%H:%M"
+
+#: greffier/ui/util.py:168
+msgid "Just now"
+msgstr "À l’instant"
+
+#: greffier/ui/util.py:171
+#, python-brace-format
+msgid "{n} minute ago"
+msgid_plural "{n} minutes ago"
+msgstr[0] "Il y a {n} minute"
+msgstr[1] "Il y a {n} minutes"
+
+#: greffier/ui/util.py:177
+#, python-brace-format
+msgid "Yesterday at {time}"
+msgstr "Hier à {time}"
+
+#. Translators: date without year, see GLib.DateTime.format(); French: "%-d %B"
+#: greffier/ui/util.py:180
+msgid "%B %-d"
+msgstr "%-d %B"
+
+#. Translators: date with year, see GLib.DateTime.format(); French: "%-d %B %Y"
+#: greffier/ui/util.py:182
+msgid "%B %-d, %Y"
+msgstr "%-d %B %Y"
+
+#. Translators: full date, see GLib.DateTime.format(); French: "%A %-d %B %Y"
+#: greffier/ui/util.py:189
+msgid "%A, %B %-d, %Y"
+msgstr "%A %-d %B %Y"
+
+#: greffier/ui/util.py:190
+#, python-brace-format
+msgid "{date} at {time}"
+msgstr "{date} à {time}"
+
+#: greffier/ui/util.py:208 greffier/ui/util.py:217
+msgid "Disabled"
+msgstr "Désactivé"
+
+#: greffier/ui/util.py:385
+msgid "OK"
+msgstr "OK"
+
+#: greffier/ui/util.py:386
+msgid "Warning"
+msgstr "Avertissement"
+
+#: greffier/ui/util.py:387
+msgid "Error"
+msgstr "Erreur"
+
+#: greffier/ui/window.py:92
+msgid "Discard the recording (Esc)"
+msgstr "Abandonner l’enregistrement (Échap)"
+
+#: greffier/ui/window.py:102
+msgid "Speech Model"
+msgstr "Modèle de reconnaissance vocale"
+
+#: greffier/ui/window.py:172
+msgid "Click the microphone to start dictating"
+msgstr "Cliquez sur le microphone pour commencer à dicter"
+
+#: greffier/ui/window.py:182 greffier/ui/window.py:315
+msgid "Connecting…"
+msgstr "Connexion…"
+
+#: greffier/ui/window.py:186
+msgid "Starting the Greffier service"
+msgstr "Démarrage du service Greffier"
+
+#: greffier/ui/window.py:188
+msgid "Service Not Running"
+msgstr "Service arrêté"
+
+#: greffier/ui/window.py:189
+msgid "Start the Greffier service to dictate"
+msgstr "Démarrez le service Greffier pour dicter"
+
+#: greffier/ui/window.py:191 greffier/ui/window.py:247
+msgid "No Model Installed"
+msgstr "Aucun modèle installé"
+
+#: greffier/ui/window.py:192
+msgid "Download a speech model to start dictating"
+msgstr "Téléchargez un modèle de reconnaissance vocale pour commencer à dicter"
+
+#: greffier/ui/window.py:194
+msgid "Loading Model…"
+msgstr "Chargement du modèle…"
+
+#: greffier/ui/window.py:195
+#, python-brace-format
+msgid "You can already press {shortcut}"
+msgstr "Déjà utilisable : {shortcut}"
+
+#: greffier/ui/window.py:200
+#, python-brace-format
+msgid "Release {shortcut} to stop"
+msgstr "Relâchez {shortcut} pour finir"
+
+#: greffier/ui/window.py:202
+#, python-brace-format
+msgid "Press {shortcut} again to stop"
+msgstr "Arrêtez avec {shortcut}"
+
+#: greffier/ui/window.py:204
+msgid "Click the microphone again to stop"
+msgstr "Cliquez à nouveau sur le microphone pour arrêter"
+
+#: greffier/ui/window.py:207
+msgid "The text will be typed into the focused window"
+msgstr "Le texte sera saisi dans la fenêtre active"
+
+#: greffier/ui/window.py:209
+msgid "Something Went Wrong"
+msgstr "Un problème est survenu"
+
+#: greffier/ui/window.py:212
+msgid "Ready to Dictate"
+msgstr "Prêt à dicter"
+
+#: greffier/ui/window.py:213
+#, python-brace-format
+msgid "Hold {shortcut} anywhere"
+msgstr "Maintenez {shortcut} et parlez"
+
+#: greffier/ui/window.py:213
+#, python-brace-format
+msgid "Press {shortcut} anywhere"
+msgstr "Dictez partout avec {shortcut}"
+
+#: greffier/ui/window.py:239
+msgid "Unavailable"
+msgstr "Indisponible"
+
+#: greffier/ui/window.py:240
+msgid "The Greffier service is stopped"
+msgstr "Le service Greffier est arrêté"
+
+#: greffier/ui/window.py:248
+msgid "Choose a model to start dictating"
+msgstr "Choisissez un modèle pour commencer à dicter"
+
+#: greffier/ui/window.py:260
+msgid "Language detected automatically"
+msgstr "Langue détectée automatiquement"
+
+#: greffier/ui/window.py:264
+msgid "Loading…"
+msgstr "Chargement…"
+
+#: greffier/ui/window.py:286
+msgid "Back"
+msgstr "Retour"
+
+#: greffier/ui/window.py:295
+msgid "_Preferences"
+msgstr "_Préférences"
+
+#: greffier/ui/window.py:296
+msgid "_Keyboard Shortcuts"
+msgstr "_Raccourcis clavier"
+
+#: greffier/ui/window.py:297
+msgid "_About Greffier"
+msgstr "À _propos de Greffier"
+
+#: greffier/ui/window.py:300
+msgid "Main Menu"
+msgstr "Menu principal"
+
+#: greffier/ui/window.py:356
+msgid "Starting Greffier…"
+msgstr "Démarrage de Greffier…"
+
+#: greffier/ui/window.py:451
+msgid "Starting the Greffier service…"
+msgstr "Démarrage du service Greffier…"
+
+#: greffier/ui/window.py:454
+msgid "No speech recognition model is installed"
+msgstr "Aucun modèle de reconnaissance vocale n’est installé"
+
+#: greffier/ui/window.py:455
+msgid "_Choose a Model"
+msgstr "_Choisir un modèle"
+
+#~ msgid "insert text as if it had been dictated"
+#~ msgstr "insérer du texte comme s’il avait été dicté"
+
+#~ msgid "replace a running instance"
+#~ msgstr "remplacer une instance déjà lancée"
+
+#~ msgid "Insertion failed."
+#~ msgstr "Échec de l’insertion."
+
+#~ msgid "Text inserted."
+#~ msgstr "Texte inséré."

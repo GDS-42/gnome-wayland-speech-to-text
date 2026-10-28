@@ -9,7 +9,7 @@ from typing import Any
 from gi.repository import Adw, Gio, GLib, Gtk
 
 from greffier.const import PROJECT_URL, SYSTEMD_UNIT, VERSION
-from greffier.i18n import N_, _
+from greffier.i18n import N_, _, pgettext
 from greffier.ui.binding import Connections
 from greffier.ui.client import DaemonClient
 from greffier.ui.util import button_row, copy_text, open_uri, show_toast, spinner, status_icon
@@ -60,7 +60,8 @@ def check_hint(check: dict[str, Any], keyboard: str = "") -> str:
                        "instantly."),
         "keyboard": _("Install the GNOME Shell extension, or turn on “Allow Remote "
                       "Interaction” when GNOME asks for permission."),
-        "microphone": _("Plug in a microphone, or allow access in GNOME Settings › Privacy."),
+        "microphone": _("Plug in a microphone, or allow access in GNOME Settings › "
+                        "Privacy & Security."),
     }.get(str(check.get("id", "")), "")
 
 
@@ -255,13 +256,13 @@ class SystemPage(Adw.PreferencesPage):
             "{gui} (service {service})").format(gui=VERSION, service=service_version)
         ext = report.get("extension") or {}
         if ext.get("active"):
-            ext_text = _("Active")
+            ext_text = pgettext("extension", "Active")
         elif ext.get("enabled"):
             ext_text = _("Enabled, active after logging in again")
         elif ext.get("installed"):
             ext_text = _("Installed, not enabled")
         else:
-            ext_text = _("Not installed")
+            ext_text = pgettext("extension", "Not installed")
         portals = report.get("portals") or {}
         tools = report.get("tools") or {}
         session = str(report.get("session_type") or "").capitalize() or _("Unknown")
@@ -270,14 +271,16 @@ class SystemPage(Adw.PreferencesPage):
             "gnome_shell": report.get("gnome_shell") or _("Not detected"),
             "session": session,
             "engine": f"sherpa-onnx {report.get('sherpa_onnx')}" if report.get("sherpa_onnx")
-            else _("Not installed"),
+            else pgettext("engine", "Not installed"),
             "threads": str(report.get("cpu_threads", "")),
             "extension": ext_text,
             "portals": " · ".join(
-                f"{label}: {yes if portals.get(key) else no}" for key, label in (
+                _("{label}: {value}").format(label=label, value=yes if portals.get(key) else no)
+                for key, label in (
                     ("global_shortcuts", _("Global Shortcuts")),
                     ("remote_desktop", _("Remote Desktop")))),
-            "tools": " · ".join(f"{name}: {yes if ok else no}" for name, ok in tools.items())
+            "tools": " · ".join(_("{label}: {value}").format(label=name, value=yes if ok else no)
+                                for name, ok in tools.items())
             or _("None"),
         }
         for key, row in self._details.items():

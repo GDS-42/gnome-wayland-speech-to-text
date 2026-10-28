@@ -12,7 +12,7 @@ from typing import Any
 
 from gi.repository import Adw, GLib, Graphene, Gsk, Gtk, Pango
 
-from greffier.i18n import _, ngettext
+from greffier.i18n import _, ngettext, pgettext
 from greffier.ui.binding import ConfigBinder, Connections
 from greffier.ui.client import DaemonClient
 from greffier.ui.util import (
@@ -231,7 +231,7 @@ class ModelRow(Gtk.ListBoxRow):
         if model.get("recommended"):
             self._badges.append(badge(_("Recommended"), "accent"))
         if active:
-            self._badges.append(badge(_("Active"), "success"))
+            self._badges.append(badge(pgettext("model", "Active"), "success"))
         elif model.get("installed") and not self.installing:
             self._badges.append(badge(_("Installed"), "neutral"))
         if model.get("update_available") and not self.installing:

@@ -246,9 +246,9 @@ class GnomeKeybinding:
         """Localised warning describing ``conflicts`` (``""`` if none)."""
         if not conflicts:
             return ""
-        names = ", ".join(f"“{c.name}”" for c in conflicts)
+        names = ", ".join(_("“{name}”").format(name=c.name) for c in conflicts)
         return _("{shortcut} is also used by {names}: only one of them will work. Change one "
-                 "of them in Settings → Keyboard → Keyboard Shortcuts.").format(
+                 "of them in Settings › Keyboard › Keyboard Shortcuts.").format(
             shortcut=accelerator_label(accelerator), names=names)
 
     # -- changes -------------------------------------------------------

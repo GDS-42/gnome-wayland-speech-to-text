@@ -1059,13 +1059,14 @@ class Controller:
         add("extension", usable, ext_message)
         injection = self.status()["injection"]
         add("keyboard", injection.get("keyboard", "none") != "none",
-            _("Text is inserted with: {backend}").format(backend=injection.get("keyboard"))
+            _("Text is inserted with: {backend}").format(
+                backend=_backend_label(injection.get("keyboard", "")))
             if injection.get("keyboard", "none") != "none" else
             _("No way to simulate the paste shortcut: text will only be copied to the clipboard."),
             "error")
         add("microphone", bool(devices),
             ngettext_devices(len(devices)) if devices else
-            _("No microphone found (check GNOME Settings › Privacy › Microphone)."))
+            _("No microphone found (check GNOME Settings › Privacy & Security › Microphone)."))
         return checks
 
     def history_items(self) -> list[dict[str, Any]]:
@@ -1074,6 +1075,16 @@ class Controller:
     def clear_history(self) -> None:
         self.history.clear()
 
+
+
+def _backend_label(backend: str) -> str:
+    """Human name of a keyboard backend id reported by the injector."""
+    labels = {
+        "extension": _("the Greffier GNOME Shell extension"),
+        "portal": _("the remote desktop portal"),
+        "ydotool": "ydotool",
+    }
+    return labels.get(backend, backend)
 
 
 def ngettext_devices(count: int) -> str:

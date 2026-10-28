@@ -122,12 +122,12 @@ sounds: ## Régénérer greffier/data/sounds/*.wav
 # --------------------------------------------------------------------------- #
 pot: ## Extraire les chaînes traduisibles dans greffier/data/locale/greffier.pot
 	@mkdir -p $(dir $(POT))
-	xgettext --from-code=UTF-8 --language=Python --add-comments=TRANSLATORS: \
+	xgettext --from-code=UTF-8 --language=Python --add-comments=Translators: \
 	  --keyword=_ --keyword=N_ --keyword=ngettext:1,2 --keyword=pgettext:1c,2 \
 	  --package-name=Greffier --package-version=$(VERSION) --msgid-bugs-address=$(ISSUES) \
 	  --sort-by-file --output=$(POT) $(PY_SOURCES)
 	@if [ -n "$(UI_SOURCES)" ]; then \
-	  xgettext --from-code=UTF-8 --join-existing --add-comments=TRANSLATORS: \
+	  xgettext --from-code=UTF-8 --join-existing --add-comments=Translators: \
 	    --sort-by-file --output=$(POT) $(UI_SOURCES); \
 	fi
 	@echo "→ $(POT) : $$(grep -c '^msgid ' $(POT)) chaînes"
